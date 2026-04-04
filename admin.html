@@ -206,6 +206,13 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <body>
 
 <!-- UPDATE BAR -->
+<div id="install-bar" style="display:none; position:fixed; top:0; left:0; right:0; background:#1a1a2e; border-bottom:2px solid var(--gold); color:var(--text); padding:10px 16px; z-index:300; align-items:center; justify-content:space-between; font-size:0.85rem; font-weight:700;">
+  📲 Install SmartCents Admin App
+  <div style="display:flex;gap:8px;">
+    <button onclick="installApp()" style="background:var(--gold); color:var(--dark); border:none; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.8rem; cursor:pointer;">Install</button>
+    <button onclick="document.getElementById('install-bar').style.display='none'" style="background:transparent; color:var(--muted); border:none; font-size:1.2rem; cursor:pointer;">×</button>
+  </div>
+</div>
 <div class="update-bar" id="update-bar">
   🚀 New update available!
   <button class="update-btn" onclick="applyUpdate()">Update Now</button>
@@ -902,8 +909,36 @@ function updateTodoProgress() {
 }
 
 
+// PWA INSTALL PROMPT
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  document.getElementById('install-bar').style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-bar').style.display = 'none';
+  deferredInstallPrompt = null;
+  showToast('✅ App installed successfully!');
+});
+
+async function installApp() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    if (outcome === 'accepted') {
+      document.getElementById('install-bar').style.display = 'none';
+    }
+    deferredInstallPrompt = null;
+  } else {
+    showToast('Open in Chrome/Edge and use Add to Home Screen');
+  }
+}
+
 // PWA & VERSION
-const APP_VERSION = '1.01';
+const APP_VERSION = '1.04';
 document.getElementById('version-label').textContent = 'v' + APP_VERSION;
 
 if ('serviceWorker' in navigator) {

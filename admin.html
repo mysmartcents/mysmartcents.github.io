@@ -915,12 +915,13 @@ const SEO_TASKS = [
   { label: 'Medium: Travel Insurance',      url: 'https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026', cat: 'medium', published: true },
   { label: 'Medium: Send Money',            url: 'https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026', cat: 'medium', published: true },
   { label: 'Medium: Budgeting Methods',     url: 'https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-2026', cat: 'medium', published: true },
-  { label: 'Medium: Freelancing on Fiverr', url: 'https://medium.com/@smartcents/how-to-start-freelancing-on-fiverr-complete-beginner-guide-2026', cat: 'medium', published: false },
+  { label: 'Medium: Freelancing on Fiverr', url: 'https://medium.com/@smartcents/how-to-start-freelancing-on-fiverr-complete-beginner-guide-2026', cat: 'medium', published: true },
+  { label: 'Medium: Passive Income 2026',   url: 'https://medium.com/@smartcents/how-to-build-passive-income-online-2026', cat: 'medium', published: true },
 ];
 
 // Real counts — update these when new articles are published
 const SC_ARTICLES = 5;       // articles on SmartCents site
-const MEDIUM_PUBLISHED = 4;  // published Medium articles
+const MEDIUM_PUBLISHED = 6;  // published Medium articles
 
 let seoErrors = [];
 
@@ -1111,7 +1112,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.13';
+const APP_VERSION = '1.14';
 
 // BLOGGER CONFIG — loaded from secure local settings
 const BLOGGER_BLOG_ID = '4286828910142477267';
@@ -1278,6 +1279,7 @@ window.addEventListener('load', () => {
 });
 
 
+function searchFBGroup(term) {
   const encoded = encodeURIComponent(term);
   window.open('https://www.facebook.com/search/groups/?q=' + encoded, '_blank');
 }

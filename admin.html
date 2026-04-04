@@ -248,6 +248,14 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <div class="hstat-val">5</div>
         <div class="hstat-lbl">Live Links</div>
       </div>
+      <div class="hstat">
+        <div class="hstat-val" id="sc-article-count">5</div>
+        <div class="hstat-lbl">SC Articles</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" id="medium-article-count">4</div>
+        <div class="hstat-lbl">Medium</div>
+      </div>
     </div>
   </div>
 
@@ -771,14 +779,16 @@ function showToast(msg) {
 function openSite(url) { window.open(url, '_blank'); }
 
 const SEO_TASKS = [
-  { label: 'Ping Google Sitemap',    url: 'https://www.google.com/ping?sitemap=https://mysmartcents.github.io/sitemap.xml' },
-  { label: 'Ping Bing Sitemap',      url: 'https://www.bing.com/ping?sitemap=https://mysmartcents.github.io/sitemap.xml' },
-  { label: 'Fetch Homepage',         url: 'https://mysmartcents.github.io/' },
-  { label: 'Fetch Article: Home Loan Interest',    url: 'https://medium.com/@smartcents/how-to-calculate-home-loan-interest-complete-guide-f18138a55c45' },
-  { label: 'Fetch Article: Travel Insurance',      url: 'https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026' },
-  { label: 'Fetch Article: Send Money',            url: 'https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026' },
-  { label: 'Fetch Article: Budgeting Methods',     url: 'https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-2026' },
-  { label: 'Fetch Article: Freelancing on Fiverr', url: 'https://medium.com/@smartcents/how-to-start-freelancing-on-fiverr-complete-beginner-guide-2026' },
+  { label: 'Ping Google Sitemap',    url: 'https://www.google.com/ping?sitemap=https://mysmartcents.github.io/sitemap.xml', cat: 'site' },
+  { label: 'Ping Bing Sitemap',      url: 'https://www.bing.com/ping?sitemap=https://mysmartcents.github.io/sitemap.xml', cat: 'site' },
+  { label: 'SmartCents Homepage',    url: 'https://mysmartcents.github.io/', cat: 'site' },
+  { label: 'SC: Home Loan Calculator', url: 'https://mysmartcents.github.io/#tools', cat: 'site' },
+  { label: 'SC: Finance Blog',       url: 'https://mysmartcents.github.io/#blog', cat: 'site' },
+  { label: 'Medium: Home Loan Interest',    url: 'https://medium.com/@smartcents/how-to-calculate-home-loan-interest-complete-guide-f18138a55c45', cat: 'medium' },
+  { label: 'Medium: Travel Insurance',      url: 'https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026', cat: 'medium' },
+  { label: 'Medium: Send Money',            url: 'https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026', cat: 'medium' },
+  { label: 'Medium: Budgeting Methods',     url: 'https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-2026', cat: 'medium' },
+  { label: 'Medium: Freelancing on Fiverr', url: 'https://medium.com/@smartcents/how-to-start-freelancing-on-fiverr-complete-beginner-guide-2026', cat: 'medium' },
 ];
 
 let seoErrors = [];
@@ -823,29 +833,56 @@ async function runFullSEO() {
   section.style.display = 'block';
   seoErrors = [];
 
-  logStep('Starting full SEO submission', 'pending', SEO_TASKS.length + ' tasks');
+  const siteTasks   = SEO_TASKS.filter(t => t.cat === 'site');
+  const mediumTasks = SEO_TASKS.filter(t => t.cat === 'medium');
 
-  let passed = 0;
-  for (const task of SEO_TASKS) {
-    await new Promise(r => setTimeout(r, 400));
+  // --- SmartCents ---
+  logStep('── SmartCents Site ──────────────────', 'pending', '');
+  let sitePassed = 0;
+  for (const task of siteTasks) {
+    await new Promise(r => setTimeout(r, 350));
     const ok = await pingUrlSEO(task);
-    if (ok) passed++;
+    if (ok) sitePassed++;
   }
 
-  const failed = SEO_TASKS.length - passed;
-  summary.style.display = 'block';
-  if (failed === 0) {
-    summary.style.background = 'rgba(76,175,125,0.1)';
-    summary.style.border = '1px solid #4caf7d44';
-    summary.style.color = '#4caf7d';
-    summary.textContent = `✅ All ${passed} submissions completed successfully!`;
-  } else {
-    summary.style.background = 'rgba(255,107,107,0.1)';
-    summary.style.border = '1px solid #ff6b6b44';
-    summary.style.color = '#ff6b6b';
-    summary.textContent = `⚠️ ${passed} passed, ${failed} failed. Use Copy Errors to inspect.`;
-    copyBtn.style.display = 'inline-block';
+  // --- Medium ---
+  logStep('── Medium Articles ──────────────────', 'pending', '');
+  let mediumPassed = 0;
+  for (const task of mediumTasks) {
+    await new Promise(r => setTimeout(r, 350));
+    const ok = await pingUrlSEO(task);
+    if (ok) mediumPassed++;
   }
+
+  const totalPassed = sitePassed + mediumPassed;
+  const totalFailed = SEO_TASKS.length - totalPassed;
+
+  // Build summary HTML
+  summary.style.display = 'block';
+  const scColor  = sitePassed   === siteTasks.length   ? '#4caf7d' : '#ff6b6b';
+  const medColor = mediumPassed === mediumTasks.length ? '#4caf7d' : '#ff6b6b';
+  const overallOk = totalFailed === 0;
+
+  summary.style.background = overallOk ? 'rgba(76,175,125,0.1)' : 'rgba(255,107,107,0.1)';
+  summary.style.border      = overallOk ? '1px solid #4caf7d44' : '1px solid #ff6b6b44';
+  summary.style.color       = 'var(--text)';
+  summary.innerHTML = `
+    <div style="margin-bottom:8px;font-size:0.85rem;">${overallOk ? '✅ All submissions completed!' : '⚠️ Some submissions failed'}</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div style="background:var(--dark3);border-radius:10px;padding:8px 12px;flex:1;min-width:120px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">SmartCents</div>
+        <div style="color:${scColor};font-size:0.9rem;font-weight:800;">${sitePassed}/${siteTasks.length} ✓</div>
+        <div style="font-size:0.68rem;color:var(--muted);">${siteTasks.length} pages pinged</div>
+      </div>
+      <div style="background:var(--dark3);border-radius:10px;padding:8px 12px;flex:1;min-width:120px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">Medium Articles</div>
+        <div style="color:${medColor};font-size:0.9rem;font-weight:800;">${mediumPassed}/${mediumTasks.length} ✓</div>
+        <div style="font-size:0.68rem;color:var(--muted);">${mediumTasks.length} articles pinged</div>
+      </div>
+    </div>
+  `;
+
+  if (totalFailed > 0) copyBtn.style.display = 'inline-block';
 
   btn.disabled = false;
   btn.textContent = '🚀 Run Full SEO Submission';
@@ -938,7 +975,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.04';
+const APP_VERSION = '1.05';
 document.getElementById('version-label').textContent = 'v' + APP_VERSION;
 
 if ('serviceWorker' in navigator) {

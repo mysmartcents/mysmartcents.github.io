@@ -253,10 +253,17 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <div class="hstat-lbl">SC Articles</div>
       </div>
       <div class="hstat">
-        <div class="hstat-val" id="medium-article-count">4</div>
+        <div class="hstat-val" id="medium-article-count">6</div>
         <div class="hstat-lbl">Medium</div>
       </div>
     </div>
+  </div>
+
+  <!-- CHECK FOR UPDATES BUTTON -->
+  <div style="padding:0 16px 4px;">
+    <button onclick="checkForUpdates()" id="update-check-btn" style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span>🔄</span><span id="update-check-label">Check for Updates</span>
+    </button>
   </div>
 
   <div class="section">
@@ -1064,7 +1071,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.09';
+const APP_VERSION = '1.10';
 
 // SOCIAL GROUPS
 let socialGroups = JSON.parse(localStorage.getItem('sc_social_groups') || '[]');
@@ -1189,6 +1196,48 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     window.location.reload();
   });
+}
+
+function checkForUpdates() {
+  const btn = document.getElementById('update-check-btn');
+  const label = document.getElementById('update-check-label');
+  label.textContent = 'Checking...';
+  btn.style.borderColor = 'rgba(201,168,76,0.3)';
+  btn.style.color = 'var(--gold)';
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (reg) {
+        reg.update().then(() => {
+          setTimeout(() => {
+            if (reg.waiting || reg.installing) {
+              label.textContent = '🚀 Update found! Tap Update Now above';
+              btn.style.borderColor = 'rgba(76,175,125,0.4)';
+              btn.style.color = 'var(--green)';
+            } else {
+              label.textContent = '✅ You are on the latest version';
+              btn.style.borderColor = 'rgba(76,175,125,0.3)';
+              btn.style.color = 'var(--green)';
+              setTimeout(() => {
+                label.textContent = 'Check for Updates';
+                btn.style.borderColor = 'var(--dark4)';
+                btn.style.color = 'var(--muted)';
+              }, 3000);
+            }
+          }, 1500);
+        });
+      } else {
+        label.textContent = '✅ Already latest version';
+        btn.style.color = 'var(--green)';
+        setTimeout(() => {
+          label.textContent = 'Check for Updates';
+          btn.style.color = 'var(--muted)';
+          btn.style.borderColor = 'var(--dark4)';
+        }, 3000);
+      }
+    });
+  } else {
+    location.reload(true);
+  }
 }
 
 function applyUpdate() {

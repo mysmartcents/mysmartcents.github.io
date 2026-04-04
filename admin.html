@@ -1064,19 +1064,21 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.08';
+const APP_VERSION = '1.09';
 
 // SOCIAL GROUPS
 let socialGroups = JSON.parse(localStorage.getItem('sc_social_groups') || '[]');
 
+const FB_PAGE = 'https://web.facebook.com/profile.php?id=61577493070318';
+
 const articlePosts = {
-  loan: `💡 Do you know how much interest you're really paying on your loan?\n\nMost people never calculate it — and end up paying thousands extra.\n\nI built a FREE Loan Calculator that shows you:\n✅ Monthly payment\n✅ Total interest paid\n✅ Full loan breakdown\n\nTry it free → https://mysmartcents.github.io\n\n#PersonalFinance #LoanCalculator #MoneyTips #Finance #SaveMoney`,
-  travel: `✈️ Planning a trip abroad? Don't make this mistake!\n\nMost travelers skip travel insurance — until something goes wrong. A single hospital visit abroad can cost $10,000+.\n\nI wrote a complete guide on choosing the RIGHT travel insurance:\n👉 https://mysmartcents.github.io\n\n#TravelInsurance #TravelTips #Finance #Travel #SmartTravel`,
-  money: `💸 Sending money internationally? You're probably losing more than you think!\n\nHidden fees + bad exchange rates = money lost silently.\n\nI wrote a guide on the CHEAPEST ways to send money in 2026:\n👉 https://mysmartcents.github.io\n\n#MoneyTransfer #RemittanceLife #PersonalFinance #SaveMoney #Finance`,
-  budget: `📊 Which budgeting method is right for YOU?\n\n50/30/20 Rule?\nZero-Based Budget?\nPay Yourself First?\n\nI broke down ALL the top methods so you can find what works:\n👉 https://mysmartcents.github.io\n\n#Budgeting #PersonalFinance #SaveMoney #MoneyManagement #FinanceTips`,
-  fiverr: `🚀 Want to start freelancing but don't know where to begin?\n\nFiverr has 4 million+ active sellers — here's exactly how to join them with ZERO experience:\n👉 https://mysmartcents.github.io\n\n#Fiverr #Freelancing #SideHustle #MakeMoneyOnline #WorkFromHome`,
-  passive: `💰 Want to earn money while you sleep?\n\nPassive income isn't a myth — but it takes the right strategy.\n\nI wrote the complete beginner's guide to building passive income in 2026:\n👉 https://mysmartcents.github.io\n\n#PassiveIncome #FinancialFreedom #MakeMoneyOnline #SideHustle #PersonalFinance`,
-  site: `🎯 FREE personal finance tools — no signup needed!\n\n✅ Loan Calculator\n✅ Budget Planner\n✅ Savings Tracker\n\nAll completely free at SmartCents:\n👉 https://mysmartcents.github.io\n\n#PersonalFinance #FreeTools #Budget #Savings #FinanceTips`
+  loan: `💡 Do you know how much interest you're really paying on your loan?\n\nMost people never calculate it — and end up paying thousands extra.\n\nI built a FREE Loan Calculator that shows you:\n✅ Monthly payment\n✅ Total interest paid\n✅ Full loan breakdown\n\nTry it free → https://mysmartcents.github.io\n\n📘 Follow SmartCents for more free finance tools → ${FB_PAGE}\n\n#PersonalFinance #LoanCalculator #MoneyTips #Finance #SaveMoney`,
+  travel: `✈️ Planning a trip abroad? Don't make this mistake!\n\nMost travelers skip travel insurance — until something goes wrong. A single hospital visit abroad can cost $10,000+.\n\nI wrote a complete guide on choosing the RIGHT travel insurance:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for more free finance tips → ${FB_PAGE}\n\n#TravelInsurance #TravelTips #Finance #Travel #SmartTravel`,
+  money: `💸 Sending money internationally? You're probably losing more than you think!\n\nHidden fees + bad exchange rates = money lost silently.\n\nI wrote a guide on the CHEAPEST ways to send money in 2026:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for more money tips → ${FB_PAGE}\n\n#MoneyTransfer #RemittanceLife #PersonalFinance #SaveMoney #Finance`,
+  budget: `📊 Which budgeting method is right for YOU?\n\n50/30/20 Rule?\nZero-Based Budget?\nPay Yourself First?\n\nI broke down ALL the top methods so you can find what works:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for daily finance tips → ${FB_PAGE}\n\n#Budgeting #PersonalFinance #SaveMoney #MoneyManagement #FinanceTips`,
+  fiverr: `🚀 Want to start freelancing but don't know where to begin?\n\nFiverr has 4 million+ active sellers — here's exactly how to join them with ZERO experience:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for more earning tips → ${FB_PAGE}\n\n#Fiverr #Freelancing #SideHustle #MakeMoneyOnline #WorkFromHome`,
+  passive: `💰 Want to earn money while you sleep?\n\nPassive income isn't a myth — but it takes the right strategy.\n\nI wrote the complete beginner's guide to building passive income in 2026:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for more passive income tips → ${FB_PAGE}\n\n#PassiveIncome #FinancialFreedom #MakeMoneyOnline #SideHustle #PersonalFinance`,
+  site: `🎯 FREE personal finance tools — no signup needed!\n\n✅ Loan Calculator\n✅ Budget Planner\n✅ Savings Tracker\n\nAll completely free at SmartCents:\n👉 https://mysmartcents.github.io\n\n📘 Follow us on Facebook for daily tips → ${FB_PAGE}\n\n#PersonalFinance #FreeTools #Budget #Savings #FinanceTips`
 };
 
 const platformIcons = { facebook: '📘', reddit: '🔴', quora: '🟠', linkedin: '💼' };

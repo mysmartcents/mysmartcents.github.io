@@ -903,6 +903,7 @@
 
   // PWA INSTALL PROMPT
   let deferredPrompt;
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
@@ -914,19 +915,24 @@
   });
 
   document.getElementById('installBtn').addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      document.getElementById('installBanner').classList.remove('show');
+    document.getElementById('installBanner').classList.remove('show');
+    if (deferredPrompt) {
+      await deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        deferredPrompt = null;
+      });
     }
-    deferredPrompt = null;
   });
 
   function dismissInstall() {
     document.getElementById('installBanner').classList.remove('show');
     localStorage.setItem('sc_install_dismissed', '1');
   }
+
+  window.addEventListener('appinstalled', () => {
+    document.getElementById('installBanner').classList.remove('show');
+    deferredPrompt = null;
+  });
 
   // SERVICE WORKER
   if ('serviceWorker' in navigator) {

@@ -316,7 +316,8 @@
     <li><a href="#partners">Partners</a></li>
     <li><a href="#about">About</a></li>
   </ul>
-  <a href="#tools" class="nav-cta">Get Started Free</a>
+  <a href="#" id="navInstallBtn" onclick="triggerInstall();return false;" class="nav-cta" style="display:none;">📱 Install App</a>
+  <a href="#tools" class="nav-cta" id="navGetStarted">Get Started Free</a>
 </nav>
 
 <!-- HERO -->
@@ -907,22 +908,25 @@
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
+    // Show install button in nav
+    document.getElementById('navInstallBtn').style.display = 'inline-block';
+    document.getElementById('navGetStarted').style.display = 'none';
+    // Show banner after 4 seconds if not dismissed
     if (!localStorage.getItem('sc_install_dismissed')) {
       setTimeout(() => {
         document.getElementById('installBanner').classList.add('show');
-      }, 3000);
+      }, 4000);
     }
   });
 
-  document.getElementById('installBtn').addEventListener('click', async () => {
+  async function triggerInstall() {
+    if (!deferredPrompt) return;
     document.getElementById('installBanner').classList.remove('show');
-    if (deferredPrompt) {
-      await deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        deferredPrompt = null;
-      });
-    }
-  });
+    await deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+  }
+
+  document.getElementById('installBtn').addEventListener('click', triggerInstall);
 
   function dismissInstall() {
     document.getElementById('installBanner').classList.remove('show');
@@ -931,6 +935,8 @@
 
   window.addEventListener('appinstalled', () => {
     document.getElementById('installBanner').classList.remove('show');
+    document.getElementById('navInstallBtn').style.display = 'none';
+    document.getElementById('navGetStarted').style.display = 'inline-block';
     deferredPrompt = null;
   });
 

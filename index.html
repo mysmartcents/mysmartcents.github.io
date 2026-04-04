@@ -330,6 +330,14 @@
     <button class="hero-tool-btn" onclick="showTool('budget')">📊 Budget Planner</button>
     <button class="hero-tool-btn" onclick="showTool('savings')">🎯 Savings Tracker</button>
   </div>
+  <div style="margin-top:20px;" id="heroInstallWrap">
+    <button id="heroInstallBtn" onclick="triggerInstall()" style="display:none;background:transparent;border:1px solid rgba(201,168,76,0.4);color:var(--gold);padding:10px 24px;border-radius:8px;font-size:0.85rem;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:600;">
+      📱 Install Free App — No App Store Needed
+    </button>
+    <p id="heroInstallAlt" style="display:none;font-size:0.78rem;color:var(--muted);margin-top:8px;">
+      On mobile: tap Chrome menu (⋮) → "Add to Home Screen"
+    </p>
+  </div>
 </section>
 
 
@@ -904,6 +912,7 @@
 
   // PWA INSTALL PROMPT
   let deferredPrompt;
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -911,6 +920,8 @@
     // Show install button in nav
     document.getElementById('navInstallBtn').style.display = 'inline-block';
     document.getElementById('navGetStarted').style.display = 'none';
+    // Show hero install button
+    document.getElementById('heroInstallBtn').style.display = 'inline-block';
     // Show banner after 4 seconds if not dismissed
     if (!localStorage.getItem('sc_install_dismissed')) {
       setTimeout(() => {
@@ -919,11 +930,29 @@
     }
   });
 
+  // On mobile show manual instructions if no prompt fires
+  if (isMobile) {
+    setTimeout(() => {
+      if (!deferredPrompt && !localStorage.getItem('sc_install_dismissed')) {
+        document.getElementById('heroInstallAlt').style.display = 'block';
+        document.getElementById('installBanner').classList.add('show');
+        document.getElementById('installBtn').textContent = 'How to Install';
+        document.getElementById('installBtn').onclick = () => {
+          alert('To install SmartCents:\n\n1. Tap the Chrome menu (⋮) at top right\n2. Tap "Add to Home Screen"\n3. Tap "Add"\n\nThe app will appear on your home screen!');
+          dismissInstall();
+        };
+      }
+    }, 5000);
+  }
+
   async function triggerInstall() {
-    if (!deferredPrompt) return;
-    document.getElementById('installBanner').classList.remove('show');
-    await deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+    if (deferredPrompt) {
+      document.getElementById('installBanner').classList.remove('show');
+      await deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+    } else if (isMobile) {
+      alert('To install SmartCents:\n\n1. Tap the Chrome menu (⋮) at top right\n2. Tap "Add to Home Screen"\n3. Tap "Add"\n\nThe app will appear on your home screen!');
+    }
   }
 
   document.getElementById('installBtn').addEventListener('click', triggerInstall);
@@ -937,6 +966,7 @@
     document.getElementById('installBanner').classList.remove('show');
     document.getElementById('navInstallBtn').style.display = 'none';
     document.getElementById('navGetStarted').style.display = 'inline-block';
+    document.getElementById('heroInstallBtn').style.display = 'none';
     deferredPrompt = null;
   });
 

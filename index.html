@@ -63,6 +63,22 @@
   .install-btn { background: var(--gold); color: #0D0D0D; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; }
   .install-dismiss { background: transparent; color: var(--muted); border: none; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; text-align: center; }
 
+  /* MOBILE INSTALL STRIP */
+  .mobile-install-strip {
+    display: none;
+    background: linear-gradient(90deg, #1A1400, #2A1F00);
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    padding: 10px 16px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .mobile-install-strip.show { display: flex; }
+  .mis-text { font-size: 0.8rem; color: var(--text); flex: 1; }
+  .mis-text span { color: var(--gold); font-weight: 700; }
+  .mis-btn { background: var(--gold); color: #0D0D0D; border: none; padding: 7px 14px; border-radius: 7px; font-weight: 700; font-size: 0.78rem; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; flex-shrink: 0; }
+  .mis-close { background: transparent; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; flex-shrink: 0; }
+
   nav {
     display: flex; align-items: center; justify-content: space-between;
     padding: 20px 40px;
@@ -305,6 +321,13 @@
     <button class="install-btn" id="installBtn">Install Free</button>
     <button class="install-dismiss" onclick="dismissInstall()">Not now</button>
   </div>
+</div>
+
+<!-- MOBILE INSTALL STRIP -->
+<div class="mobile-install-strip" id="mobileInstallStrip">
+  <div class="mis-text">📱 <span>Install SmartCents</span> — free app, no app store needed!</div>
+  <button class="mis-btn" onclick="showMobileInstallGuide()">Install</button>
+  <button class="mis-close" onclick="closeMobileStrip()">✕</button>
 </div>
 
 <!-- NAV -->
@@ -914,15 +937,17 @@
   let deferredPrompt;
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
+  // Show mobile install strip immediately on mobile
+  if (isMobile && !localStorage.getItem('sc_mobile_strip_closed')) {
+    document.getElementById('mobileInstallStrip').classList.add('show');
+  }
+
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    // Show install button in nav
     document.getElementById('navInstallBtn').style.display = 'inline-block';
     document.getElementById('navGetStarted').style.display = 'none';
-    // Show hero install button
     document.getElementById('heroInstallBtn').style.display = 'inline-block';
-    // Show banner after 4 seconds if not dismissed
     if (!localStorage.getItem('sc_install_dismissed')) {
       setTimeout(() => {
         document.getElementById('installBanner').classList.add('show');
@@ -930,19 +955,17 @@
     }
   });
 
-  // On mobile show manual instructions if no prompt fires
-  if (isMobile) {
-    setTimeout(() => {
-      if (!deferredPrompt && !localStorage.getItem('sc_install_dismissed')) {
-        document.getElementById('heroInstallAlt').style.display = 'block';
-        document.getElementById('installBanner').classList.add('show');
-        document.getElementById('installBtn').textContent = 'How to Install';
-        document.getElementById('installBtn').onclick = () => {
-          alert('To install SmartCents:\n\n1. Tap the Chrome menu (⋮) at top right\n2. Tap "Add to Home Screen"\n3. Tap "Add"\n\nThe app will appear on your home screen!');
-          dismissInstall();
-        };
-      }
-    }, 5000);
+  function showMobileInstallGuide() {
+    if (deferredPrompt) {
+      triggerInstall();
+    } else {
+      alert('Install SmartCents in 3 steps:\n\n1️⃣ Tap the Chrome menu (⋮) at top right of your browser\n2️⃣ Tap "Add to Home Screen"\n3️⃣ Tap "Add"\n\n✅ SmartCents will appear on your home screen like a real app!');
+    }
+  }
+
+  function closeMobileStrip() {
+    document.getElementById('mobileInstallStrip').classList.remove('show');
+    localStorage.setItem('sc_mobile_strip_closed', '1');
   }
 
   async function triggerInstall() {
@@ -950,8 +973,8 @@
       document.getElementById('installBanner').classList.remove('show');
       await deferredPrompt.prompt();
       deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
-    } else if (isMobile) {
-      alert('To install SmartCents:\n\n1. Tap the Chrome menu (⋮) at top right\n2. Tap "Add to Home Screen"\n3. Tap "Add"\n\nThe app will appear on your home screen!');
+    } else {
+      showMobileInstallGuide();
     }
   }
 
@@ -964,6 +987,7 @@
 
   window.addEventListener('appinstalled', () => {
     document.getElementById('installBanner').classList.remove('show');
+    document.getElementById('mobileInstallStrip').classList.remove('show');
     document.getElementById('navInstallBtn').style.display = 'none';
     document.getElementById('navGetStarted').style.display = 'inline-block';
     document.getElementById('heroInstallBtn').style.display = 'none';

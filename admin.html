@@ -677,10 +677,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <!-- SHARE BUTTONS -->
       <div class="sec-header"><div class="sec-title">Step 5 — Share</div></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button onclick="shareToFacebook()" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📘 Facebook Groups</button>
+        <button onclick="shareToFacebook()" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📘 Facebook Page</button>
+        <button onclick="shareToFBGroups()" style="background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.2);color:#4A9EF5;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">👥 FB Groups</button>
         <button onclick="shareToInstagram()" style="background:rgba(225,48,108,0.1);border:1px solid rgba(225,48,108,0.2);color:#E1306C;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📸 Instagram</button>
         <button onclick="shareToPinterest()" style="background:rgba(230,0,35,0.1);border:1px solid rgba(230,0,35,0.2);color:#E60023;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📌 Pinterest</button>
-        <button onclick="copyPost()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Post</button>
+        <button onclick="copyPost()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;grid-column:span 2;">📋 Copy Post Only</button>
       </div>
     </div>
 
@@ -1071,7 +1072,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.10';
+const APP_VERSION = '1.11';
 
 // SOCIAL GROUPS
 let socialGroups = JSON.parse(localStorage.getItem('sc_social_groups') || '[]');
@@ -1337,12 +1338,25 @@ function copyPost() {
   navigator.clipboard.writeText(post).then(() => showToast('Post copied!')).catch(() => showToast('Select and copy manually'));
 }
 
+const SC_FB_PAGE = 'https://www.facebook.com/profile.php?id=61577493070318';
+const SC_INSTAGRAM = 'https://www.instagram.com/mysmartcents/';
+const SC_PINTEREST = 'https://www.pinterest.com/mysmartcents/';
+
 function shareToFacebook() {
   const post = document.getElementById('post-result').value;
   if (!post) { showToast('Paste Claude reply first!'); return; }
   navigator.clipboard.writeText(post).then(() => {
-    showToast('Copied! Opening Facebook...');
-    setTimeout(() => window.open('https://www.facebook.com/groups/feed/', '_blank'), 1000);
+    showToast('Copied! Opening Facebook Page...');
+    setTimeout(() => window.open(SC_FB_PAGE, '_blank'), 800);
+  });
+}
+
+function shareToFBGroups() {
+  const post = document.getElementById('post-result').value;
+  if (!post) { showToast('Paste Claude reply first!'); return; }
+  navigator.clipboard.writeText(post).then(() => {
+    showToast('Copied! Opening Facebook Groups...');
+    setTimeout(() => window.open('https://www.facebook.com/groups/feed/', '_blank'), 800);
   });
 }
 
@@ -1351,18 +1365,25 @@ function shareToInstagram() {
   if (!post) { showToast('Paste Claude reply first!'); return; }
   navigator.clipboard.writeText(post).then(() => {
     showToast('Copied! Opening Instagram...');
-    setTimeout(() => window.open('https://www.instagram.com/', '_blank'), 1000);
+    setTimeout(() => window.open(SC_INSTAGRAM, '_blank'), 800);
   });
 }
 
 function shareToPinterest() {
   const post = document.getElementById('post-result').value;
   if (!post) { showToast('Paste Claude reply first!'); return; }
-  const encoded = encodeURIComponent('mysmartcents.netlify.app');
+  const url = encodeURIComponent('https://mysmartcents.github.io');
+  const desc = encodeURIComponent(post.substring(0, 500));
   navigator.clipboard.writeText(post).then(() => {
     showToast('Copied! Opening Pinterest...');
-    setTimeout(() => window.open('https://www.pinterest.com/pin/create/button/?url=' + encoded, '_blank'), 1000);
+    setTimeout(() => window.open(`https://www.pinterest.com/pin/create/button/?url=${url}&description=${desc}`, '_blank'), 800);
   });
+}
+
+function copyPost() {
+  const post = document.getElementById('post-result').value;
+  if (!post) { showToast('Paste Claude reply first!'); return; }
+  navigator.clipboard.writeText(post).then(() => showToast('Post copied! 📋'));
 }
 </script>
 </body>

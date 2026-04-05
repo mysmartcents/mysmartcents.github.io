@@ -259,11 +259,12 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     </div>
   </div>
 
-  <!-- CHECK FOR UPDATES BUTTON -->
-  <div style="padding:0 16px 4px;">
-    <button onclick="checkForUpdates()" id="update-check-btn" style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+  <!-- CHECK FOR UPDATES + CLEAR CONTENT -->
+  <div style="padding:0 16px 4px;display:grid;grid-template-columns:1fr auto;gap:8px;">
+    <button onclick="checkForUpdates()" id="update-check-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
       <span>🔄</span><span id="update-check-label">Check for Updates</span>
     </button>
+    <button onclick="clearAllContent()" style="background:rgba(224,90,90,0.1);border:1px solid rgba(224,90,90,0.2);color:var(--red);padding:12px 14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;white-space:nowrap;">🗑️ Clear Posts</button>
   </div>
 
   <div class="section">
@@ -670,8 +671,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
             <button onclick="openClaudeWith('medium')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
           </div>
         </div>
-        <textarea id="result-medium" placeholder="Paste Claude's Medium article here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:120px;outline:none;resize:none;margin-bottom:8px;"></textarea>
-        <button onclick="openMedium()" style="width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">✍️ Open Medium to Publish</button>
+        <textarea id="result-medium" oninput="saveContent('medium',this.value)" placeholder="Paste Claude's Medium article here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button onclick="copyContent('medium')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="openMedium()" style="background:rgba(0,0,0,0.4);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">✍️ Open Medium</button>
+        </div>
       </div>
 
       <!-- BLOGGER -->
@@ -684,8 +688,12 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
             <button onclick="openClaudeWith('blogger')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
           </div>
         </div>
-        <textarea id="result-blogger" placeholder="Paste Claude's Blogger post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:120px;outline:none;resize:none;margin-bottom:8px;"></textarea>
-        <button onclick="postToBloggerFromStudio()" id="bloggerBtn" style="width:100%;background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🟠 Auto-Post to Blogger</button>
+        <textarea id="result-blogger" oninput="saveContent('blogger',this.value)" placeholder="Paste Claude's Blogger post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <button onclick="copyContent('blogger')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="openSite('https://www.blogger.com/blog/post/edit/4286828910142477267')" style="background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🟠 Open Blogger</button>
+        </div>
+        <button onclick="postToBloggerFromStudio()" id="bloggerBtn" style="width:100%;background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.4);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🟠 Auto-Post to Blogger</button>
         <div id="blogger-status" style="display:none;margin-top:8px;background:var(--dark2);border:1px solid var(--dark4);border-radius:8px;padding:10px;font-size:0.78rem;font-family:'DM Mono',monospace;color:var(--muted);"></div>
       </div>
 
@@ -699,10 +707,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
             <button onclick="openClaudeWith('facebook')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
           </div>
         </div>
-        <textarea id="result-facebook" placeholder="Paste Claude's Facebook post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:120px;outline:none;resize:none;margin-bottom:8px;"></textarea>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button onclick="sharePlatform('facebook','page')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📘 FB Page</button>
-          <button onclick="sharePlatform('facebook','groups')" style="background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.2);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">👥 FB Groups</button>
+        <textarea id="result-facebook" oninput="saveContent('facebook',this.value)" placeholder="Paste Claude's Facebook post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <button onclick="copyContent('facebook')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📋 Copy</button>
+          <button onclick="copyAndOpen('facebook','https://www.facebook.com/profile.php?id=61577493070318')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📘 FB Page</button>
+          <button onclick="copyAndOpen('facebook','https://www.facebook.com/groups/feed/')" style="background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.2);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">👥 Groups</button>
         </div>
       </div>
 
@@ -716,8 +725,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
             <button onclick="openClaudeWith('instagram')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
           </div>
         </div>
-        <textarea id="result-instagram" placeholder="Paste Claude's Instagram caption here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:120px;outline:none;resize:none;margin-bottom:8px;"></textarea>
-        <button onclick="sharePlatform('instagram','main')" style="width:100%;background:rgba(225,48,108,0.1);border:1px solid rgba(225,48,108,0.2);color:#E1306C;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📸 Copy & Open Instagram</button>
+        <textarea id="result-instagram" oninput="saveContent('instagram',this.value)" placeholder="Paste Claude's Instagram caption here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button onclick="copyContent('instagram')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="copyAndOpen('instagram','https://www.instagram.com/mysmartcents/')" style="background:rgba(225,48,108,0.1);border:1px solid rgba(225,48,108,0.2);color:#E1306C;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📸 Open Instagram</button>
+        </div>
       </div>
 
       <!-- PINTEREST -->
@@ -730,8 +742,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
             <button onclick="openClaudeWith('pinterest')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
           </div>
         </div>
-        <textarea id="result-pinterest" placeholder="Paste Claude's Pinterest description here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:120px;outline:none;resize:none;margin-bottom:8px;"></textarea>
-        <button onclick="sharePlatform('pinterest','main')" style="width:100%;background:rgba(230,0,35,0.1);border:1px solid rgba(230,0,35,0.2);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📌 Copy & Open Pinterest</button>
+        <textarea id="result-pinterest" oninput="saveContent('pinterest',this.value)" placeholder="Paste Claude's Pinterest description here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button onclick="copyContent('pinterest')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="copyAndOpen('pinterest','https://www.pinterest.com/pin/creation-tool/')" style="background:rgba(230,0,35,0.1);border:1px solid rgba(230,0,35,0.2);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📌 Open Pinterest</button>
+        </div>
       </div>
 
     </div>
@@ -1303,7 +1318,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.20';
+const APP_VERSION = '1.22';
 
 // RESEARCH FUNCTIONS
 const countryParams = { us:'gl=us&hl=en', gb:'gl=gb&hl=en', au:'gl=au&hl=en', ca:'gl=ca&hl=en', pk:'gl=pk&hl=en' };
@@ -1458,66 +1473,118 @@ function buildPrompts(topic) {
   const aff = topicAffiliates[topic];
   const name = topicNames[topic];
   const site = 'https://mysmartcents.github.io';
+  const fb = 'https://web.facebook.com/profile.php?id=61577493070318';
+  const ig = 'https://www.instagram.com/mysmartcents/';
+  const pin = 'https://www.pinterest.com/mysmartcents/';
 
   return {
-    medium: `Write a comprehensive, SEO-optimized Medium article about "${name}" for a global English-speaking audience (US/UK/global). 
+    medium: `Generate a complete Medium article package about "${name}" for a global English-speaking audience (US/UK/global). Format your response EXACTLY like this:
 
-Requirements:
-- 800-1200 words, long-form, informative
-- Use clear headings (##), bullet points and examples
-- Include practical actionable tips
-- Naturally mention: ${aff.name} (${aff.url})
-- End with: "Use SmartCents free finance tools at ${site} — no signup needed"
-- Add 5 relevant tags at the end
-- Global audience, not region-specific
-- Professional but friendly tone`,
+TITLE:
+[Write an SEO-optimized, compelling title including the main keyword — 60 chars max]
 
-    blogger: `Write a detailed blog post about "${name}" for SmartCents blog. Global English audience.
+META DESCRIPTION:
+[Write a 150-160 character description with main keyword for Google search snippet]
 
-Requirements:
-- 600-900 words, informative and helpful
-- Clear sections with headings
-- Include: ${aff.name} → ${aff.url}
-- Include SmartCents tools: ${site}
-- End with strong call to action
-- Follow us on Facebook, Instagram, Pinterest
-- SEO optimized with relevant keywords throughout`,
+TAGS:
+[List exactly 5 Medium tags separated by commas]
 
-    facebook: `Write a Facebook page post about "${name}" for SmartCents. Global English audience.
+ARTICLE:
+[Write 900-1200 words. Use ## for headings, bullet points for lists. Include:
+- Hook opening paragraph (grab attention immediately)
+- 4-5 sections with ## headings
+- Practical tips with examples
+- Mention ${aff.name} naturally with link: ${aff.url}
+- CTA: "Try SmartCents free finance tools at ${site} — no signup needed"
+- FAQ section with 3 questions at the end]
 
-Requirements:
-- 100-150 words maximum
-- Engaging opening line (question or bold statement)
-- 3-5 key points using emojis
-- Include: ${aff.name} → ${aff.url}
-- End with: "Free tools at ${site}"
-- Add "Follow SmartCents for daily finance tips!"
-- 5 relevant hashtags
-- Conversational and helpful tone, NOT salesy`,
+COVER IMAGE PROMPT:
+[Write a detailed prompt to generate a cover image using AI (Gemini/Claude). Specify: style, colors, elements, mood. Make it relevant to ${name}. Format: 1500x750px, professional finance blog style]`,
 
-    instagram: `Write an Instagram caption about "${name}" for @mysmartcents. Global English audience.
+    blogger: `Generate a complete Blogger post package about "${name}" for SmartCents blog. Global English audience. Format EXACTLY like this:
 
-Requirements:
-- 80-120 words
-- Strong hook first line
-- Use line breaks for readability
-- Include emojis throughout
-- Relevant affiliate: ${aff.name}
-- End with: "🔗 Link in bio → ${site}"
-- 15-20 hashtags in first comment (list them separately)
-- Engaging, visual language`,
+TITLE:
+[SEO-optimized title with main keyword — 60 chars max]
 
-    pinterest: `Write a Pinterest pin description about "${name}" for SmartCents. Global English audience.
+META DESCRIPTION:
+[150-160 character meta description with keyword]
 
-Requirements:
-- 100-200 words
-- Start with strong keyword-rich sentence
-- Describe value clearly
-- Include: ${aff.url}
-- Include: ${site}
-- Use relevant keywords naturally
-- End with clear call to action
-- No hashtags needed for Pinterest`
+LABELS/TAGS:
+[5 relevant Blogger labels separated by commas]
+
+POST CONTENT:
+[Write 600-900 words in HTML-friendly format. Include:
+- Strong intro paragraph
+- 3-4 sections with clear headings
+- Bullet points for tips
+- ${aff.name} link: ${aff.url}
+- SmartCents tools: ${site}
+- Social follow CTA: Facebook | Instagram | Pinterest
+- Final CTA paragraph]
+
+COVER IMAGE PROMPT:
+[AI image generation prompt for Blogger cover. 1200x628px, professional blog style, relevant to ${name}]`,
+
+    facebook: `Generate a complete Facebook post package about "${name}" for SmartCents page. Global English audience. Format EXACTLY like this:
+
+POST TITLE:
+[Short punchy title for the post — 40 chars max]
+
+POST CONTENT:
+[Write 100-150 words. Include:
+- Strong opening question or statement
+- 3-4 key points with emojis
+- ${aff.name}: ${aff.url}
+- "Free tools at ${site}"
+- "Follow SmartCents for daily finance tips! 👉 ${fb}"
+- 5 relevant hashtags at the end]
+
+COVER IMAGE PROMPT:
+[AI image prompt for Facebook post image. 1200x630px, eye-catching, finance theme, bold text overlay suggestion relevant to ${name}]`,
+
+    instagram: `Generate a complete Instagram post package about "${name}" for @mysmartcents. Global English audience. Format EXACTLY like this:
+
+POST TITLE:
+[Caption hook — first line that stops the scroll, max 10 words]
+
+CAPTION:
+[Write 80-120 words. Include:
+- Strong hook first line (same as title)
+- Line breaks between each point
+- Emojis throughout
+- ${aff.name} mention
+- "🔗 Link in bio → ${site}"
+- Call to action (save this post / share with someone)]
+
+FIRST COMMENT HASHTAGS:
+[List 20-25 relevant hashtags — mix of popular and niche ones]
+
+COVER IMAGE PROMPT:
+[AI image prompt for Instagram square post. 1080x1080px, bold visuals, finance theme, minimal text, vibrant. Relevant to ${name}]
+
+STORY IMAGE PROMPT:
+[Separate AI prompt for Instagram Story. 1080x1920px, vertical format, same topic]`,
+
+    pinterest: `Generate a complete Pinterest pin package about "${name}" for SmartCents. Global English audience. Format EXACTLY like this:
+
+PIN TITLE:
+[SEO-optimized pin title with keywords — 100 chars max]
+
+PIN DESCRIPTION:
+[Write 150-300 words. Include:
+- Keyword-rich opening sentence
+- What the reader will learn/gain
+- Step-by-step value points
+- ${aff.url}
+- ${site}
+- Clear call to action at end
+- 5-8 relevant keywords woven naturally]
+
+BOARD SUGGESTION:
+[Which of these boards to pin to: Personal Finance Tips / Budgeting & Saving / Home Loan Tips / Travel Insurance / Make Money Online / Savings Goals]
+
+PIN IMAGE PROMPT:
+[AI image prompt for Pinterest vertical pin. 1000x1500px, tall format, finance infographic style, bold title text at top, SmartCents branding, relevant to ${name}. Clean, professional, shareable]`
   };
 }
 
@@ -1690,9 +1757,53 @@ function renderNotes() {
   `).join('');
 }
 
-renderNotes();
+// CONTENT PERSISTENCE
+const CONTENT_KEYS = ['medium','blogger','facebook','instagram','pinterest'];
 
-// ACCOUNTS & PASSWORD HINTS
+function saveContent(platform, value) {
+  localStorage.setItem('sc_post_' + platform, value);
+}
+
+function loadSavedContent() {
+  CONTENT_KEYS.forEach(p => {
+    const saved = localStorage.getItem('sc_post_' + p);
+    const el = document.getElementById('result-' + p);
+    if (saved && el) el.value = saved;
+  });
+}
+
+function copyContent(platform) {
+  const el = document.getElementById('result-' + platform);
+  if (!el || !el.value) { showToast('No content to copy!'); return; }
+  navigator.clipboard.writeText(el.value).then(() => showToast('Copied! 📋'));
+}
+
+function copyAndOpen(platform, url) {
+  const el = document.getElementById('result-' + platform);
+  if (!el || !el.value) { showToast('No content — paste Claude reply first!'); return; }
+  navigator.clipboard.writeText(el.value).then(() => {
+    showToast('Copied! Opening ' + platform + '...');
+    setTimeout(() => window.open(url, '_blank'), 800);
+  });
+}
+
+function clearAllContent() {
+  if (!confirm('Clear all generated post content? This will NOT delete your notes, API keys, groups or accounts.')) return;
+  CONTENT_KEYS.forEach(p => {
+    localStorage.removeItem('sc_post_' + p);
+    const el = document.getElementById('result-' + p);
+    if (el) el.value = '';
+  });
+  // Also clear prompts display
+  CONTENT_KEYS.forEach(p => {
+    const el = document.getElementById('prompt-' + p);
+    if (el) el.textContent = '';
+  });
+  document.getElementById('platform-results').style.display = 'none';
+  showToast('Post content cleared! ✅');
+}
+
+loadSavedContent();
 let accounts = JSON.parse(localStorage.getItem('sc_accounts') || '[]');
 
 function saveAccount() {

@@ -471,6 +471,7 @@
     <button class="hero-tool-btn active" onclick="showTool('loan')">🏠 Loan Calculator</button>
     <button class="hero-tool-btn" onclick="showTool('budget')">📊 Budget Planner</button>
     <button class="hero-tool-btn" onclick="showTool('savings')">🎯 Savings Tracker</button>
+    <button class="hero-tool-btn" onclick="showTool('vehicle')">🚗 Vehicle Loan</button>
   </div>
   <div style="margin-top:20px;" id="heroInstallWrap">
     <button id="heroInstallBtn" onclick="triggerInstall()" style="display:none;background:transparent;border:1px solid rgba(201,168,76,0.4);color:var(--gold);padding:10px 24px;border-radius:8px;font-size:0.85rem;font-family:'DM Sans',sans-serif;cursor:pointer;font-weight:600;">
@@ -655,6 +656,66 @@
     </div>
   </div>
 
+    <!-- VEHICLE LOAN CALCULATOR -->
+    <div class="tool-panel" id="tool-vehicle" style="display:none;">
+      <h2>🚗 Vehicle & Auto Loan Calculator</h2>
+      <p class="tool-desc">Calculate your car or motorcycle loan payments, total interest, and true cost instantly.</p>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>Vehicle Price ($)</label>
+          <input type="number" id="vPrice" value="25000">
+        </div>
+        <div class="input-group">
+          <label>Down Payment ($)</label>
+          <input type="number" id="vDown" value="5000">
+        </div>
+        <div class="input-group">
+          <label>Annual Interest Rate (%)</label>
+          <input type="number" id="vRate" value="6.5" step="0.1">
+        </div>
+        <div class="input-group">
+          <label>Loan Term</label>
+          <select id="vTerm">
+            <option value="24">2 Years</option>
+            <option value="36">3 Years</option>
+            <option value="48">4 Years</option>
+            <option value="60" selected>5 Years</option>
+            <option value="72">6 Years</option>
+            <option value="84">7 Years</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Trade-In Value ($)</label>
+          <input type="number" id="vTradeIn" value="0">
+        </div>
+        <div class="input-group">
+          <label>Sales Tax (%)</label>
+          <input type="number" id="vTax" value="8" step="0.1">
+        </div>
+      </div>
+      <button class="calc-btn" onclick="calcVehicle()">Calculate Vehicle Loan</button>
+      <div class="result-box" id="vehicleResult">
+        <div class="result-grid">
+          <div class="result-item">
+            <div class="r-label">Monthly Payment</div>
+            <div class="r-value gold" id="v-monthly">—</div>
+          </div>
+          <div class="result-item">
+            <div class="r-label">Total Interest</div>
+            <div class="r-value red" id="v-interest">—</div>
+          </div>
+          <div class="result-item">
+            <div class="r-label">Total Cost</div>
+            <div class="r-value" id="v-total">—</div>
+          </div>
+          <div class="result-item">
+            <div class="r-label">Amount Financed</div>
+            <div class="r-value" id="v-financed">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 </div><!-- end tools-section -->
 
 <!-- BLOG SECTION -->
@@ -786,7 +847,7 @@
   </div>
   <div style="color:var(--muted); font-size:0.8rem; text-align:right; line-height:1.8;">
     <div>© 2026 SmartCents</div>
-    <div>Privacy Policy · Terms of Use</div>
+    <div><a href="/privacy.html" style="color:var(--muted);text-decoration:none;">Privacy Policy</a> · <a href="/terms.html" style="color:var(--muted);text-decoration:none;">Terms of Use</a></div>
     <div><a href="#" onclick="document.getElementById('disclosureModal').style.display='flex';return false;" style="color:var(--muted);text-decoration:none;">Affiliate Disclosure</a></div>
   </div>
 </footer>
@@ -889,6 +950,33 @@
     });
     document.getElementById('s-milestones').innerHTML = html;
     document.getElementById('savingsResult').classList.add('show');
+  }
+
+  function calcVehicle() {
+    const price = parseFloat(document.getElementById('vPrice').value) || 0;
+    const down = parseFloat(document.getElementById('vDown').value) || 0;
+    const rate = parseFloat(document.getElementById('vRate').value) / 100 / 12;
+    const n = parseInt(document.getElementById('vTerm').value);
+    const tradeIn = parseFloat(document.getElementById('vTradeIn').value) || 0;
+    const taxRate = parseFloat(document.getElementById('vTax').value) / 100;
+
+    const taxAmount = price * taxRate;
+    const financed = price + taxAmount - down - tradeIn;
+    if (financed <= 0) { alert('Down payment + trade-in exceeds vehicle price!'); return; }
+
+    const monthly = rate > 0
+      ? financed * rate * Math.pow(1 + rate, n) / (Math.pow(1 + rate, n) - 1)
+      : financed / n;
+
+    const totalPaid = monthly * n;
+    const totalInterest = totalPaid - financed;
+    const totalCost = totalPaid + down + tradeIn;
+
+    document.getElementById('v-monthly').textContent = fmt(monthly);
+    document.getElementById('v-interest').textContent = fmt(totalInterest);
+    document.getElementById('v-total').textContent = fmt(totalCost);
+    document.getElementById('v-financed').textContent = fmt(financed);
+    document.getElementById('vehicleResult').classList.add('show');
   }
 
 

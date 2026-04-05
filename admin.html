@@ -763,8 +763,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   <div class="section">
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
       <input id="note-title" type="text" placeholder="Note title..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:8px;">
-      <textarea id="note-body" placeholder="Write your idea or note here..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.8rem;line-height:1.6;min-height:100px;outline:none;resize:none;margin-bottom:8px;"></textarea>
-      <button onclick="saveNote()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:11px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">+ Save Note</button>
+      <textarea id="note-body" placeholder="Write your idea or note here..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.8rem;line-height:1.6;min-height:80px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+        <button onclick="saveNote()" style="background:var(--gold);color:#080808;border:none;padding:11px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">+ Save Note</button>
+        <button onclick="shareAllNotes()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:11px 14px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;white-space:nowrap;">📱 Share All</button>
+      </div>
     </div>
 
     <div class="sec-header">
@@ -869,9 +872,10 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <input id="article-competitors" type="text" placeholder="Top competitor URLs (optional)..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
       <button onclick="generateArticleBrief()" style="width:100%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;margin-bottom:10px;">📝 Generate Article Brief</button>
       <div id="article-brief-output" style="display:none;background:var(--dark3);border:1px solid var(--dark5);border-radius:8px;padding:12px;font-size:0.78rem;font-family:'DM Mono',monospace;line-height:1.6;color:var(--text);white-space:pre-wrap;margin-bottom:8px;"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="article-brief-actions" style="display:none;">
-        <button onclick="copyArticleBrief()" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Brief</button>
-        <button onclick="openClaudeWithBrief()" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;" id="article-brief-actions" style="display:none;">
+        <button onclick="copyArticleBrief()" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📋 Copy</button>
+        <button onclick="openClaudeWithBrief()" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🤖 Claude</button>
+        <button onclick="saveBriefToNotes()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📓 Save</button>
       </div>
     </div>
 
@@ -1318,7 +1322,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.22';
+const APP_VERSION = '1.23';
 
 // RESEARCH FUNCTIONS
 const countryParams = { us:'gl=us&hl=en', gb:'gl=gb&hl=en', au:'gl=au&hl=en', ca:'gl=ca&hl=en', pk:'gl=pk&hl=en' };
@@ -1737,24 +1741,43 @@ function shareNote(id) {
 function renderNotes() {
   const list = document.getElementById('notes-list');
   const count = document.getElementById('notes-count');
-  count.textContent = notes.length + ' note' + (notes.length !== 1 ? 's' : '');
+  if (count) count.textContent = notes.length + ' note' + (notes.length !== 1 ? 's' : '');
+  if (!list) return;
   if (notes.length === 0) {
     list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted);font-size:0.85rem;">No notes yet. Add your first idea above!</div>';
     return;
   }
   list.innerHTML = notes.map(n => `
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
         <div style="font-size:0.9rem;font-weight:700;color:var(--gold);flex:1;">${n.title}</div>
         <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-left:8px;">${n.date}</div>
       </div>
-      <div style="font-size:0.8rem;color:var(--text);line-height:1.6;margin-bottom:10px;font-family:'DM Mono',monospace;white-space:pre-wrap;">${n.body}</div>
+      <div style="font-size:0.78rem;color:var(--text);line-height:1.6;margin-bottom:10px;font-family:'DM Mono',monospace;white-space:pre-wrap;">${n.body}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button onclick="shareNote(${n.id})" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📱 Share on WhatsApp</button>
+        <button onclick="shareNote(${n.id})" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
         <button onclick="deleteNote(${n.id})" style="background:rgba(224,90,90,0.1);border:1px solid rgba(224,90,90,0.2);color:var(--red);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">🗑️ Delete</button>
       </div>
     </div>
   `).join('');
+}
+
+function shareAllNotes() {
+  if (notes.length === 0) { showToast('No notes to share!'); return; }
+  const text = '*SmartCents Notes*\n\n' + notes.map((n,i) =>
+    `*${i+1}. ${n.title}*\n${n.body}`
+  ).join('\n\n---\n\n');
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+
+function saveBriefToNotes() {
+  const brief = document.getElementById('article-brief-output').textContent;
+  const kw = document.getElementById('article-keyword').value.trim() || 'Article Brief';
+  if (!brief) { showToast('Generate a brief first!'); return; }
+  notes.unshift({ id: Date.now(), title: 'Brief: ' + kw, body: brief, date: new Date().toLocaleDateString() });
+  localStorage.setItem('sc_notes', JSON.stringify(notes));
+  renderNotes();
+  showToast('Brief saved to Notes! 📓');
 }
 
 // CONTENT PERSISTENCE

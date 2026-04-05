@@ -7,9 +7,52 @@
   <!-- Main Page -->
   <url>
     <loc>https://mysmartcents.github.io/</loc>
-    <lastmod>2026-04-04</lastmod>
+    <lastmod>2026-04-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <!-- Medium Articles -->
+  <url>
+    <loc>https://medium.com/@smartcents/how-to-calculate-home-loan-interest-complete-guide-f18138a55c45</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026-9d43493ce11a</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026-77fb0f5b6add</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-in-2026-a21499c2a2b0</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://medium.com/@smartcents/how-to-build-an-emergency-fund-from-scratch-in-2026-14d621785947</loc>
+    <lastmod>2026-04-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://medium.com/@smartcents/how-to-build-passive-income-online-in-2026-the-complete-guide-7e59933e8024</loc>
+    <lastmod>2026-04-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
 </urlset>

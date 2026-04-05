@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Main Page -->
   <url>
     <loc>https://mysmartcents.github.io/</loc>
     <lastmod>2026-04-05</lastmod>
@@ -12,47 +8,39 @@
     <priority>1.0</priority>
   </url>
 
-  <!-- Medium Articles -->
   <url>
-    <loc>https://medium.com/@smartcents/how-to-calculate-home-loan-interest-complete-guide-f18138a55c45</loc>
-    <lastmod>2026-04-01</lastmod>
+    <loc>https://mysmartcents.github.io/articles/home-loan-calculator-guide.html</loc>
+    <lastmod>2026-04-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026-9d43493ce11a</loc>
-    <lastmod>2026-04-01</lastmod>
+    <loc>https://mysmartcents.github.io/articles/best-travel-insurance-2026.html</loc>
+    <lastmod>2026-04-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026-77fb0f5b6add</loc>
-    <lastmod>2026-04-02</lastmod>
+    <loc>https://mysmartcents.github.io/articles/how-to-send-money-internationally.html</loc>
+    <lastmod>2026-04-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-in-2026-a21499c2a2b0</loc>
-    <lastmod>2026-04-02</lastmod>
+    <loc>https://mysmartcents.github.io/articles/best-budgeting-methods.html</loc>
+    <lastmod>2026-04-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://medium.com/@smartcents/how-to-build-an-emergency-fund-from-scratch-in-2026-14d621785947</loc>
-    <lastmod>2026-04-03</lastmod>
+    <loc>https://mysmartcents.github.io/articles/how-to-freelance-on-fiverr.html</loc>
+    <lastmod>2026-04-05</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://medium.com/@smartcents/how-to-build-passive-income-online-in-2026-the-complete-guide-7e59933e8024</loc>
-    <lastmod>2026-04-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
 </urlset>

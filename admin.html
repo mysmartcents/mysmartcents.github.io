@@ -512,15 +512,15 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <div class="tab-content" id="tab-traffic">
   <div style="padding:16px 16px 0">
     <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">Site Traffic</div>
-    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:20px;">mysmartcents.netlify.app</div>
+    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:20px;">mysmartcents.github.io</div>
   </div>
 
   <div class="section">
     <div class="traffic-grid">
-      <div class="traffic-card"><div class="traffic-val" id="t-visitors">2</div><div class="traffic-lbl">Active Now</div></div>
+      <div class="traffic-card"><div class="traffic-val" id="t-visitors">—</div><div class="traffic-lbl">Active Now</div></div>
       <div class="traffic-card"><div class="traffic-val" id="t-today">—</div><div class="traffic-lbl">Today</div></div>
       <div class="traffic-card"><div class="traffic-val" id="t-week">—</div><div class="traffic-lbl">This Week</div></div>
-      <div class="traffic-card"><div class="traffic-val" id="t-country">🇵🇰</div><div class="traffic-lbl">Top Country</div></div>
+      <div class="traffic-card"><div class="traffic-val" id="t-country">🇺🇸</div><div class="traffic-lbl">Top Country</div></div>
     </div>
     <div class="traffic-note">Live data from Google Analytics G-JL7E42JVS2</div>
 
@@ -528,7 +528,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="sec-header"><div class="sec-title">Traffic Sources</div></div>
       <div class="platform-card">
         <div class="p-icon green">🔍</div>
-        <div class="p-info"><div class="p-name">Google Search (SEO)</div><div class="p-desc">Organic — building up</div></div>
+        <div class="p-info"><div class="p-name">Google Search (SEO)</div><div class="p-desc">Organic — 5 articles indexed</div></div>
         <div class="p-badge badge-pending">Growing</div>
       </div>
       <div class="platform-card">
@@ -537,9 +537,14 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <div class="p-badge badge-active">Live</div>
       </div>
       <div class="platform-card">
-        <div class="p-icon blue">📊</div>
-        <div class="p-info"><div class="p-name">Direct / Other</div><div class="p-desc">Direct URL visits</div></div>
-        <div class="p-badge badge-active">Active</div>
+        <div class="p-icon blue">📸</div>
+        <div class="p-info"><div class="p-name">Instagram @mysmartcents</div><div class="p-desc">Business account active</div></div>
+        <div class="p-badge badge-active">Live</div>
+      </div>
+      <div class="platform-card">
+        <div class="p-icon" style="background:rgba(230,0,35,0.1);">📌</div>
+        <div class="p-info"><div class="p-name">Pinterest @mysmartcents</div><div class="p-desc">Business account active</div></div>
+        <div class="p-badge badge-active">Live</div>
       </div>
     </div>
 
@@ -547,9 +552,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="sec-header"><div class="sec-title">Quick Links</div></div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <button onclick="openSite('https://analytics.google.com')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📊 Google Analytics</button>
-        <button onclick="openSite('https://mysmartcents.netlify.app')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">🌐 View Site</button>
-        <button onclick="openSite('https://app.netlify.com')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">⚡ Netlify Dashboard</button>
+        <button onclick="openSite('https://mysmartcents.github.io')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">🌐 View Site</button>
+        <button onclick="openSite('https://search.google.com/search-console')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">🔍 Search Console</button>
         <button onclick="openSite('https://web.facebook.com/profile.php?id=61577493070318')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📘 Facebook Page</button>
+        <button onclick="openSite('https://www.instagram.com/mysmartcents/')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📸 Instagram</button>
+        <button onclick="openSite('https://www.pinterest.com/mysmartcents/')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📌 Pinterest</button>
       </div>
     </div>
   </div>
@@ -1276,7 +1283,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.16';
+const APP_VERSION = '1.17';
 
 // RESEARCH FUNCTIONS
 const countryParams = { us:'gl=us&hl=en', gb:'gl=gb&hl=en', au:'gl=au&hl=en', ca:'gl=ca&hl=en', pk:'gl=pk&hl=en' };
@@ -1986,12 +1993,12 @@ const platformLabels = {
 };
 
 const prompts = {
-  finance_tip: (p) => `Write a short engaging ${p} post about a practical personal finance tip for Pakistani audience. Include 1-2 relevant emojis, keep it under 150 words, end with "Visit mysmartcents.netlify.app for free finance tools!" and add 5 relevant hashtags.`,
-  tool_promo: (p) => `Write a short engaging ${p} post promoting SmartCents (mysmartcents.netlify.app) — a free personal finance tools website with loan calculator, budget planner and savings tracker. Pakistani audience. Under 150 words. Include emojis and 5 hashtags. Make it feel helpful not salesy.`,
-  affiliate_promo: (p) => `Write a short engaging ${p} post promoting one of these: Western Union money transfer, Travel Insurance, or Shokran UAE shopping rewards. Pakistani audience. Under 150 words. Include the benefit to the user, a call to action, emojis, and 5 hashtags.`,
-  money_quote: (p) => `Write an original motivational money/wealth quote post for ${p}. Make it inspiring, relatable for Pakistanis, add relevant emojis, end with "SmartCents — Free Finance Tools 👉 mysmartcents.netlify.app" and 5 hashtags.`,
-  seo_blog: (p) => `Suggest 3 SEO blog post titles for a Pakistani personal finance website called SmartCents (mysmartcents.netlify.app). Each title should target a high-search keyword. Also write a 2-sentence meta description for each. Format as a numbered list.`,
-  engagement: (p) => `Write an engaging question-based ${p} post to boost comments and shares. Topic: personal finance, saving money, or budgeting in Pakistan. Include emojis, a clear question, 2-3 answer options for people to comment, and 5 hashtags. End with SmartCents link.`
+  finance_tip: (p) => `Write a short engaging ${p} post about a practical personal finance tip for a global English-speaking audience (US/UK). Include 1-2 relevant emojis, keep it under 150 words, end with "Try our free finance tools at mysmartcents.github.io — no signup needed!" and add 5 relevant hashtags.`,
+  tool_promo: (p) => `Write a short engaging ${p} post promoting SmartCents (mysmartcents.github.io) — a free personal finance tools website with loan calculator, budget planner and savings tracker. Target US/UK/global English audience. Under 150 words. Include emojis and 5 hashtags. Make it feel helpful not salesy. Include the link: mysmartcents.github.io`,
+  affiliate_promo: (p) => `Write a short engaging ${p} post promoting one of these affiliate products: Western Union money transfer (https://kdbov.com/g/kryb7glvg72ae376f35fa82f40b179/) or EKTA Travel Insurance (https://ogsib.com/g/92qb79zvwn2ae376f35f239505df72/). Target US/UK/global English audience. Under 150 words. Include the affiliate link, benefit to the user, a call to action, emojis, and 5 hashtags.`,
+  money_quote: (p) => `Write an original motivational money/wealth quote post for ${p}. Make it inspiring and relatable for a global English-speaking audience, add relevant emojis, end with "SmartCents — Free Finance Tools 👉 mysmartcents.github.io" and 5 hashtags.`,
+  seo_blog: (p) => `Suggest 3 SEO blog post titles for SmartCents (mysmartcents.github.io) — a global personal finance website. Each title should target a high-search US/UK keyword related to loans, budgeting, savings or travel insurance. Also write a 2-sentence meta description for each. Format as a numbered list.`,
+  engagement: (p) => `Write an engaging question-based ${p} post to boost comments and shares. Topic: personal finance, saving money, or budgeting for a global English audience. Include emojis, a clear question, 2-3 answer options for people to comment, and 5 hashtags. End with "mysmartcents.github.io — free finance tools!"`
 };
 
 const shareURLs = {

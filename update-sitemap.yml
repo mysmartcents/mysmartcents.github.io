@@ -1,0 +1,62 @@
+name: Auto Update Sitemap
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'articles/**'
+      - 'index.html'
+
+jobs:
+  update-sitemap:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate sitemap.xml
+        run: |
+          BASE_URL="https://mysmartcents.github.io"
+          TODAY=$(date +%Y-%m-%d)
+          
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
+          echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
+          
+          # Homepage
+          echo "  <url>" >> sitemap.xml
+          echo "    <loc>${BASE_URL}/</loc>" >> sitemap.xml
+          echo "    <lastmod>${TODAY}</lastmod>" >> sitemap.xml
+          echo "    <changefreq>weekly</changefreq>" >> sitemap.xml
+          echo "    <priority>1.0</priority>" >> sitemap.xml
+          echo "  </url>" >> sitemap.xml
+          
+          # All article pages
+          for file in articles/*.html; do
+            if [ -f "$file" ]; then
+              FILENAME=$(basename "$file")
+              echo "  <url>" >> sitemap.xml
+              echo "    <loc>${BASE_URL}/articles/${FILENAME}</loc>" >> sitemap.xml
+              echo "    <lastmod>${TODAY}</lastmod>" >> sitemap.xml
+              echo "    <changefreq>monthly</changefreq>" >> sitemap.xml
+              echo "    <priority>0.8</priority>" >> sitemap.xml
+              echo "  </url>" >> sitemap.xml
+            fi
+          done
+          
+          echo '</urlset>' >> sitemap.xml
+          echo "Sitemap generated with $(grep -c '<url>' sitemap.xml) URLs"
+
+      - name: Commit and push updated sitemap
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml
+          if git diff --staged --quiet; then
+            echo "No sitemap changes to commit"
+          else
+            git commit -m "Auto-update sitemap [skip ci]"
+            git push
+          fi

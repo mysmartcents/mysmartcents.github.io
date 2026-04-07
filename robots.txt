@@ -1,8 +1,4 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
 Sitemap: https://mysmartcents.github.io/sitemap.xml
-
-# Admin dashboard — keep private from search engines
-Disallow: /admin.html

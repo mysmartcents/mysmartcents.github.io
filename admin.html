@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SmartCents">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 :root {
   --gold: #C9A84C;
@@ -175,8 +176,14 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   display:flex;
   padding:10px 0 20px;
   z-index:100;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  -webkit-overflow-scrolling:touch;
 }
-.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:4px 0; }
+.bottom-nav::-webkit-scrollbar { display:none; }
+.nav-item { flex:0 0 64px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:4px 0; }
 .nav-icon { font-size:1.2rem; }
 .nav-label { font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; font-family:'DM Mono',monospace; }
 .nav-item.active .nav-label { color:var(--gold); }
@@ -206,6 +213,13 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <body>
 
 <!-- UPDATE BAR -->
+<div id="install-bar" style="display:none; position:fixed; top:0; left:0; right:0; background:#1a1a2e; border-bottom:2px solid var(--gold); color:var(--text); padding:10px 16px; z-index:300; align-items:center; justify-content:space-between; font-size:0.85rem; font-weight:700;">
+  📲 Install SmartCents Admin App
+  <div style="display:flex;gap:8px;">
+    <button onclick="installApp()" style="background:var(--gold); color:var(--dark); border:none; padding:6px 14px; border-radius:8px; font-weight:700; font-size:0.8rem; cursor:pointer;">Install</button>
+    <button onclick="document.getElementById('install-bar').style.display='none'" style="background:transparent; color:var(--muted); border:none; font-size:1.2rem; cursor:pointer;">×</button>
+  </div>
+</div>
 <div class="update-bar" id="update-bar">
   🚀 New update available!
   <button class="update-btn" onclick="applyUpdate()">Update Now</button>
@@ -230,18 +244,34 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     <div class="hero-sub">across all platforms · updated manually</div>
     <div class="hero-stats">
       <div class="hstat">
-        <div class="hstat-val" id="active-count">5</div>
+        <div class="hstat-val" id="active-count">6</div>
         <div class="hstat-lbl">Active</div>
       </div>
       <div class="hstat">
-        <div class="hstat-val" id="pending-count">10</div>
+        <div class="hstat-val" id="pending-count">9</div>
         <div class="hstat-lbl">CJ Pending</div>
       </div>
       <div class="hstat">
         <div class="hstat-val">5</div>
         <div class="hstat-lbl">Live Links</div>
       </div>
+      <div class="hstat">
+        <div class="hstat-val" id="sc-article-count">6</div>
+        <div class="hstat-lbl">SC Articles</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-val" id="medium-article-count">8</div>
+        <div class="hstat-lbl">Medium</div>
+      </div>
     </div>
+  </div>
+
+  <!-- CHECK FOR UPDATES + CLEAR CONTENT -->
+  <div style="padding:0 16px 4px;display:grid;grid-template-columns:1fr auto;gap:8px;">
+    <button onclick="checkForUpdates()" id="update-check-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <span>🔄</span><span id="update-check-label">Check for Updates</span>
+    </button>
+    <button onclick="clearAllContent()" style="background:rgba(224,90,90,0.1);border:1px solid rgba(224,90,90,0.2);color:var(--red);padding:12px 14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;white-space:nowrap;">🗑️ Clear Posts</button>
   </div>
 
   <div class="section">
@@ -454,12 +484,12 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="link-url">https://ogsib.com/g/g86qhgosre2ae376f35f102b8feede/</div>
     </div>
 
-    <div class="sec-header" style="margin-top:16px"><div class="sec-title">CJ Affiliate — Pending Approval</div><div class="sec-count">10 apps</div></div>
+    <div class="sec-header" style="margin-top:16px"><div class="sec-title">CJ Affiliate — Active</div><div class="sec-count">LawDepot ✓</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏦 Allianz Worldwide Care</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🛡️ Auras Insurance (CJ)</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏧 Axos Bank</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏦 Barclays US Savings</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
-    <div class="link-card"><div class="link-header"><div class="link-name">⚖️ LawDepot</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
+    <div class="link-card"><div class="link-header"><div class="link-name">⚖️ LawDepot</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url" style="color:var(--muted)">CJ Affiliate — Approved ✓</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">💰 LendingTree</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">📊 TaxAct</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">📒 QuickBooks</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
@@ -490,15 +520,15 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <div class="tab-content" id="tab-traffic">
   <div style="padding:16px 16px 0">
     <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">Site Traffic</div>
-    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:20px;">mysmartcents.netlify.app</div>
+    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:20px;">mysmartcents.github.io</div>
   </div>
 
   <div class="section">
     <div class="traffic-grid">
-      <div class="traffic-card"><div class="traffic-val" id="t-visitors">2</div><div class="traffic-lbl">Active Now</div></div>
+      <div class="traffic-card"><div class="traffic-val" id="t-visitors">—</div><div class="traffic-lbl">Active Now</div></div>
       <div class="traffic-card"><div class="traffic-val" id="t-today">—</div><div class="traffic-lbl">Today</div></div>
       <div class="traffic-card"><div class="traffic-val" id="t-week">—</div><div class="traffic-lbl">This Week</div></div>
-      <div class="traffic-card"><div class="traffic-val" id="t-country">🇵🇰</div><div class="traffic-lbl">Top Country</div></div>
+      <div class="traffic-card"><div class="traffic-val" id="t-country">🇺🇸</div><div class="traffic-lbl">Top Country</div></div>
     </div>
     <div class="traffic-note">Live data from Google Analytics G-JL7E42JVS2</div>
 
@@ -506,7 +536,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="sec-header"><div class="sec-title">Traffic Sources</div></div>
       <div class="platform-card">
         <div class="p-icon green">🔍</div>
-        <div class="p-info"><div class="p-name">Google Search (SEO)</div><div class="p-desc">Organic — building up</div></div>
+        <div class="p-info"><div class="p-name">Google Search (SEO)</div><div class="p-desc">Organic — 6 articles indexed</div></div>
         <div class="p-badge badge-pending">Growing</div>
       </div>
       <div class="platform-card">
@@ -515,9 +545,14 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <div class="p-badge badge-active">Live</div>
       </div>
       <div class="platform-card">
-        <div class="p-icon blue">📊</div>
-        <div class="p-info"><div class="p-name">Direct / Other</div><div class="p-desc">Direct URL visits</div></div>
-        <div class="p-badge badge-active">Active</div>
+        <div class="p-icon blue">📸</div>
+        <div class="p-info"><div class="p-name">Instagram @mysmartcents</div><div class="p-desc">Business account active</div></div>
+        <div class="p-badge badge-active">Live</div>
+      </div>
+      <div class="platform-card">
+        <div class="p-icon" style="background:rgba(230,0,35,0.1);">📌</div>
+        <div class="p-info"><div class="p-name">Pinterest @mysmartcents</div><div class="p-desc">Business account active</div></div>
+        <div class="p-badge badge-active">Live</div>
       </div>
     </div>
 
@@ -525,9 +560,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="sec-header"><div class="sec-title">Quick Links</div></div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <button onclick="openSite('https://analytics.google.com')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📊 Google Analytics</button>
-        <button onclick="openSite('https://mysmartcents.netlify.app')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">🌐 View Site</button>
-        <button onclick="openSite('https://app.netlify.com')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">⚡ Netlify Dashboard</button>
+        <button onclick="openSite('https://mysmartcents.github.io')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">🌐 View Site</button>
+        <button onclick="openSite('https://search.google.com/search-console')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">🔍 Search Console</button>
         <button onclick="openSite('https://web.facebook.com/profile.php?id=61577493070318')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📘 Facebook Page</button>
+        <button onclick="openSite('https://www.instagram.com/mysmartcents/')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📸 Instagram</button>
+        <button onclick="openSite('https://www.pinterest.com/mysmartcents/')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📌 Pinterest</button>
       </div>
     </div>
   </div>
@@ -565,9 +602,14 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Awin applied — under review</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
 
     <div class="sec-header" style="margin-top:16px"><div class="sec-title">Pending Actions</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Publish Article 3 on Medium (Money Transfers)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Publish Article 4 on Medium (Budgeting)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Publish Article 5 on Medium (Fiverr Guide)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Tomorrow</div></div>
+    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 3 on Medium (Money Transfers)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 4 on Medium (Budgeting)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 5 on Medium (Fiverr Guide)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 7 on Medium (Legal Documents — LawDepot)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 8 on Medium (Passive Income Ideas)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Set up Google Search Console + submit sitemap</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Fix AdSense — add privacy/terms links to index.html footer</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Push all new files to GitHub (icons, favicon, privacy, terms, articles)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
     <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Add Fiverr link to site when approved</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
     <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Add Hostinger link when approved (500+ visitors)</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
     <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">AdSense approved — ads auto-appear</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
@@ -584,81 +626,268 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <div class="tab-content" id="tab-post">
   <div style="padding:16px 16px 0">
     <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">Post Studio</div>
-    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:20px;">Generate & share content with Claude AI</div>
+    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:16px;">Generate content for all platforms at once</div>
   </div>
 
   <div class="section">
 
-    <!-- STEP 1: Content Type -->
-    <div class="sec-header"><div class="sec-title">Step 1 — Content Type</div></div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
-      <div class="ps-type-btn" onclick="selectType(this,'finance_tip')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
-        <div style="font-size:1.4rem;">💡</div>
-        <div style="font-size:0.8rem;font-weight:700;margin-top:4px;">Finance Tip</div>
+    <!-- STEP 1: Topic -->
+    <div class="sec-header"><div class="sec-title">Step 1 — Choose Topic</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+      <div class="ps-type-btn" onclick="selectTopic(this,'loan')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
+        <div style="font-size:1.3rem;">🏠</div><div style="font-size:0.75rem;font-weight:700;margin-top:4px;">Loan Calculator</div>
       </div>
-      <div class="ps-type-btn" onclick="selectType(this,'tool_promo')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
-        <div style="font-size:1.4rem;">🔧</div>
-        <div style="font-size:0.8rem;font-weight:700;margin-top:4px;">Tool Promo</div>
+      <div class="ps-type-btn" onclick="selectTopic(this,'budget')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
+        <div style="font-size:1.3rem;">📊</div><div style="font-size:0.75rem;font-weight:700;margin-top:4px;">Budget Planner</div>
       </div>
-      <div class="ps-type-btn" onclick="selectType(this,'affiliate_promo')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
-        <div style="font-size:1.4rem;">💸</div>
-        <div style="font-size:0.8rem;font-weight:700;margin-top:4px;">Affiliate Promo</div>
+      <div class="ps-type-btn" onclick="selectTopic(this,'savings')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
+        <div style="font-size:1.3rem;">🎯</div><div style="font-size:0.75rem;font-weight:700;margin-top:4px;">Savings Tracker</div>
       </div>
-      <div class="ps-type-btn" onclick="selectType(this,'money_quote')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
-        <div style="font-size:1.4rem;">✨</div>
-        <div style="font-size:0.8rem;font-weight:700;margin-top:4px;">Money Quote</div>
+      <div class="ps-type-btn" onclick="selectTopic(this,'travel')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
+        <div style="font-size:1.3rem;">✈️</div><div style="font-size:0.75rem;font-weight:700;margin-top:4px;">Travel Insurance</div>
       </div>
-      <div class="ps-type-btn" onclick="selectType(this,'seo_blog')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
-        <div style="font-size:1.4rem;">📝</div>
-        <div style="font-size:0.8rem;font-weight:700;margin-top:4px;">SEO Blog Idea</div>
+      <div class="ps-type-btn" onclick="selectTopic(this,'money')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
+        <div style="font-size:1.3rem;">💸</div><div style="font-size:0.75rem;font-weight:700;margin-top:4px;">Money Transfer</div>
       </div>
-      <div class="ps-type-btn" onclick="selectType(this,'engagement')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
-        <div style="font-size:1.4rem;">🙋</div>
-        <div style="font-size:0.8rem;font-weight:700;margin-top:4px;">Engagement Post</div>
+      <div class="ps-type-btn" onclick="selectTopic(this,'passive')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
+        <div style="font-size:1.3rem;">💰</div><div style="font-size:0.75rem;font-weight:700;margin-top:4px;">Passive Income</div>
       </div>
-    </div>
-
-    <!-- STEP 2: Platform -->
-    <div class="sec-header"><div class="sec-title">Step 2 — Platform</div></div>
-    <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-      <div class="ps-plat-btn" onclick="selectPlatform(this,'facebook')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:10px;padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;">
-        <span style="font-size:1.1rem;">📘</span><span style="font-size:0.85rem;font-weight:700;">Facebook</span>
+      <div class="ps-type-btn" onclick="selectTopic(this,'fiverr')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
+        <div style="font-size:1.3rem;">🎨</div><div style="font-size:0.75rem;font-weight:700;margin-top:4px;">Freelancing</div>
       </div>
-      <div class="ps-plat-btn" onclick="selectPlatform(this,'instagram')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:10px;padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;">
-        <span style="font-size:1.1rem;">📸</span><span style="font-size:0.85rem;font-weight:700;">Instagram</span>
-      </div>
-      <div class="ps-plat-btn" onclick="selectPlatform(this,'pinterest')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:10px;padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;">
-        <span style="font-size:1.1rem;">📌</span><span style="font-size:0.85rem;font-weight:700;">Pinterest</span>
-      </div>
-      <div class="ps-plat-btn" onclick="selectPlatform(this,'all')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:10px;padding:10px 16px;cursor:pointer;display:flex;align-items:center;gap:8px;">
-        <span style="font-size:1.1rem;">🌐</span><span style="font-size:0.85rem;font-weight:700;">All</span>
+      <div class="ps-type-btn" onclick="selectTopic(this,'tip')" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:12px;text-align:center;cursor:pointer;">
+        <div style="font-size:1.3rem;">✨</div><div style="font-size:0.75rem;font-weight:700;margin-top:4px;">Finance Tip</div>
       </div>
     </div>
 
-    <!-- STEP 3: Generate -->
-    <div class="sec-header"><div class="sec-title">Step 3 — Generate</div></div>
-    <button onclick="generatePost()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;margin-bottom:16px;">✨ Generate with Claude AI</button>
+    <!-- STEP 2: Generate All -->
+    <button onclick="generateAllPlatforms()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;margin-bottom:16px;">✨ Generate for All Platforms</button>
 
-    <!-- GENERATED PROMPT PREVIEW -->
-    <div id="prompt-preview" style="display:none;">
-      <div class="sec-header"><div class="sec-title">Your Claude Prompt</div></div>
-      <div id="prompt-box" style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;font-size:0.8rem;color:var(--muted);font-family:'DM Mono',monospace;line-height:1.6;margin-bottom:10px;"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
-        <button onclick="copyPrompt()" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">📋 Copy Prompt</button>
-        <button onclick="openClaude()" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
+    <!-- PLATFORM TABS -->
+    <div id="platform-results" style="display:none;">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="platform-tab-btns">
+        <button onclick="showPlatformTab('medium')" class="ptab-btn active" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">📝 Medium</button>
+        <button onclick="showPlatformTab('blogger')" class="ptab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">🟠 Blogger</button>
+        <button onclick="showPlatformTab('facebook')" class="ptab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">📘 Facebook</button>
+        <button onclick="showPlatformTab('instagram')" class="ptab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">📸 Instagram</button>
+        <button onclick="showPlatformTab('pinterest')" class="ptab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 12px;border-radius:8px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">📌 Pinterest</button>
       </div>
 
-      <!-- PASTE RESULT -->
-      <div class="sec-header"><div class="sec-title">Step 4 — Paste Claude's Reply</div></div>
-      <textarea id="post-result" placeholder="Paste Claude's generated post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:14px;border-radius:12px;font-family:'DM Mono',monospace;font-size:0.8rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:10px;"></textarea>
+      <!-- MEDIUM -->
+      <div id="ptab-medium" class="ptab-content">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CLAUDE PROMPT — Copy and open Claude.ai</div>
+          <div id="prompt-medium" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.6;margin-bottom:10px;white-space:pre-wrap;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="copyPlatformPrompt('medium')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Prompt</button>
+            <button onclick="openClaudeWith('medium')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
+          </div>
+        </div>
+        <textarea id="result-medium" oninput="saveContent('medium',this.value)" placeholder="Paste Claude's Medium article here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button onclick="copyContent('medium')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="openMedium()" style="background:rgba(0,0,0,0.4);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">✍️ Open Medium</button>
+        </div>
+      </div>
 
-      <!-- SHARE BUTTONS -->
-      <div class="sec-header"><div class="sec-title">Step 5 — Share</div></div>
+      <!-- BLOGGER -->
+      <div id="ptab-blogger" class="ptab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CLAUDE PROMPT — Copy and open Claude.ai</div>
+          <div id="prompt-blogger" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.6;margin-bottom:10px;white-space:pre-wrap;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="copyPlatformPrompt('blogger')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Prompt</button>
+            <button onclick="openClaudeWith('blogger')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
+          </div>
+        </div>
+        <textarea id="result-blogger" oninput="saveContent('blogger',this.value)" placeholder="Paste Claude's Blogger post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <button onclick="copyContent('blogger')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="openSite('https://www.blogger.com/blog/post/edit/4286828910142477267')" style="background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🟠 Open Blogger</button>
+        </div>
+        <button onclick="postToBloggerFromStudio()" id="bloggerBtn" style="width:100%;background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.4);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🟠 Auto-Post to Blogger</button>
+        <div id="blogger-status" style="display:none;margin-top:8px;background:var(--dark2);border:1px solid var(--dark4);border-radius:8px;padding:10px;font-size:0.78rem;font-family:'DM Mono',monospace;color:var(--muted);"></div>
+      </div>
+
+      <!-- FACEBOOK -->
+      <div id="ptab-facebook" class="ptab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CLAUDE PROMPT</div>
+          <div id="prompt-facebook" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.6;margin-bottom:10px;white-space:pre-wrap;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="copyPlatformPrompt('facebook')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Prompt</button>
+            <button onclick="openClaudeWith('facebook')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
+          </div>
+        </div>
+        <textarea id="result-facebook" oninput="saveContent('facebook',this.value)" placeholder="Paste Claude's Facebook post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <button onclick="copyContent('facebook')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📋 Copy</button>
+          <button onclick="copyAndOpen('facebook','https://www.facebook.com/profile.php?id=61577493070318')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📘 FB Page</button>
+          <button onclick="copyAndOpen('facebook','https://www.facebook.com/groups/feed/')" style="background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.2);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">👥 Groups</button>
+        </div>
+      </div>
+
+      <!-- INSTAGRAM -->
+      <div id="ptab-instagram" class="ptab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CLAUDE PROMPT</div>
+          <div id="prompt-instagram" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.6;margin-bottom:10px;white-space:pre-wrap;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="copyPlatformPrompt('instagram')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Prompt</button>
+            <button onclick="openClaudeWith('instagram')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
+          </div>
+        </div>
+        <textarea id="result-instagram" oninput="saveContent('instagram',this.value)" placeholder="Paste Claude's Instagram caption here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button onclick="copyContent('instagram')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="copyAndOpen('instagram','https://www.instagram.com/mysmartcents/')" style="background:rgba(225,48,108,0.1);border:1px solid rgba(225,48,108,0.2);color:#E1306C;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📸 Open Instagram</button>
+        </div>
+      </div>
+
+      <!-- PINTEREST -->
+      <div id="ptab-pinterest" class="ptab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CLAUDE PROMPT</div>
+          <div id="prompt-pinterest" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.6;margin-bottom:10px;white-space:pre-wrap;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="copyPlatformPrompt('pinterest')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Prompt</button>
+            <button onclick="openClaudeWith('pinterest')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🤖 Open Claude</button>
+          </div>
+        </div>
+        <textarea id="result-pinterest" oninput="saveContent('pinterest',this.value)" placeholder="Paste Claude's Pinterest description here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button onclick="copyContent('pinterest')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="copyAndOpen('pinterest','https://www.pinterest.com/pin/creation-tool/')" style="background:rgba(230,0,35,0.1);border:1px solid rgba(230,0,35,0.2);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📌 Open Pinterest</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- NOTES TAB -->
+<div class="tab-content" id="tab-notes">
+  <div style="padding:16px 16px 0">
+    <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">Notes & Ideas</div>
+    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:16px;">Save ideas, tasks and thoughts about SmartCents</div>
+  </div>
+
+  <div class="section">
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <input id="note-title" type="text" placeholder="Note title..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:8px;">
+      <textarea id="note-body" placeholder="Write your idea or note here..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.8rem;line-height:1.6;min-height:80px;outline:none;resize:none;margin-bottom:8px;"></textarea>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+        <button onclick="saveNote()" style="background:var(--gold);color:#080808;border:none;padding:11px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">+ Save Note</button>
+        <button onclick="shareAllNotes()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:11px 14px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;white-space:nowrap;">📱 Share All</button>
+      </div>
+    </div>
+
+    <div class="sec-header">
+      <div class="sec-title">Saved Notes</div>
+      <div class="sec-count" id="notes-count">0 notes</div>
+    </div>
+    <div id="notes-list">
+      <div style="text-align:center;padding:30px;color:var(--muted);font-size:0.85rem;">No notes yet. Add your first idea above!</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESEARCH TAB -->
+<div class="tab-content" id="tab-research">
+  <div style="padding:16px 16px 0">
+    <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">🔬 SEO Research</div>
+    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:16px;">Research keywords, competitors & trends — US/UK perspective</div>
+  </div>
+
+  <div class="section">
+
+    <!-- KEYWORD SEARCH -->
+    <div class="sec-header"><div class="sec-title">Keyword Research</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
+      <input id="research-keyword" type="text" placeholder="Enter keyword (e.g. loan calculator)" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <select id="research-country" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
+          <option value="us">🇺🇸 United States</option>
+          <option value="gb">🇬🇧 United Kingdom</option>
+          <option value="au">🇦🇺 Australia</option>
+          <option value="ca">🇨🇦 Canada</option>
+          <option value="pk">🇵🇰 Pakistan</option>
+        </select>
+        <select id="research-type" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
+          <option value="search">Google Search</option>
+          <option value="trends">Google Trends</option>
+          <option value="questions">People Also Ask</option>
+          <option value="reddit">Reddit</option>
+          <option value="quora">Quora</option>
+          <option value="youtube">YouTube</option>
+        </select>
+      </div>
+      <button onclick="doResearch()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">🔍 Research This Keyword</button>
+    </div>
+
+    <!-- QUICK NICHE KEYWORDS -->
+    <div class="sec-header"><div class="sec-title">Quick Niche Keywords</div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+      <button onclick="quickSearch('loan calculator free')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🏠 loan calculator</button>
+      <button onclick="quickSearch('budget planner free')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">📊 budget planner</button>
+      <button onclick="quickSearch('savings tracker app')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🎯 savings tracker</button>
+      <button onclick="quickSearch('best travel insurance 2026')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">✈️ travel insurance</button>
+      <button onclick="quickSearch('how to send money internationally')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">💸 money transfer</button>
+      <button onclick="quickSearch('how to build passive income')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">💰 passive income</button>
+      <button onclick="quickSearch('budgeting methods save money')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">📈 budgeting tips</button>
+      <button onclick="quickSearch('how to freelance on fiverr')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🎨 fiverr guide</button>
+      <button onclick="quickSearch('personal finance tips 2026')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">💡 finance tips</button>
+      <button onclick="quickSearch('mortgage calculator monthly payment')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🏡 mortgage</button>
+      <button onclick="quickSearch('how to save money fast')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">💵 save money</button>
+      <button onclick="quickSearch('debt free journey tips')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🆓 debt free</button>
+    </div>
+
+    <!-- COMPETITOR CHECK -->
+    <div class="sec-header"><div class="sec-title">Competitor & Rank Checker</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Check if SmartCents ranks for a keyword on Google US</div>
+      <input id="rank-keyword" type="text" placeholder="Keyword to check ranking..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button onclick="shareToFacebook()" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📘 Facebook Groups</button>
-        <button onclick="shareToInstagram()" style="background:rgba(225,48,108,0.1);border:1px solid rgba(225,48,108,0.2);color:#E1306C;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📸 Instagram</button>
-        <button onclick="shareToPinterest()" style="background:rgba(230,0,35,0.1);border:1px solid rgba(230,0,35,0.2);color:#E60023;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📌 Pinterest</button>
-        <button onclick="copyPost()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Post</button>
+        <button onclick="checkRank()" style="background:rgba(74,158,245,0.15);border:1px solid rgba(74,158,245,0.3);color:var(--blue);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📊 Check Google Rank</button>
+        <button onclick="checkCompetitors()" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🏆 See Competitors</button>
+      </div>
+    </div>
+
+    <!-- TRENDING FINANCE TOPICS -->
+    <div class="sec-header"><div class="sec-title">Trending Finance Topics</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+      <button onclick="openTrends('personal finance')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">📈 Personal Finance Trends</button>
+      <button onclick="openTrends('loan calculator')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">🏠 Loan Calculator Trends</button>
+      <button onclick="openTrends('budget planner')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">📊 Budget Planner Trends</button>
+      <button onclick="openTrends('travel insurance')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">✈️ Travel Insurance Trends</button>
+      <button onclick="openTrends('passive income')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">💰 Passive Income Trends</button>
+      <button onclick="openTrends('save money')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">💵 Save Money Trends</button>
+    </div>
+
+    <!-- AUDIENCE QUESTIONS -->
+    <div class="sec-header"><div class="sec-title">What Your Audience Asks</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">See real questions people ask on Reddit & Quora</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="openRedditFinance()" style="background:rgba(255,69,0,0.1);border:1px solid rgba(255,69,0,0.2);color:#FF4500;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔴 Reddit Finance</button>
+        <button onclick="openQuoraFinance()" style="background:rgba(185,43,39,0.1);border:1px solid rgba(185,43,39,0.2);color:#B92B27;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🟠 Quora Finance</button>
+        <button onclick="openAnswerThePublic()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">💬 Answer The Public</button>
+        <button onclick="openKeywordSurfer()" style="background:rgba(74,158,245,0.1);border:1px solid rgba(74,158,245,0.2);color:var(--blue);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔍 Keyword Research</button>
+      </div>
+    </div>
+
+    <!-- GENERATE ARTICLE FROM RESEARCH -->
+    <div class="sec-header"><div class="sec-title">Generate Article from Research</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">After researching, generate an SEO-optimized article brief</div>
+      <input id="article-keyword" type="text" placeholder="Target keyword for article..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+      <input id="article-competitors" type="text" placeholder="Top competitor URLs (optional)..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+      <button onclick="generateArticleBrief()" style="width:100%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;margin-bottom:10px;">📝 Generate Article Brief</button>
+      <div id="article-brief-output" style="display:none;background:var(--dark3);border:1px solid var(--dark5);border-radius:8px;padding:12px;font-size:0.78rem;font-family:'DM Mono',monospace;line-height:1.6;color:var(--text);white-space:pre-wrap;margin-bottom:8px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;" id="article-brief-actions" style="display:none;">
+        <button onclick="copyArticleBrief()" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📋 Copy</button>
+        <button onclick="openClaudeWithBrief()" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🤖 Claude</button>
+        <button onclick="saveBriefToNotes()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📓 Save</button>
       </div>
     </div>
 
@@ -669,147 +898,273 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <div class="tab-content" id="tab-seo">
   <div style="padding:20px 16px 8px;">
     <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">SEO Tools</div>
-    <div style="font-size:0.8rem; color:var(--muted);">Submit & index your site across search engines</div>
+    <div style="font-size:0.8rem; color:var(--muted);">One-tap full submission — no browser tabs needed</div>
   </div>
 
+  <!-- ONE-TAP FULL SEO BUTTON -->
   <div class="section">
-    <div style="font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Google</div>
-
-    <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px; margin-bottom:10px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-weight:700; font-size:0.9rem;">Search Console</div>
-          <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Submit sitemap & request indexing</div>
-        </div>
-        <button onclick="openSite('https://search.google.com/search-console')" style="background:var(--gold); color:var(--dark); border:none; padding:8px 14px; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:pointer;">Open →</button>
-      </div>
-    </div>
-
-    <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px; margin-bottom:10px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-weight:700; font-size:0.9rem;">Request Indexing — Homepage</div>
-          <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Tell Google to crawl mysmartcents.github.io</div>
-        </div>
-        <button onclick="pingGoogle('https://mysmartcents.github.io')" style="background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:8px 14px; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:pointer;">Ping</button>
-      </div>
-    </div>
-
-    <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px; margin-bottom:10px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-weight:700; font-size:0.9rem;">Submit Sitemap to Google</div>
-          <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Ping Google with your sitemap.xml</div>
-        </div>
-        <button onclick="submitSitemap('google')" style="background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:8px 14px; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:pointer;">Submit</button>
-      </div>
-    </div>
+    <button onclick="runFullSEO()" id="seoRunBtn" style="width:100%; background:var(--gold); color:var(--dark); border:none; padding:16px; border-radius:16px; font-weight:800; font-size:1rem; cursor:pointer; letter-spacing:0.5px;">
+      🚀 Run Full SEO Submission
+    </button>
+    <div style="font-size:0.75rem; color:var(--muted); text-align:center; margin-top:8px;">Pings Google & Bing sitemaps + indexes all pages & articles</div>
   </div>
 
+  <!-- RESULTS LOG -->
+  <div class="section" id="seoResultsSection" style="display:none;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+      <div style="font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px;">Results</div>
+      <button onclick="copyErrors()" id="copyErrBtn" style="display:none; background:var(--dark3); color:#ff6b6b; border:1px solid #ff6b6b44; padding:5px 10px; border-radius:8px; font-size:0.72rem; cursor:pointer;">📋 Copy Errors</button>
+    </div>
+    <div id="seoLog" style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:14px; font-size:0.78rem; font-family:monospace; line-height:1.9;"></div>
+    <div id="seoSummary" style="margin-top:10px; padding:12px 14px; border-radius:12px; font-size:0.82rem; font-weight:700; display:none;"></div>
+  </div>
+
+  <!-- SITEMAP INFO -->
   <div class="section">
-    <div style="font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Bing</div>
+    <div style="font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">Sitemap</div>
+    <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:14px;">
+      <div style="font-size:0.75rem; color:var(--muted); margin-bottom:6px;">Your sitemap URL:</div>
+      <div style="font-size:0.78rem; color:var(--gold); font-family:monospace; word-break:break-all;">https://mysmartcents.github.io/sitemap.xml</div>
+      <button onclick="openSite('https://mysmartcents.github.io/sitemap.xml')" style="margin-top:10px; background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:8px 14px; border-radius:10px; font-size:0.8rem; cursor:pointer; width:100%;">View Sitemap →</button>
+    </div>
+  </div>
 
-    <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px; margin-bottom:10px;">
+  <!-- SEARCH CONSOLE LINK -->
+  <div class="section">
+    <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:14px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <div style="font-weight:700; font-size:0.9rem;">Bing Webmaster Tools</div>
-          <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Submit sitemap to Bing search</div>
+          <div style="font-weight:700; font-size:0.9rem;">Google Search Console</div>
+          <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">View indexing status & coverage</div>
         </div>
-        <button onclick="openSite('https://www.bing.com/webmasters')" style="background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:8px 14px; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:pointer;">Open →</button>
-      </div>
-    </div>
-
-    <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px; margin-bottom:10px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div>
-          <div style="font-weight:700; font-size:0.9rem;">Submit Sitemap to Bing</div>
-          <div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Ping Bing with your sitemap.xml</div>
-        </div>
-        <button onclick="submitSitemap('bing')" style="background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:8px 14px; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:pointer;">Submit</button>
+        <button onclick="openSite('https://search.google.com/search-console')" style="background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:8px 14px; border-radius:10px; font-weight:700; font-size:0.8rem; cursor:pointer;">Open →</button>
       </div>
     </div>
   </div>
-
-  <div class="section">
-    <div style="font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Medium Articles</div>
-
-    <div id="mediumArticles">
-      <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px; margin-bottom:10px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="flex:1; margin-right:10px;">
-            <div style="font-weight:700; font-size:0.85rem;">How to Calculate Home Loan Interest</div>
-            <div style="font-size:0.7rem; color:var(--muted); margin-top:2px;">medium.com/@smartcents</div>
-          </div>
-          <button onclick="pingGoogle('https://medium.com/@smartcents/how-to-calculate-home-loan-interest-complete-guide-f18138a55c45')" style="background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:6px 10px; border-radius:8px; font-size:0.75rem; cursor:pointer;">Index</button>
-        </div>
-      </div>
-      <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px; margin-bottom:10px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="flex:1; margin-right:10px;">
-            <div style="font-weight:700; font-size:0.85rem;">Best Travel Insurance 2026</div>
-            <div style="font-size:0.7rem; color:var(--muted); margin-top:2px;">medium.com/@smartcents</div>
-          </div>
-          <button onclick="pingGoogle('https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026')" style="background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:6px 10px; border-radius:8px; font-size:0.75rem; cursor:pointer;">Index</button>
-        </div>
-      </div>
-      <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px; margin-bottom:10px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="flex:1; margin-right:10px;">
-            <div style="font-weight:700; font-size:0.85rem;">How to Send Money Internationally 2026</div>
-            <div style="font-size:0.7rem; color:var(--muted); margin-top:2px;">medium.com/@smartcents</div>
-          </div>
-          <button onclick="pingGoogle('https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026')" style="background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:6px 10px; border-radius:8px; font-size:0.75rem; cursor:pointer;">Index</button>
-        </div>
-      </div>
-      <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px; margin-bottom:10px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="flex:1; margin-right:10px;">
-            <div style="font-weight:700; font-size:0.85rem;">Best Budgeting Methods 2026</div>
-            <div style="font-size:0.7rem; color:var(--muted); margin-top:2px;">medium.com/@smartcents</div>
-          </div>
-          <button onclick="pingGoogle('https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-2026')" style="background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:6px 10px; border-radius:8px; font-size:0.75rem; cursor:pointer;">Index</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div style="font-size:0.75rem; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px;">Sitemap</div>
-    <div style="background:var(--dark2); border:1px solid var(--dark4); border-radius:16px; padding:16px;">
-      <div style="font-size:0.8rem; color:var(--muted); margin-bottom:8px;">Your sitemap URL:</div>
-      <div style="font-size:0.8rem; color:var(--gold); font-family:monospace; word-break:break-all;">https://mysmartcents.github.io/sitemap.xml</div>
-      <button onclick="openSite('https://mysmartcents.github.io/sitemap.xml')" style="margin-top:12px; background:var(--dark3); color:var(--text); border:1px solid var(--dark4); padding:8px 14px; border-radius:10px; font-size:0.8rem; cursor:pointer; width:100%;">View Sitemap →</button>
-    </div>
-  </div>
-
-  <div id="seoStatus" style="margin:0 16px 20px; padding:12px 16px; background:var(--dark2); border:1px solid var(--dark4); border-radius:12px; font-size:0.8rem; color:var(--muted); display:none;"></div>
 </div>
 
 <!-- BOTTOM NAV -->
+<!-- SOCIAL MEDIA TAB -->
+<div class="tab-content" id="tab-social">
+  <div style="padding:16px 16px 0">
+    <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">Social Groups</div>
+    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:16px;">Manage your Facebook groups & post content</div>
+  </div>
+
+  <div class="section">
+
+    <!-- FIND GROUPS -->
+    <div class="sec-header"><div class="sec-title">Find New Groups on Facebook</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Tap a search term to find groups on Facebook:</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <button onclick="searchFBGroup('personal finance')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">💰 Personal Finance</button>
+        <button onclick="searchFBGroup('budgeting and saving money')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">📊 Budgeting & Saving</button>
+        <button onclick="searchFBGroup('financial independence')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">🏦 Financial Independence</button>
+        <button onclick="searchFBGroup('make money online')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">💻 Make Money Online</button>
+        <button onclick="searchFBGroup('passive income ideas')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">💸 Passive Income</button>
+        <button onclick="searchFBGroup('travel insurance tips')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">✈️ Travel Insurance</button>
+        <button onclick="searchFBGroup('money saving tips')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">🎯 Money Saving Tips</button>
+        <button onclick="searchFBGroup('fiverr freelancers')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">🎨 Fiverr Freelancers</button>
+        <button onclick="searchFBGroup('side hustle ideas')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">🚀 Side Hustle</button>
+        <button onclick="searchFBGroup('debt free community')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">🆓 Debt Free</button>
+        <button onclick="searchFBGroup('investing for beginners')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">📈 Investing Beginners</button>
+        <button onclick="searchFBGroup('home loan mortgage tips')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">🏠 Home Loan Tips</button>
+      </div>
+    </div>
+
+    <!-- ADD NEW GROUP -->
+    <div class="sec-header"><div class="sec-title">Add Group to Your List</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <input id="social-group-name" type="text" placeholder="Group name (e.g. Personal Finance USA)" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+      <input id="social-group-url" type="url" placeholder="Group URL (https://facebook.com/groups/...)" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+      <select id="social-group-platform" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+        <option value="facebook">📘 Facebook Group</option>
+        <option value="reddit">🔴 Reddit</option>
+        <option value="quora">🟠 Quora</option>
+        <option value="linkedin">💼 LinkedIn Group</option>
+      </select>
+      <button onclick="addSocialGroup()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">+ Add Group</button>
+    </div>
+
+    <!-- POST TO ALL GROUPS -->
+    <div class="sec-header"><div class="sec-title">Post to Groups</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:10px;">Select an article to share:</div>
+      <select id="social-article-select" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+        <option value="loan">Home Loan Calculator Guide</option>
+        <option value="travel">Best Travel Insurance 2026</option>
+        <option value="money">Send Money Internationally</option>
+        <option value="budget">Best Budgeting Methods</option>
+        <option value="fiverr">Freelancing on Fiverr Guide</option>
+        <option value="passive">Build Passive Income Online</option>
+        <option value="site">SmartCents Free Finance Tools</option>
+      </select>
+      <button onclick="generateGroupPost()" style="width:100%;background:var(--dark3);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">✨ Generate Post for This Article</button>
+    </div>
+
+    <!-- GENERATED POST -->
+    <div id="social-post-preview" style="display:none;margin-bottom:16px;">
+      <div class="sec-header"><div class="sec-title">Generated Post</div></div>
+      <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
+        <textarea id="social-post-text" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.75rem;line-height:1.6;min-height:120px;outline:none;resize:none;margin-bottom:10px;"></textarea>
+        <button onclick="copyGroupPost()" style="width:100%;background:rgba(76,175,125,0.15);border:1px solid rgba(76,175,125,0.3);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">📋 Copy Post</button>
+      </div>
+    </div>
+
+    <!-- GROUPS LIST -->
+    <div class="sec-header">
+      <div class="sec-title">My Groups</div>
+      <div class="sec-count" id="group-count">0 groups</div>
+    </div>
+    <div id="social-groups-list">
+      <div style="text-align:center;padding:30px;color:var(--muted);font-size:0.85rem;">No groups added yet. Add your first group above!</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SETTINGS TAB -->
+<div class="tab-content" id="tab-settings">
+  <div style="padding:16px 16px 0">
+    <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">Settings</div>
+    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:16px;">API keys stored on your device only</div>
+  </div>
+  <div class="section">
+
+    <!-- GOOGLE DRIVE SYNC -->
+    <div class="sec-header"><div class="sec-title">☁️ Google Drive Sync</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;font-family:'DM Mono',monospace;">Sync notes, accounts, groups across all your devices via Google Drive</div>
+      <div id="gdrive-status" style="background:var(--dark3);border:1px solid var(--dark5);border-radius:8px;padding:10px;font-size:0.78rem;font-family:'DM Mono',monospace;color:var(--muted);margin-bottom:10px;">Not connected</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <button onclick="gdriveSignIn()" id="gdrive-signin-btn" style="background:rgba(66,133,244,0.15);border:1px solid rgba(66,133,244,0.3);color:#4285F4;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">🔑 Sign in with Google</button>
+        <button onclick="gdriveSignOut()" id="gdrive-signout-btn" style="display:none;background:rgba(224,90,90,0.1);border:1px solid rgba(224,90,90,0.2);color:var(--red);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">Sign Out</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="gdriveSave()" id="gdrive-save-btn" disabled style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;opacity:0.4;">☁️ Save to Drive</button>
+        <button onclick="gdriveLoad()" id="gdrive-load-btn" disabled style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;opacity:0.4;">⬇️ Load from Drive</button>
+      </div>
+      <div style="font-size:0.7rem;color:var(--muted);margin-top:8px;font-family:'DM Mono',monospace;">Syncs: notes · accounts · groups · earnings data</div>
+    </div>
+
+    <!-- BLOGGER API KEY -->
+    <div class="sec-header"><div class="sec-title">Blogger API Key</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px;font-family:'DM Mono',monospace;">Stored locally on your device only — never shared</div>
+      <input id="blogger-key-input" type="password" placeholder="Enter your Blogger API key..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.85rem;outline:none;margin-bottom:10px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="saveBloggerKey()" style="background:var(--gold);color:#080808;border:none;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">💾 Save Key</button>
+        <button onclick="clearBloggerKey()" style="background:rgba(224,90,90,0.15);border:1px solid rgba(224,90,90,0.2);color:var(--red);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">🗑️ Clear Key</button>
+      </div>
+      <div id="key-status" style="font-size:0.75rem;color:var(--muted);margin-top:8px;font-family:'DM Mono',monospace;"></div>
+    </div>
+
+    <!-- BLOGGER BLOG -->
+    <div class="sec-header"><div class="sec-title">Blogger Blog</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:0.85rem;font-weight:700;margin-bottom:4px;">smartcents-finance.blogspot.com</div>
+      <div style="font-size:0.75rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:10px;">Blog ID: 4286828910142477267</div>
+      <button onclick="openSite('https://smartcents-finance.blogspot.com')" style="width:100%;background:var(--dark3);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;cursor:pointer;">🟠 Open Blogger →</button>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="sec-header"><div class="sec-title">Quick Links</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button onclick="openSite('https://console.cloud.google.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">☁️ Google Console</button>
+      <button onclick="openSite('https://www.blogger.com/blog/posts/4286828910142477267')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">📝 Blogger Posts</button>
+      <button onclick="openSite('https://analytics.google.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">📊 Analytics</button>
+      <button onclick="openSite('https://search.google.com/search-console')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">🔍 Search Console</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACCOUNTS TAB -->
+<div class="tab-content" id="tab-accounts">
+  <div style="padding:16px 16px 0">
+    <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">🔐 Accounts</div>
+    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:16px;">All your affiliate & platform logins — stored on device only</div>
+  </div>
+  <div class="section">
+
+    <!-- ADD / EDIT FORM -->
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <div id="acc-edit-banner" style="display:none;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:8px 12px;font-size:0.78rem;color:var(--gold);margin-bottom:10px;font-family:'DM Mono',monospace;">✏️ Editing account — update fields and save</div>
+      <input id="acc-platform" type="text" placeholder="Platform name (e.g. Admitad)" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:8px;">
+      <input id="acc-email" type="email" placeholder="Email used to sign up" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:8px;">
+      <input id="acc-hint" type="text" placeholder="Password hint (e.g. usual+Year)" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:8px;">
+      <input id="acc-url" type="url" placeholder="Login URL (e.g. https://store.admitad.com)" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+        <button onclick="saveAccount()" id="acc-save-btn" style="background:var(--gold);color:#080808;border:none;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">+ Add Account</button>
+        <button onclick="cancelEditAccount()" id="acc-cancel-btn" style="display:none;background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:12px 14px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">✕ Cancel</button>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <input id="acc-search" type="text" oninput="renderAccounts()" placeholder="Search platforms..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px 12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:12px;">
+
+    <!-- ACCOUNTS LIST -->
+    <div class="sec-header">
+      <div class="sec-title">Saved Accounts</div>
+      <div class="sec-count" id="accounts-count">0 accounts</div>
+    </div>
+    <div id="accounts-list"></div>
+
+    <!-- PRE-FILLED QUICK ADD -->
+    <div class="sec-header" style="margin-top:16px;"><div class="sec-title">Quick Add Platform</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button onclick="quickAddAccount('Admitad','https://store.admitad.com/en/promo/')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ Admitad</button>
+      <button onclick="quickAddAccount('Amazon Associates','https://affiliate-program.amazon.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ Amazon</button>
+      <button onclick="quickAddAccount('CJ Affiliate','https://members.cj.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ CJ Affiliate</button>
+      <button onclick="quickAddAccount('ClickBank','https://accounts.clickbank.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ ClickBank</button>
+      <button onclick="quickAddAccount('Fiverr Affiliates','https://affiliates.fiverr.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ Fiverr</button>
+      <button onclick="quickAddAccount('Impact.com','https://app.impact.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ Impact</button>
+      <button onclick="quickAddAccount('Binance KOL','https://www.binance.com/en/login')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ Binance</button>
+      <button onclick="quickAddAccount('Google AdSense','https://adsense.google.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ AdSense</button>
+      <button onclick="quickAddAccount('Medium','https://medium.com/m/signin')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ Medium</button>
+      <button onclick="quickAddAccount('Blogger','https://www.blogger.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ Blogger</button>
+      <button onclick="quickAddAccount('Payoneer','https://myaccount.payoneer.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ Payoneer</button>
+      <button onclick="quickAddAccount('Awin','https://www.awin.com/gb/login')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;">+ Awin</button>
+    </div>
+  </div>
+</div>
+
 <div class="bottom-nav">
   <div class="nav-item active" onclick="switchTab('dashboard', this)">
-    <div class="nav-icon">🏠</div>
-    <div class="nav-label">Home</div>
+    <div class="nav-icon">🏠</div><div class="nav-label">Home</div>
   </div>
   <div class="nav-item" onclick="switchTab('earnings', this)">
-    <div class="nav-icon">💰</div>
-    <div class="nav-label">Earn</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('post', this)">
-    <div class="nav-icon">✍️</div>
-    <div class="nav-label">Post</div>
+    <div class="nav-icon">💰</div><div class="nav-label">Earn</div>
   </div>
   <div class="nav-item" onclick="switchTab('links', this)">
-    <div class="nav-icon">🔗</div>
-    <div class="nav-label">Links</div>
+    <div class="nav-icon">🔗</div><div class="nav-label">Links</div>
+  </div>
+  <div class="nav-item" onclick="switchTab('traffic', this)">
+    <div class="nav-icon">📊</div><div class="nav-label">Traffic</div>
   </div>
   <div class="nav-item" onclick="switchTab('todo', this)">
-    <div class="nav-icon">✅</div>
-    <div class="nav-label">Tasks</div>
+    <div class="nav-icon">✅</div><div class="nav-label">Tasks</div>
+  </div>
+  <div class="nav-item" onclick="switchTab('post', this)">
+    <div class="nav-icon">✍️</div><div class="nav-label">Post</div>
+  </div>
+  <div class="nav-item" onclick="switchTab('research', this)">
+    <div class="nav-icon">🔬</div><div class="nav-label">Research</div>
   </div>
   <div class="nav-item" onclick="switchTab('seo', this)">
-    <div class="nav-icon">🔍</div>
-    <div class="nav-label">SEO</div>
+    <div class="nav-icon">🔍</div><div class="nav-label">SEO</div>
+  </div>
+  <div class="nav-item" onclick="switchTab('social', this)">
+    <div class="nav-icon">📣</div><div class="nav-label">Social</div>
+  </div>
+  <div class="nav-item" onclick="switchTab('notes', this)">
+    <div class="nav-icon">📓</div><div class="nav-label">Notes</div>
+  </div>
+  <div class="nav-item" onclick="switchTab('accounts', this)">
+    <div class="nav-icon">🔐</div><div class="nav-label">Accounts</div>
+  </div>
+  <div class="nav-item" onclick="switchTab('settings', this)">
+    <div class="nav-icon">⚙️</div><div class="nav-label">Settings</div>
   </div>
 </div>
 
@@ -834,37 +1189,154 @@ function showToast(msg) {
 
 function openSite(url) { window.open(url, '_blank'); }
 
-function showSeoStatus(msg, isError) {
-  const el = document.getElementById('seoStatus');
-  el.style.display = 'block';
-  el.style.color = isError ? '#ff6b6b' : '#4caf7d';
-  el.textContent = msg;
-  setTimeout(() => { el.style.display = 'none'; }, 5000);
+const SEO_TASKS = [
+  { label: 'Ping Google Sitemap',    url: 'https://www.google.com/ping?sitemap=https://mysmartcents.github.io/sitemap.xml', cat: 'site' },
+  { label: 'Ping Bing Sitemap',      url: 'https://www.bing.com/ping?sitemap=https://mysmartcents.github.io/sitemap.xml', cat: 'site' },
+  { label: 'SmartCents Homepage',    url: 'https://mysmartcents.github.io/', cat: 'site' },
+  { label: 'SC: Home Loan Calculator', url: 'https://mysmartcents.github.io/#tools', cat: 'site' },
+  { label: 'SC: Finance Blog',       url: 'https://mysmartcents.github.io/#blog', cat: 'site' },
+  { label: 'Medium: Home Loan Interest',    url: 'https://medium.com/@smartcents/how-to-calculate-home-loan-interest-complete-guide-f18138a55c45', cat: 'medium', published: true },
+  { label: 'Medium: Travel Insurance',      url: 'https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026', cat: 'medium', published: true },
+  { label: 'Medium: Send Money',            url: 'https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026', cat: 'medium', published: true },
+  { label: 'Medium: Budgeting Methods',     url: 'https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-2026', cat: 'medium', published: true },
+  { label: 'Medium: Freelancing on Fiverr', url: 'https://medium.com/@smartcents/how-to-start-freelancing-on-fiverr-complete-beginner-guide-2026', cat: 'medium', published: true },
+  { label: 'Medium: Passive Income 2026',   url: 'https://medium.com/@smartcents/how-to-build-passive-income-online-2026', cat: 'medium', published: true },
+  { label: 'Medium: Legal Documents Online', url: 'https://medium.com/@smartcents/how-to-create-legal-documents-online-complete-guide-2026', cat: 'medium', published: true },
+  { label: 'Medium: Passive Income Ideas',  url: 'https://medium.com/@smartcents/7-passive-income-ideas-that-actually-work-2026', cat: 'medium', published: false },
+];
+
+// Real counts — update these when new articles are published
+const SC_ARTICLES = 6;       // articles on SmartCents site
+const MEDIUM_PUBLISHED = 8;  // published Medium articles
+
+let seoErrors = [];
+
+function logStep(label, status, detail) {
+  const log = document.getElementById('seoLog');
+  const icon = status === 'ok' ? '✅' : status === 'err' ? '❌' : '⏳';
+  const color = status === 'ok' ? '#4caf7d' : status === 'err' ? '#ff6b6b' : 'var(--muted)';
+  const line = document.createElement('div');
+  line.style.color = color;
+  line.innerHTML = `${icon} <b>${label}</b>${detail ? ' <span style="color:var(--muted);font-size:0.72rem;">— ' + detail + '</span>' : ''}`;
+  log.appendChild(line);
+  log.scrollTop = log.scrollHeight;
 }
 
-function pingGoogle(url) {
-  const gscUrl = 'https://search.google.com/search-console/inspect?resource_id=https%3A%2F%2Fmysmartcents.github.io%2F&id=' + encodeURIComponent(url);
-  window.open(gscUrl, '_blank');
-  showSeoStatus('✓ Opened Google Search Console for: ' + url.split('/').pop());
-}
-
-function submitSitemap(engine) {
-  const sitemap = 'https://mysmartcents.github.io/sitemap.xml';
-  if (engine === 'google') {
-    window.open('https://search.google.com/search-console/sitemaps?resource_id=https%3A%2F%2Fmysmartcents.github.io%2F', '_blank');
-    showSeoStatus('✓ Opened Google Search Console — paste your sitemap URL there');
-  } else if (engine === 'bing') {
-    window.open('https://www.bing.com/webmasters/sitemaps?siteUrl=https://mysmartcents.github.io/', '_blank');
-    showSeoStatus('✓ Opened Bing Webmaster Tools — submit sitemap there');
+async function pingUrlSEO(task) {
+  try {
+    const res = await fetch(task.url, { method: 'GET', mode: 'no-cors', cache: 'no-cache' });
+    logStep(task.label, 'ok', 'Pinged successfully');
+    return true;
+  } catch(e) {
+    const errMsg = e.message || 'Network error';
+    logStep(task.label, 'err', errMsg);
+    seoErrors.push({ label: task.label, url: task.url, error: errMsg });
+    return false;
   }
+}
+
+async function runFullSEO() {
+  const btn = document.getElementById('seoRunBtn');
+  const section = document.getElementById('seoResultsSection');
+  const log = document.getElementById('seoLog');
+  const summary = document.getElementById('seoSummary');
+  const copyBtn = document.getElementById('copyErrBtn');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Running SEO Submission...';
+  btn.style.opacity = '0.7';
+  log.innerHTML = '';
+  summary.style.display = 'none';
+  copyBtn.style.display = 'none';
+  section.style.display = 'block';
+  seoErrors = [];
+
+  const siteTasks   = SEO_TASKS.filter(t => t.cat === 'site');
+  const mediumTasks = SEO_TASKS.filter(t => t.cat === 'medium');
+
+  // --- SmartCents ---
+  logStep('── SmartCents Site ──────────────────', 'pending', '');
+  let sitePassed = 0;
+  for (const task of siteTasks) {
+    await new Promise(r => setTimeout(r, 350));
+    const ok = await pingUrlSEO(task);
+    if (ok) sitePassed++;
+  }
+
+  // --- Medium (published only) ---
+  logStep('── Medium Articles ──────────────────', 'pending', '');
+  const publishedMedium = mediumTasks.filter(t => t.published !== false);
+  const unpublished = mediumTasks.filter(t => t.published === false);
+  let mediumPassed = 0;
+  for (const task of publishedMedium) {
+    await new Promise(r => setTimeout(r, 350));
+    const ok = await pingUrlSEO(task);
+    if (ok) mediumPassed++;
+  }
+  if (unpublished.length > 0) {
+    unpublished.forEach(t => logStep(t.label, 'pending', 'Skipped — not published yet'));
+  }
+
+  const totalPassed = sitePassed + mediumPassed;
+  const totalFailed = (siteTasks.length + publishedMedium.length) - totalPassed;
+
+  // Build summary HTML
+  summary.style.display = 'block';
+  const scColor  = sitePassed   === siteTasks.length     ? '#4caf7d' : '#ff6b6b';
+  const medColor = mediumPassed === publishedMedium.length ? '#4caf7d' : '#ff6b6b';
+  const overallOk = totalFailed === 0;
+
+  summary.style.background = overallOk ? 'rgba(76,175,125,0.1)' : 'rgba(255,107,107,0.1)';
+  summary.style.border      = overallOk ? '1px solid #4caf7d44' : '1px solid #ff6b6b44';
+  summary.style.color       = 'var(--text)';
+  summary.innerHTML = `
+    <div style="margin-bottom:8px;font-size:0.85rem;">${overallOk ? '✅ All submissions completed!' : '⚠️ Some submissions failed'}</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div style="background:var(--dark3);border-radius:10px;padding:8px 12px;flex:1;min-width:120px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">SmartCents Site</div>
+        <div style="color:${scColor};font-size:0.9rem;font-weight:800;">${sitePassed}/${siteTasks.length} ✓</div>
+        <div style="font-size:0.68rem;color:var(--muted);">${SC_ARTICLES} articles on site</div>
+      </div>
+      <div style="background:var(--dark3);border-radius:10px;padding:8px 12px;flex:1;min-width:120px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">Medium Articles</div>
+        <div style="color:${medColor};font-size:0.9rem;font-weight:800;">${mediumPassed}/${publishedMedium.length} ✓</div>
+        <div style="font-size:0.68rem;color:var(--muted);">${MEDIUM_PUBLISHED} published · ${unpublished.length} pending</div>
+      </div>
+    </div>
+  `;
+
+  if (totalFailed > 0) copyBtn.style.display = 'inline-block';
+
+  btn.disabled = false;
+  btn.textContent = '🚀 Run Full SEO Submission';
+  btn.style.opacity = '1';
+}
+
+function copyErrors() {
+  if (!seoErrors.length) return;
+  const text = seoErrors.map(e => `❌ ${e.label}\n   URL: ${e.url}\n   Error: ${e.error}`).join('\n\n');
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Errors copied to clipboard');
+  }).catch(() => {
+    prompt('Copy this error log:', text);
+  });
+}
+
+function showSeoStatus(msg, isError) {}
+function pingGoogle(url) { openSite('https://search.google.com/search-console/inspect?resource_id=https%3A%2F%2Fmysmartcents.github.io%2F&id=' + encodeURIComponent(url)); }
+function submitSitemap(engine) {
+  if (engine === 'google') openSite('https://search.google.com/search-console/sitemaps?resource_id=https%3A%2F%2Fmysmartcents.github.io%2F');
+  else openSite('https://www.bing.com/webmasters/sitemaps?siteUrl=https://mysmartcents.github.io/');
 }
 
 function updateTotal() {
   const ids = ['amazon','awin','admitad','cj','clickbank','fiverr','hostinger','binance','adsense','impact'];
   let total = 0;
   ids.forEach(id => {
-    const val = parseFloat(document.getElementById('earn-' + id).value) || 0;
+    const el = document.getElementById('earn-' + id);
+    const val = parseFloat(el.value) || 0;
     total += val;
+    localStorage.setItem('sc_earn_' + id, el.value || '');
   });
   document.getElementById('earn-total').textContent = total.toFixed(2);
   document.getElementById('total-earnings').textContent = total.toFixed(2);
@@ -883,6 +1355,15 @@ function updateTotal() {
   document.getElementById('annual-current').textContent = total.toFixed(2);
 }
 
+function loadEarnings() {
+  const ids = ['amazon','awin','admitad','cj','clickbank','fiverr','hostinger','binance','adsense','impact'];
+  ids.forEach(id => {
+    const saved = localStorage.getItem('sc_earn_' + id);
+    if (saved) document.getElementById('earn-' + id).value = saved;
+  });
+  updateTotal();
+}
+
 function toggleTodo(el) {
   el.classList.toggle('done');
   const cb = el.querySelector('.todo-check');
@@ -899,8 +1380,1045 @@ function updateTodoProgress() {
 }
 
 
+// PWA INSTALL PROMPT
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  document.getElementById('install-bar').style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-bar').style.display = 'none';
+  deferredInstallPrompt = null;
+  showToast('✅ App installed successfully!');
+});
+
+async function installApp() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    if (outcome === 'accepted') {
+      document.getElementById('install-bar').style.display = 'none';
+    }
+    deferredInstallPrompt = null;
+  } else {
+    showToast('Open in Chrome/Edge and use Add to Home Screen');
+  }
+}
+
 // PWA & VERSION
-const APP_VERSION = '1.01';
+const APP_VERSION = '1.25';
+
+// GOOGLE DRIVE SYNC
+const GDRIVE_CLIENT_ID = '182976820422-mk4mt230b4r2g542cuiosno45lntr12t.apps.googleusercontent.com';
+const GDRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.file';
+const GDRIVE_FILE_NAME = 'smartcents-data.json';
+let gdriveToken = null;
+let gdriveFileId = localStorage.getItem('sc_gdrive_file_id') || null;
+
+function gdriveSignIn() {
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: GDRIVE_CLIENT_ID,
+    scope: GDRIVE_SCOPES,
+    callback: (response) => {
+      if (response.error) {
+        gdriveSetStatus('❌ Sign in failed: ' + response.error, 'var(--red)');
+        return;
+      }
+      gdriveToken = response.access_token;
+      localStorage.setItem('sc_gdrive_token', gdriveToken);
+      gdriveSetStatus('✅ Connected to Google Drive!', 'var(--green)');
+      document.getElementById('gdrive-signin-btn').style.display = 'none';
+      document.getElementById('gdrive-signout-btn').style.display = 'block';
+      document.getElementById('gdrive-save-btn').disabled = false;
+      document.getElementById('gdrive-save-btn').style.opacity = '1';
+      document.getElementById('gdrive-load-btn').disabled = false;
+      document.getElementById('gdrive-load-btn').style.opacity = '1';
+      showToast('Connected to Google Drive! ☁️');
+    }
+  });
+  client.requestAccessToken();
+}
+
+function gdriveSignOut() {
+  gdriveToken = null;
+  gdriveFileId = null;
+  localStorage.removeItem('sc_gdrive_token');
+  localStorage.removeItem('sc_gdrive_file_id');
+  gdriveSetStatus('Not connected', 'var(--muted)');
+  document.getElementById('gdrive-signin-btn').style.display = 'block';
+  document.getElementById('gdrive-signout-btn').style.display = 'none';
+  document.getElementById('gdrive-save-btn').disabled = true;
+  document.getElementById('gdrive-save-btn').style.opacity = '0.4';
+  document.getElementById('gdrive-load-btn').disabled = true;
+  document.getElementById('gdrive-load-btn').style.opacity = '0.4';
+  showToast('Signed out from Google Drive');
+}
+
+function gdriveSetStatus(msg, color) {
+  const el = document.getElementById('gdrive-status');
+  if (el) { el.textContent = msg; el.style.color = color || 'var(--muted)'; }
+}
+
+function gdriveGetData() {
+  return JSON.stringify({
+    version: APP_VERSION,
+    savedAt: new Date().toISOString(),
+    notes: JSON.parse(localStorage.getItem('sc_notes') || '[]'),
+    accounts: JSON.parse(localStorage.getItem('sc_accounts') || '[]'),
+    groups: JSON.parse(localStorage.getItem('sc_social_groups') || '[]'),
+    earnings: {
+      admitad: localStorage.getItem('sc_earn_admitad') || '0',
+      amazon: localStorage.getItem('sc_earn_amazon') || '0',
+      cj: localStorage.getItem('sc_earn_cj') || '0',
+      clickbank: localStorage.getItem('sc_earn_clickbank') || '0',
+      adsense: localStorage.getItem('sc_earn_adsense') || '0',
+    }
+  });
+}
+
+function gdriveApplyData(data) {
+  try {
+    const d = JSON.parse(data);
+    if (d.notes) { localStorage.setItem('sc_notes', JSON.stringify(d.notes)); notes = d.notes; renderNotes(); }
+    if (d.accounts) { localStorage.setItem('sc_accounts', JSON.stringify(d.accounts)); accounts = d.accounts; renderAccounts(); }
+    if (d.groups) { localStorage.setItem('sc_social_groups', JSON.stringify(d.groups)); socialGroups = d.groups; renderGroups(); }
+    if (d.earnings) {
+      Object.entries(d.earnings).forEach(([k,v]) => localStorage.setItem('sc_earn_' + k, v));
+    }
+    return d.savedAt || 'unknown time';
+  } catch(e) { return null; }
+}
+
+async function gdriveFindFile() {
+  const res = await fetch(
+    `https://www.googleapis.com/drive/v3/files?q=name='${GDRIVE_FILE_NAME}'+and+trashed=false&spaces=drive&fields=files(id,name,modifiedTime)`,
+    { headers: { Authorization: 'Bearer ' + gdriveToken } }
+  );
+  const data = await res.json();
+  if (data.files && data.files.length > 0) {
+    gdriveFileId = data.files[0].id;
+    localStorage.setItem('sc_gdrive_file_id', gdriveFileId);
+    return gdriveFileId;
+  }
+  return null;
+}
+
+async function gdriveSave() {
+  if (!gdriveToken) { showToast('Sign in to Google Drive first!'); return; }
+  gdriveSetStatus('⏳ Saving to Drive...', 'var(--gold)');
+  const content = gdriveGetData();
+  const blob = new Blob([content], { type: 'application/json' });
+
+  try {
+    let fileId = gdriveFileId || await gdriveFindFile();
+
+    if (fileId) {
+      // Update existing file
+      const form = new FormData();
+      form.append('file', blob);
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`, {
+        method: 'PATCH',
+        headers: { Authorization: 'Bearer ' + gdriveToken },
+        body: form
+      });
+    } else {
+      // Create new file
+      const meta = JSON.stringify({ name: GDRIVE_FILE_NAME, mimeType: 'application/json' });
+      const form = new FormData();
+      form.append('metadata', new Blob([meta], { type: 'application/json' }));
+      form.append('file', blob);
+      const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer ' + gdriveToken },
+        body: form
+      });
+      const created = await res.json();
+      gdriveFileId = created.id;
+      localStorage.setItem('sc_gdrive_file_id', gdriveFileId);
+    }
+
+    const time = new Date().toLocaleTimeString();
+    gdriveSetStatus('✅ Saved to Drive at ' + time, 'var(--green)');
+    showToast('Saved to Google Drive! ☁️');
+  } catch(e) {
+    gdriveSetStatus('❌ Save failed: ' + e.message, 'var(--red)');
+    showToast('Save failed — try again');
+  }
+}
+
+async function gdriveLoad() {
+  if (!gdriveToken) { showToast('Sign in to Google Drive first!'); return; }
+  gdriveSetStatus('⏳ Loading from Drive...', 'var(--gold)');
+
+  try {
+    let fileId = gdriveFileId || await gdriveFindFile();
+    if (!fileId) {
+      gdriveSetStatus('⚠️ No saved data found in Drive', 'var(--gold)');
+      showToast('No data found in Drive yet');
+      return;
+    }
+
+    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+      headers: { Authorization: 'Bearer ' + gdriveToken }
+    });
+    const text = await res.text();
+    const savedAt = gdriveApplyData(text);
+
+    if (savedAt) {
+      gdriveSetStatus('✅ Loaded! Saved at: ' + new Date(savedAt).toLocaleString(), 'var(--green)');
+      showToast('Data loaded from Google Drive! ☁️');
+    } else {
+      gdriveSetStatus('❌ Failed to parse data', 'var(--red)');
+    }
+  } catch(e) {
+    gdriveSetStatus('❌ Load failed: ' + e.message, 'var(--red)');
+  }
+}
+
+// RESEARCH FUNCTIONS
+const countryParams = { us:'gl=us&hl=en', gb:'gl=gb&hl=en', au:'gl=au&hl=en', ca:'gl=ca&hl=en', pk:'gl=pk&hl=en' };
+
+function doResearch() {
+  const kw = document.getElementById('research-keyword').value.trim();
+  if (!kw) { showToast('Enter a keyword first!'); return; }
+  const country = document.getElementById('research-country').value;
+  const type = document.getElementById('research-type').value;
+  const params = countryParams[country] || 'gl=us&hl=en';
+  const encoded = encodeURIComponent(kw);
+
+  const urls = {
+    search: `https://www.google.com/search?q=${encoded}&${params}&num=10`,
+    trends: `https://trends.google.com/trends/explore?q=${encoded}&geo=${country.toUpperCase()}&cat=7`,
+    questions: `https://www.google.com/search?q=${encoded}+site:quora.com+OR+site:reddit.com&${params}`,
+    reddit: `https://www.reddit.com/search/?q=${encoded}&sort=top&t=month`,
+    quora: `https://www.quora.com/search?q=${encoded}`,
+    youtube: `https://www.youtube.com/results?search_query=${encoded}`
+  };
+
+  window.open(urls[type] || urls.search, '_blank');
+  showToast('Opening research... 🔬');
+}
+
+function quickSearch(kw) {
+  document.getElementById('research-keyword').value = kw;
+  document.getElementById('research-type').value = 'search';
+  document.getElementById('research-country').value = 'us';
+  doResearch();
+}
+
+function checkRank() {
+  const kw = document.getElementById('rank-keyword').value.trim();
+  if (!kw) { showToast('Enter a keyword to check!'); return; }
+  const encoded = encodeURIComponent(kw + ' site:mysmartcents.github.io');
+  window.open(`https://www.google.com/search?q=${encoded}&gl=us&hl=en`, '_blank');
+  showToast('Checking SmartCents rank...');
+}
+
+function checkCompetitors() {
+  const kw = document.getElementById('rank-keyword').value.trim();
+  if (!kw) { showToast('Enter a keyword first!'); return; }
+  const encoded = encodeURIComponent(kw);
+  window.open(`https://www.google.com/search?q=${encoded}&gl=us&hl=en&num=10`, '_blank');
+  showToast('Opening US page 1 results...');
+}
+
+function openTrends(kw) {
+  const encoded = encodeURIComponent(kw);
+  window.open(`https://trends.google.com/trends/explore?q=${encoded}&geo=US&cat=7`, '_blank');
+}
+
+function openRedditFinance() {
+  window.open('https://www.reddit.com/r/personalfinance/top/?t=week', '_blank');
+}
+
+function openQuoraFinance() {
+  window.open('https://www.quora.com/topic/Personal-Finance', '_blank');
+}
+
+function openAnswerThePublic() {
+  window.open('https://answerthepublic.com/', '_blank');
+}
+
+function openKeywordSurfer() {
+  window.open('https://keywordsurfer.com/', '_blank');
+}
+
+function generateArticleBrief() {
+  const kw = document.getElementById('article-keyword').value.trim();
+  if (!kw) { showToast('Enter a target keyword!'); return; }
+  const competitors = document.getElementById('article-competitors').value.trim();
+
+  const brief = `SEO ARTICLE BRIEF — SmartCents
+========================
+TARGET KEYWORD: ${kw}
+TARGET AUDIENCE: US/UK English speakers (global)
+TARGET WORD COUNT: 1200-1500 words
+WEBSITE: mysmartcents.github.io
+========================
+
+Write a comprehensive, SEO-optimized article targeting the keyword "${kw}".
+
+REQUIREMENTS:
+1. Title must include "${kw}" naturally
+2. Write a compelling meta description (150-160 chars)
+3. Use these heading structure:
+   - H1: Main title with keyword
+   - H2: 4-6 main sections
+   - H3: Subsections where needed
+4. Include these elements:
+   - Introduction with hook (first 100 words must grab attention)
+   - Practical tips with numbered lists
+   - Real examples and data
+   - FAQ section at the end (3-5 questions)
+   - Strong call to action
+5. Naturally include related keywords throughout
+6. Link to SmartCents tools: mysmartcents.github.io
+7. Include relevant affiliate links where natural:
+   - Travel insurance: EKTA (ogsib.com/g/92qb79zvwn2ae376f35f239505df72/)
+   - Money transfer: Western Union (kdbov.com/g/kryb7glvg72ae376f35fa82f40b179/)
+   - Books: Amazon affiliate links
+8. End with: "Use SmartCents free finance tools at mysmartcents.github.io"
+${competitors ? `\nCOMPETITOR URLS TO OUTRANK:\n${competitors}` : ''}
+
+TONE: Professional but friendly, helpful, actionable
+AVOID: Fluff, padding, generic advice
+FORMAT: Use markdown headings, bullet points, bold for key terms`;
+
+  document.getElementById('article-brief-output').textContent = brief;
+  document.getElementById('article-brief-output').style.display = 'block';
+  document.getElementById('article-brief-actions').style.display = 'grid';
+  showToast('Article brief generated! 📝');
+}
+
+function copyArticleBrief() {
+  const brief = document.getElementById('article-brief-output').textContent;
+  navigator.clipboard.writeText(brief).then(() => showToast('Brief copied! 📋'));
+}
+
+function openClaudeWithBrief() {
+  const brief = document.getElementById('article-brief-output').textContent;
+  window.open('https://claude.ai/new?q=' + encodeURIComponent(brief), '_blank');
+}
+
+// AFFILIATE LINKS BY TOPIC
+const topicAffiliates = {
+  loan: { name: 'SmartCents Loan Calculator', url: 'https://mysmartcents.github.io/#tools' },
+  budget: { name: 'SmartCents Budget Planner', url: 'https://mysmartcents.github.io/#tools' },
+  savings: { name: 'SmartCents Savings Tracker', url: 'https://mysmartcents.github.io/#tools' },
+  travel: { name: 'EKTA Travel Insurance', url: 'https://ogsib.com/g/92qb79zvwn2ae376f35f239505df72/' },
+  money: { name: 'Western Union', url: 'https://kdbov.com/g/kryb7glvg72ae376f35fa82f40b179/' },
+  passive: { name: 'Rich Dad Poor Dad', url: 'https://amzn.to/47AkNmw' },
+  fiverr: { name: 'SmartCents Free Tools', url: 'https://mysmartcents.github.io' },
+  tip: { name: 'SmartCents Free Finance Tools', url: 'https://mysmartcents.github.io' }
+};
+
+const topicNames = {
+  loan: 'Home Loan & Mortgage Calculator',
+  budget: 'Monthly Budget Planning',
+  savings: 'Savings Goal Tracking',
+  travel: 'Travel Insurance',
+  money: 'International Money Transfers',
+  passive: 'Building Passive Income Online',
+  fiverr: 'Freelancing on Fiverr',
+  tip: 'Personal Finance Tips'
+};
+
+// PLATFORM PROMPTS
+function buildPrompts(topic) {
+  const aff = topicAffiliates[topic];
+  const name = topicNames[topic];
+  const site = 'https://mysmartcents.github.io';
+  const fb = 'https://web.facebook.com/profile.php?id=61577493070318';
+  const ig = 'https://www.instagram.com/mysmartcents/';
+  const pin = 'https://www.pinterest.com/mysmartcents/';
+
+  return {
+    medium: `Generate a complete Medium article package about "${name}" for a global English-speaking audience (US/UK/global). Format your response EXACTLY like this:
+
+TITLE:
+[Write an SEO-optimized, compelling title including the main keyword — 60 chars max]
+
+META DESCRIPTION:
+[Write a 150-160 character description with main keyword for Google search snippet]
+
+TAGS:
+[List exactly 5 Medium tags separated by commas]
+
+ARTICLE:
+[Write 900-1200 words. Use ## for headings, bullet points for lists. Include:
+- Hook opening paragraph (grab attention immediately)
+- 4-5 sections with ## headings
+- Practical tips with examples
+- Mention ${aff.name} naturally with link: ${aff.url}
+- CTA: "Try SmartCents free finance tools at ${site} — no signup needed"
+- FAQ section with 3 questions at the end]
+
+COVER IMAGE PROMPT:
+[Write a detailed prompt to generate a cover image using AI (Gemini/Claude). Specify: style, colors, elements, mood. Make it relevant to ${name}. Format: 1500x750px, professional finance blog style]`,
+
+    blogger: `Generate a complete Blogger post package about "${name}" for SmartCents blog. Global English audience. Format EXACTLY like this:
+
+TITLE:
+[SEO-optimized title with main keyword — 60 chars max]
+
+META DESCRIPTION:
+[150-160 character meta description with keyword]
+
+LABELS/TAGS:
+[5 relevant Blogger labels separated by commas]
+
+POST CONTENT:
+[Write 600-900 words in HTML-friendly format. Include:
+- Strong intro paragraph
+- 3-4 sections with clear headings
+- Bullet points for tips
+- ${aff.name} link: ${aff.url}
+- SmartCents tools: ${site}
+- Social follow CTA: Facebook | Instagram | Pinterest
+- Final CTA paragraph]
+
+COVER IMAGE PROMPT:
+[AI image generation prompt for Blogger cover. 1200x628px, professional blog style, relevant to ${name}]`,
+
+    facebook: `Generate a complete Facebook post package about "${name}" for SmartCents page. Global English audience. Format EXACTLY like this:
+
+POST TITLE:
+[Short punchy title for the post — 40 chars max]
+
+POST CONTENT:
+[Write 100-150 words. Include:
+- Strong opening question or statement
+- 3-4 key points with emojis
+- ${aff.name}: ${aff.url}
+- "Free tools at ${site}"
+- "Follow SmartCents for daily finance tips! 👉 ${fb}"
+- 5 relevant hashtags at the end]
+
+COVER IMAGE PROMPT:
+[AI image prompt for Facebook post image. 1200x630px, eye-catching, finance theme, bold text overlay suggestion relevant to ${name}]`,
+
+    instagram: `Generate a complete Instagram post package about "${name}" for @mysmartcents. Global English audience. Format EXACTLY like this:
+
+POST TITLE:
+[Caption hook — first line that stops the scroll, max 10 words]
+
+CAPTION:
+[Write 80-120 words. Include:
+- Strong hook first line (same as title)
+- Line breaks between each point
+- Emojis throughout
+- ${aff.name} mention
+- "🔗 Link in bio → ${site}"
+- Call to action (save this post / share with someone)]
+
+FIRST COMMENT HASHTAGS:
+[List 20-25 relevant hashtags — mix of popular and niche ones]
+
+COVER IMAGE PROMPT:
+[AI image prompt for Instagram square post. 1080x1080px, bold visuals, finance theme, minimal text, vibrant. Relevant to ${name}]
+
+STORY IMAGE PROMPT:
+[Separate AI prompt for Instagram Story. 1080x1920px, vertical format, same topic]`,
+
+    pinterest: `Generate a complete Pinterest pin package about "${name}" for SmartCents. Global English audience. Format EXACTLY like this:
+
+PIN TITLE:
+[SEO-optimized pin title with keywords — 100 chars max]
+
+PIN DESCRIPTION:
+[Write 150-300 words. Include:
+- Keyword-rich opening sentence
+- What the reader will learn/gain
+- Step-by-step value points
+- ${aff.url}
+- ${site}
+- Clear call to action at end
+- 5-8 relevant keywords woven naturally]
+
+BOARD SUGGESTION:
+[Which of these boards to pin to: Personal Finance Tips / Budgeting & Saving / Home Loan Tips / Travel Insurance / Make Money Online / Savings Goals]
+
+PIN IMAGE PROMPT:
+[AI image prompt for Pinterest vertical pin. 1000x1500px, tall format, finance infographic style, bold title text at top, SmartCents branding, relevant to ${name}. Clean, professional, shareable]`
+  };
+}
+
+let currentTopic = '';
+let platformPrompts = {};
+
+function selectTopic(el, topic) {
+  document.querySelectorAll('.ps-type-btn').forEach(b => {
+    b.style.borderColor = 'var(--dark4)';
+    b.style.background = 'var(--dark2)';
+  });
+  el.style.borderColor = 'var(--gold)';
+  el.style.background = 'rgba(201,168,76,0.1)';
+  currentTopic = topic;
+}
+
+function generateAllPlatforms() {
+  if (!currentTopic) { showToast('Select a topic first!'); return; }
+  platformPrompts = buildPrompts(currentTopic);
+  document.getElementById('prompt-medium').textContent = platformPrompts.medium;
+  document.getElementById('prompt-blogger').textContent = platformPrompts.blogger;
+  document.getElementById('prompt-facebook').textContent = platformPrompts.facebook;
+  document.getElementById('prompt-instagram').textContent = platformPrompts.instagram;
+  document.getElementById('prompt-pinterest').textContent = platformPrompts.pinterest;
+  document.getElementById('platform-results').style.display = 'block';
+  showPlatformTab('medium');
+  showToast('Prompts ready for all platforms! 🚀');
+  document.getElementById('platform-results').scrollIntoView({behavior:'smooth'});
+}
+
+function showPlatformTab(name) {
+  document.querySelectorAll('.ptab-content').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('.ptab-btn').forEach(b => {
+    b.style.background = 'var(--dark2)';
+    b.style.borderColor = 'var(--dark4)';
+    b.style.color = 'var(--muted)';
+  });
+  document.getElementById('ptab-' + name).style.display = 'block';
+  const btns = document.querySelectorAll('.ptab-btn');
+  const idx = ['medium','blogger','facebook','instagram','pinterest'].indexOf(name);
+  if (btns[idx]) {
+    btns[idx].style.background = 'rgba(201,168,76,0.15)';
+    btns[idx].style.borderColor = 'rgba(201,168,76,0.3)';
+    btns[idx].style.color = 'var(--gold)';
+  }
+}
+
+function copyPlatformPrompt(platform) {
+  const prompt = platformPrompts[platform] || '';
+  if (!prompt) { showToast('Generate prompts first!'); return; }
+  navigator.clipboard.writeText(prompt).then(() => showToast('Prompt copied! 📋'));
+}
+
+function openClaudeWith(platform) {
+  const prompt = platformPrompts[platform] || '';
+  if (!prompt) { showToast('Generate prompts first!'); return; }
+  window.open('https://claude.ai/new?q=' + encodeURIComponent(prompt), '_blank');
+}
+
+function openMedium() {
+  window.open('https://medium.com/new-story', '_blank');
+}
+
+function sharePlatform(platform, type) {
+  const post = document.getElementById('result-' + platform).value;
+  if (!post) { showToast('Paste Claude reply first!'); return; }
+  navigator.clipboard.writeText(post).then(() => {
+    if (platform === 'facebook' && type === 'page') {
+      showToast('Copied! Opening Facebook Page...');
+      setTimeout(() => window.open('https://www.facebook.com/profile.php?id=61577493070318', '_blank'), 800);
+    } else if (platform === 'facebook' && type === 'groups') {
+      showToast('Copied! Opening Facebook Groups...');
+      setTimeout(() => window.open('https://www.facebook.com/groups/feed/', '_blank'), 800);
+    } else if (platform === 'instagram') {
+      showToast('Copied! Opening Instagram...');
+      setTimeout(() => window.open('https://www.instagram.com/mysmartcents/', '_blank'), 800);
+    } else if (platform === 'pinterest') {
+      const url = encodeURIComponent('https://mysmartcents.github.io');
+      showToast('Copied! Opening Pinterest...');
+      setTimeout(() => window.open('https://www.pinterest.com/pin/create/button/?url=' + url, '_blank'), 800);
+    }
+  });
+}
+
+async function postToBloggerFromStudio() {
+  const post = document.getElementById('result-blogger').value;
+  if (!post) { showToast('Paste Claude reply first!'); return; }
+  const apiKey = getBloggerKey();
+  if (!apiKey) { showToast('Add Blogger API key in Settings tab!'); return; }
+  const title = topicNames[currentTopic] || 'SmartCents Finance Tips';
+  const btn = document.getElementById('bloggerBtn');
+  const status = document.getElementById('blogger-status');
+  btn.textContent = '⏳ Posting...';
+  status.style.display = 'block';
+  status.textContent = 'Connecting to Blogger...';
+  const content = `<div style="font-family:Georgia,serif;max-width:800px;margin:0 auto;line-height:1.8;">${post.replace(/\n/g,'<br>')}<hr style="margin:30px 0;border:none;border-top:1px solid #eee;"><p style="background:#f9f9f9;padding:20px;border-radius:8px;border-left:4px solid #C9A84C;"><strong>Free Finance Tools:</strong> Visit <a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents</a> — loan calculator, budget planner & savings tracker. No signup needed!</p></div>`;
+  try {
+    const res = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts?key=${apiKey}`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ title, content, labels: ['Personal Finance','SmartCents','Money Tips'] })
+    });
+    const data = await res.json();
+    if (data.url) {
+      status.style.color = 'var(--green)';
+      status.innerHTML = `✅ Posted! <a href="${data.url}" target="_blank" style="color:var(--gold);">View →</a>`;
+      btn.textContent = '✅ Posted!';
+      showToast('Posted to Blogger! 🟠');
+    } else {
+      status.style.color = 'var(--red)';
+      status.textContent = '❌ ' + (data.error?.message || 'Auth error — check API key');
+      btn.textContent = '🟠 Auto-Post to Blogger';
+    }
+  } catch(e) {
+    status.style.color = 'var(--red)';
+    status.textContent = '❌ Failed: ' + e.message;
+    btn.textContent = '🟠 Auto-Post to Blogger';
+  }
+}
+
+// NOTES
+let notes = JSON.parse(localStorage.getItem('sc_notes') || '[]');
+
+function saveNote() {
+  const title = document.getElementById('note-title').value.trim();
+  const body = document.getElementById('note-body').value.trim();
+  if (!title && !body) { showToast('Write something first!'); return; }
+  notes.unshift({ id: Date.now(), title: title || 'Untitled', body, date: new Date().toLocaleDateString() });
+  localStorage.setItem('sc_notes', JSON.stringify(notes));
+  document.getElementById('note-title').value = '';
+  document.getElementById('note-body').value = '';
+  renderNotes();
+  showToast('Note saved! 📓');
+}
+
+function deleteNote(id) {
+  notes = notes.filter(n => n.id !== id);
+  localStorage.setItem('sc_notes', JSON.stringify(notes));
+  renderNotes();
+  showToast('Note deleted');
+}
+
+function shareNote(id) {
+  const note = notes.find(n => n.id === id);
+  if (!note) return;
+  const text = `*${note.title}*\n\n${note.body}\n\n— SmartCents`;
+  const encoded = encodeURIComponent(text);
+  window.open('https://wa.me/?text=' + encoded, '_blank');
+}
+
+function renderNotes() {
+  const list = document.getElementById('notes-list');
+  const count = document.getElementById('notes-count');
+  if (count) count.textContent = notes.length + ' note' + (notes.length !== 1 ? 's' : '');
+  if (!list) return;
+  if (notes.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted);font-size:0.85rem;">No notes yet. Add your first idea above!</div>';
+    return;
+  }
+  list.innerHTML = notes.map(n => `
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+        <div style="font-size:0.9rem;font-weight:700;color:var(--gold);flex:1;">${n.title}</div>
+        <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-left:8px;">${n.date}</div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--text);line-height:1.6;margin-bottom:10px;font-family:'DM Mono',monospace;white-space:pre-wrap;">${n.body}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="shareNote(${n.id})" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📱 WhatsApp</button>
+        <button onclick="deleteNote(${n.id})" style="background:rgba(224,90,90,0.1);border:1px solid rgba(224,90,90,0.2);color:var(--red);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">🗑️ Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function shareAllNotes() {
+  if (notes.length === 0) { showToast('No notes to share!'); return; }
+  const text = '*SmartCents Notes*\n\n' + notes.map((n,i) =>
+    `*${i+1}. ${n.title}*\n${n.body}`
+  ).join('\n\n---\n\n');
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+}
+
+function saveBriefToNotes() {
+  const brief = document.getElementById('article-brief-output').textContent;
+  const kw = document.getElementById('article-keyword').value.trim() || 'Article Brief';
+  if (!brief) { showToast('Generate a brief first!'); return; }
+  notes.unshift({ id: Date.now(), title: 'Brief: ' + kw, body: brief, date: new Date().toLocaleDateString() });
+  localStorage.setItem('sc_notes', JSON.stringify(notes));
+  renderNotes();
+  showToast('Brief saved to Notes! 📓');
+}
+
+// CONTENT PERSISTENCE
+const CONTENT_KEYS = ['medium','blogger','facebook','instagram','pinterest'];
+
+function saveContent(platform, value) {
+  localStorage.setItem('sc_post_' + platform, value);
+}
+
+function loadSavedContent() {
+  CONTENT_KEYS.forEach(p => {
+    const saved = localStorage.getItem('sc_post_' + p);
+    const el = document.getElementById('result-' + p);
+    if (saved && el) el.value = saved;
+  });
+}
+
+function copyContent(platform) {
+  const el = document.getElementById('result-' + platform);
+  if (!el || !el.value) { showToast('No content to copy!'); return; }
+  navigator.clipboard.writeText(el.value).then(() => showToast('Copied! 📋'));
+}
+
+function copyAndOpen(platform, url) {
+  const el = document.getElementById('result-' + platform);
+  if (!el || !el.value) { showToast('No content — paste Claude reply first!'); return; }
+  navigator.clipboard.writeText(el.value).then(() => {
+    showToast('Copied! Opening ' + platform + '...');
+    setTimeout(() => window.open(url, '_blank'), 800);
+  });
+}
+
+function clearAllContent() {
+  if (!confirm('Clear all generated post content? This will NOT delete your notes, API keys, groups or accounts.')) return;
+  CONTENT_KEYS.forEach(p => {
+    localStorage.removeItem('sc_post_' + p);
+    const el = document.getElementById('result-' + p);
+    if (el) el.value = '';
+  });
+  // Also clear prompts display
+  CONTENT_KEYS.forEach(p => {
+    const el = document.getElementById('prompt-' + p);
+    if (el) el.textContent = '';
+  });
+  document.getElementById('platform-results').style.display = 'none';
+  showToast('Post content cleared! ✅');
+}
+
+loadSavedContent();
+
+// ACCOUNTS
+let accounts = JSON.parse(localStorage.getItem('sc_accounts') || '[]');
+let editingAccountId = null;
+
+function saveAccount() {
+  const platform = document.getElementById('acc-platform').value.trim();
+  const email = document.getElementById('acc-email').value.trim();
+  const hint = document.getElementById('acc-hint').value.trim();
+  const url = document.getElementById('acc-url').value.trim();
+  if (!platform) { showToast('Enter platform name!'); return; }
+
+  if (editingAccountId !== null) {
+    accounts = accounts.map(a => a.id === editingAccountId ? {...a, platform, email, hint, url} : a);
+    editingAccountId = null;
+    document.getElementById('acc-save-btn').textContent = '+ Add Account';
+    document.getElementById('acc-cancel-btn').style.display = 'none';
+    document.getElementById('acc-edit-banner').style.display = 'none';
+    showToast('Account updated! ✅');
+  } else {
+    if (accounts.find(a => a.platform.toLowerCase() === platform.toLowerCase())) { showToast('Platform already exists!'); return; }
+    accounts.unshift({ id: Date.now(), platform, email, hint, url });
+    showToast('Account saved! 🔐');
+  }
+  localStorage.setItem('sc_accounts', JSON.stringify(accounts));
+  document.getElementById('acc-platform').value = '';
+  document.getElementById('acc-email').value = '';
+  document.getElementById('acc-hint').value = '';
+  document.getElementById('acc-url').value = '';
+  renderAccounts();
+}
+
+function editAccount(id) {
+  const a = accounts.find(a => a.id === id);
+  if (!a) return;
+  editingAccountId = id;
+  document.getElementById('acc-platform').value = a.platform;
+  document.getElementById('acc-email').value = a.email || '';
+  document.getElementById('acc-hint').value = a.hint || '';
+  document.getElementById('acc-url').value = a.url || '';
+  document.getElementById('acc-save-btn').textContent = '💾 Save Changes';
+  document.getElementById('acc-cancel-btn').style.display = 'block';
+  document.getElementById('acc-edit-banner').style.display = 'block';
+  document.getElementById('acc-platform').focus();
+  document.getElementById('acc-platform').scrollIntoView({behavior:'smooth'});
+}
+
+function cancelEditAccount() {
+  editingAccountId = null;
+  document.getElementById('acc-platform').value = '';
+  document.getElementById('acc-email').value = '';
+  document.getElementById('acc-hint').value = '';
+  document.getElementById('acc-url').value = '';
+  document.getElementById('acc-save-btn').textContent = '+ Add Account';
+  document.getElementById('acc-cancel-btn').style.display = 'none';
+  document.getElementById('acc-edit-banner').style.display = 'none';
+}
+
+function deleteAccount(id) {
+  if (!confirm('Remove this account?')) return;
+  accounts = accounts.filter(a => a.id !== id);
+  localStorage.setItem('sc_accounts', JSON.stringify(accounts));
+  renderAccounts();
+  showToast('Account removed');
+}
+
+function quickAddAccount(platform, url) {
+  document.getElementById('acc-platform').value = platform;
+  document.getElementById('acc-url').value = url;
+  document.getElementById('acc-email').value = '';
+  document.getElementById('acc-hint').value = '';
+  document.getElementById('acc-platform').scrollIntoView({behavior:'smooth'});
+  document.getElementById('acc-email').focus();
+  showToast('Fill email & hint then save!');
+}
+
+function renderAccounts() {
+  const list = document.getElementById('accounts-list');
+  const countEl = document.getElementById('accounts-count');
+  const search = (document.getElementById('acc-search')?.value || '').toLowerCase();
+  if (!list) return;
+  const filtered = accounts.filter(a =>
+    a.platform.toLowerCase().includes(search) ||
+    (a.email || '').toLowerCase().includes(search)
+  );
+  if (countEl) countEl.textContent = accounts.length + ' account' + (accounts.length !== 1 ? 's' : '');
+  if (accounts.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted);font-size:0.85rem;">No accounts yet. Use Quick Add or fill the form above!</div>';
+    return;
+  }
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:0.85rem;">No results found.</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(a => `
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-size:1rem;font-weight:700;color:var(--gold);">${a.platform}</div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="editAccount(${a.id})" style="background:rgba(201,168,76,0.12);color:var(--gold);border:1px solid rgba(201,168,76,0.25);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:0.85rem;">✏️</button>
+          <button onclick="deleteAccount(${a.id})" style="background:rgba(224,90,90,0.12);color:var(--red);border:none;width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:0.85rem;">🗑️</button>
+        </div>
+      </div>
+      <div style="font-size:0.8rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:3px;">📧 ${a.email || '—'}</div>
+      <div style="font-size:0.8rem;color:var(--text);font-family:'DM Mono',monospace;margin-bottom:${a.url ? '10px' : '0'};">🔑 ${a.hint || '—'}</div>
+      ${a.url ? `<button onclick="openSite('${a.url}')" style="width:100%;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔗 Open Login Page</button>` : ''}
+    </div>
+  `).join('');
+}
+
+renderAccounts();
+const BLOGGER_BLOG_ID = '4286828910142477267';
+const BLOGGER_URL = 'https://smartcents-finance.blogspot.com';
+
+function getBloggerKey() {
+  return localStorage.getItem('sc_blogger_key') || '';
+}
+
+const articleTitles = {
+  loan: 'How to Calculate Your Loan Payment — Free Loan Calculator',
+  travel: 'Best Travel Insurance for International Trips 2026',
+  money: 'How to Send Money Internationally — Cheapest Methods 2026',
+  budget: 'Best Budgeting Methods to Save Money Fast in 2026',
+  fiverr: 'How to Start Freelancing on Fiverr — Complete Beginner Guide',
+  passive: 'How to Build Passive Income Online in 2026',
+  site: 'Free Personal Finance Tools — Loan Calculator, Budget Planner & Savings Tracker'
+};
+
+async function postToBlogger() {
+  const post = document.getElementById('post-result').value;
+  if (!post) { showToast('Paste Claude reply first!'); return; }
+
+  const apiKey = getBloggerKey();
+  if (!apiKey) {
+    showToast('Add Blogger API key in Settings first!');
+    document.getElementById('blogger-status').style.display = 'block';
+    document.getElementById('blogger-status').style.color = 'var(--red)';
+    document.getElementById('blogger-status').textContent = '❌ No API key found. Go to Settings tab → Blogger API Key and add it.';
+    return;
+  }
+
+  const article = document.getElementById('social-article-select').value;
+  const title = articleTitles[article] || 'SmartCents Finance Tips';
+
+  const btn = document.getElementById('bloggerBtn');
+  const status = document.getElementById('blogger-status');
+  btn.textContent = '⏳ Posting...';
+  btn.style.opacity = '0.7';
+  status.style.display = 'block';
+  status.textContent = 'Connecting to Blogger...';
+
+  const content = `
+    <div style="font-family:Georgia,serif;max-width:800px;margin:0 auto;line-height:1.8;color:#333;">
+      ${post.replace(/\n/g, '<br>')}
+      <hr style="margin:30px 0;border:none;border-top:1px solid #eee;">
+      <p style="background:#f9f9f9;padding:20px;border-radius:8px;border-left:4px solid #C9A84C;">
+        <strong>Free Finance Tools:</strong> Visit <a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents</a> for our free loan calculator, budget planner and savings tracker — no signup needed!
+      </p>
+      <p style="font-size:0.85em;color:#888;">Follow us: 
+        <a href="https://web.facebook.com/profile.php?id=61577493070318">Facebook</a> · 
+        <a href="https://www.instagram.com/mysmartcents/">Instagram</a> · 
+        <a href="https://www.pinterest.com/mysmartcents/">Pinterest</a>
+      </p>
+    </div>
+  `;
+
+  try {
+    const response = await fetch(
+      `https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: title,
+          content: content,
+          labels: ['Personal Finance', 'SmartCents', 'Finance Tips', 'Money']
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.url) {
+      status.style.color = 'var(--green)';
+      status.innerHTML = `✅ Posted! <a href="${data.url}" target="_blank" style="color:var(--gold);">View on Blogger →</a>`;
+      btn.textContent = '✅ Posted!';
+      showToast('Posted to Blogger! 🟠');
+    } else if (data.error) {
+      status.style.color = 'var(--red)';
+      status.textContent = '❌ Error: ' + (data.error.message || 'Auth required — use OAuth');
+      btn.textContent = '🟠 Post to Blogger';
+      btn.style.opacity = '1';
+    }
+  } catch (err) {
+    status.style.color = 'var(--red)';
+    status.textContent = '❌ Failed: ' + err.message;
+    btn.textContent = '🟠 Post to Blogger';
+    btn.style.opacity = '1';
+  }
+}
+
+// SOCIAL GROUPS
+let socialGroups = JSON.parse(localStorage.getItem('sc_social_groups') || '[]');
+
+const FB_PAGE = 'https://web.facebook.com/profile.php?id=61577493070318';
+
+const articlePosts = {
+  loan: `💡 Do you know how much interest you're really paying on your loan?\n\nMost people never calculate it — and end up paying thousands extra.\n\nI built a FREE Loan Calculator that shows you:\n✅ Monthly payment\n✅ Total interest paid\n✅ Full loan breakdown\n\nTry it free → https://mysmartcents.github.io\n\n📘 Follow SmartCents for more free finance tools → ${FB_PAGE}\n\n#PersonalFinance #LoanCalculator #MoneyTips #Finance #SaveMoney`,
+  travel: `✈️ Planning a trip abroad? Don't make this mistake!\n\nMost travelers skip travel insurance — until something goes wrong. A single hospital visit abroad can cost $10,000+.\n\nI wrote a complete guide on choosing the RIGHT travel insurance:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for more free finance tips → ${FB_PAGE}\n\n#TravelInsurance #TravelTips #Finance #Travel #SmartTravel`,
+  money: `💸 Sending money internationally? You're probably losing more than you think!\n\nHidden fees + bad exchange rates = money lost silently.\n\nI wrote a guide on the CHEAPEST ways to send money in 2026:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for more money tips → ${FB_PAGE}\n\n#MoneyTransfer #RemittanceLife #PersonalFinance #SaveMoney #Finance`,
+  budget: `📊 Which budgeting method is right for YOU?\n\n50/30/20 Rule?\nZero-Based Budget?\nPay Yourself First?\n\nI broke down ALL the top methods so you can find what works:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for daily finance tips → ${FB_PAGE}\n\n#Budgeting #PersonalFinance #SaveMoney #MoneyManagement #FinanceTips`,
+  fiverr: `🚀 Want to start freelancing but don't know where to begin?\n\nFiverr has 4 million+ active sellers — here's exactly how to join them with ZERO experience:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for more earning tips → ${FB_PAGE}\n\n#Fiverr #Freelancing #SideHustle #MakeMoneyOnline #WorkFromHome`,
+  passive: `💰 Want to earn money while you sleep?\n\nPassive income isn't a myth — but it takes the right strategy.\n\nI wrote the complete beginner's guide to building passive income in 2026:\n👉 https://mysmartcents.github.io\n\n📘 Follow SmartCents for more passive income tips → ${FB_PAGE}\n\n#PassiveIncome #FinancialFreedom #MakeMoneyOnline #SideHustle #PersonalFinance`,
+  site: `🎯 FREE personal finance tools — no signup needed!\n\n✅ Loan Calculator\n✅ Budget Planner\n✅ Savings Tracker\n\nAll completely free at SmartCents:\n👉 https://mysmartcents.github.io\n\n📘 Follow us on Facebook for daily tips → ${FB_PAGE}\n\n#PersonalFinance #FreeTools #Budget #Savings #FinanceTips`
+};
+
+const platformIcons = { facebook: '📘', reddit: '🔴', quora: '🟠', linkedin: '💼' };
+
+function saveSocialGroups() {
+  localStorage.setItem('sc_social_groups', JSON.stringify(socialGroups));
+}
+
+function renderGroups() {
+  const list = document.getElementById('social-groups-list');
+  const count = document.getElementById('group-count');
+  count.textContent = socialGroups.length + ' group' + (socialGroups.length !== 1 ? 's' : '');
+  if (socialGroups.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--muted);font-size:0.85rem;">No groups added yet. Add your first group above!</div>';
+    return;
+  }
+  list.innerHTML = socialGroups.map((g, i) => `
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:0.9rem;font-weight:700;">${platformIcons[g.platform] || '🌐'} ${g.name}</div>
+        <button onclick="removeGroup(${i})" style="background:rgba(224,90,90,0.15);color:var(--red);border:none;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:0.9rem;">✕</button>
+      </div>
+      <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:10px;word-break:break-all;">${g.url}</div>
+      ${g.lastPosted ? `<div style="font-size:0.7rem;color:var(--muted);margin-bottom:8px;">Last posted: ${g.lastPosted}</div>` : ''}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="openGroup(${i})" style="background:rgba(74,158,245,0.1);border:1px solid rgba(74,158,245,0.2);color:var(--blue);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">🌐 Open Group</button>
+        <button onclick="copyAndOpen(${i})" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📋 Copy & Open</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function saveBloggerKey() {
+  const key = document.getElementById('blogger-key-input').value.trim();
+  if (!key) { showToast('Enter your API key first!'); return; }
+  localStorage.setItem('sc_blogger_key', key);
+  document.getElementById('blogger-key-input').value = '';
+  document.getElementById('key-status').textContent = '✅ Key saved securely on this device!';
+  document.getElementById('key-status').style.color = 'var(--green)';
+  showToast('API key saved! ✅');
+}
+
+function clearBloggerKey() {
+  localStorage.removeItem('sc_blogger_key');
+  document.getElementById('key-status').textContent = '🗑️ Key cleared';
+  document.getElementById('key-status').style.color = 'var(--muted)';
+  showToast('Key cleared');
+}
+
+// Load key status on init
+window.addEventListener('load', () => {
+  const key = getBloggerKey();
+  if (key) {
+    document.getElementById('key-status').textContent = '✅ API key is saved and ready';
+    document.getElementById('key-status').style.color = 'var(--green)';
+  } else {
+    document.getElementById('key-status').textContent = '⚠️ No API key saved yet';
+  }
+  loadEarnings();
+});
+
+
+function searchFBGroup(term) {
+  const encoded = encodeURIComponent(term);
+  window.open('https://www.facebook.com/search/groups/?q=' + encoded, '_blank');
+}
+
+function addSocialGroup() {
+  const name = document.getElementById('social-group-name').value.trim();
+  const url = document.getElementById('social-group-url').value.trim();
+  const platform = document.getElementById('social-group-platform').value;
+  if (!name || !url) { showToast('Enter group name and URL!'); return; }
+  if (!url.startsWith('http')) { showToast('URL must start with https://'); return; }
+  const duplicate = socialGroups.find(g => g.url.toLowerCase() === url.toLowerCase());
+  if (duplicate) { showToast('This group is already in your list!'); return; }
+  socialGroups.push({ name, url, platform, lastPosted: null });
+  saveSocialGroups();
+  renderGroups();
+  document.getElementById('social-group-name').value = '';
+  document.getElementById('social-group-url').value = '';
+  showToast('Group added! ✅');
+}
+
+function removeGroup(i) {
+  socialGroups.splice(i, 1);
+  saveSocialGroups();
+  renderGroups();
+  showToast('Group removed');
+}
+
+function openGroup(i) {
+  window.open(socialGroups[i].url, '_blank');
+}
+
+function copyAndOpen(i) {
+  const post = document.getElementById('social-post-text').value;
+  if (!post) { showToast('Generate a post first!'); return; }
+  navigator.clipboard.writeText(post).then(() => {
+    socialGroups[i].lastPosted = new Date().toLocaleDateString();
+    saveSocialGroups();
+    renderGroups();
+    showToast('Copied! Opening group...');
+    setTimeout(() => window.open(socialGroups[i].url, '_blank'), 800);
+  });
+}
+
+function generateGroupPost() {
+  const article = document.getElementById('social-article-select').value;
+  const post = articlePosts[article] || articlePosts['site'];
+  document.getElementById('social-post-text').value = post;
+  document.getElementById('social-post-preview').style.display = 'block';
+  showToast('Post ready! Copy & share 🚀');
+  document.getElementById('social-post-preview').scrollIntoView({behavior:'smooth'});
+}
+
+function copyGroupPost() {
+  const post = document.getElementById('social-post-text').value;
+  if (!post) { showToast('Generate a post first!'); return; }
+  navigator.clipboard.writeText(post).then(() => showToast('Post copied! 📋'));
+}
+
+renderGroups();
+document.getElementById('sc-article-count').textContent = SC_ARTICLES;
+document.getElementById('medium-article-count').textContent = MEDIUM_PUBLISHED;
 document.getElementById('version-label').textContent = 'v' + APP_VERSION;
 
 if ('serviceWorker' in navigator) {
@@ -917,6 +2435,48 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     window.location.reload();
   });
+}
+
+function checkForUpdates() {
+  const btn = document.getElementById('update-check-btn');
+  const label = document.getElementById('update-check-label');
+  label.textContent = 'Checking...';
+  btn.style.borderColor = 'rgba(201,168,76,0.3)';
+  btn.style.color = 'var(--gold)';
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (reg) {
+        reg.update().then(() => {
+          setTimeout(() => {
+            if (reg.waiting || reg.installing) {
+              label.textContent = '🚀 Update found! Tap Update Now above';
+              btn.style.borderColor = 'rgba(76,175,125,0.4)';
+              btn.style.color = 'var(--green)';
+            } else {
+              label.textContent = '✅ You are on the latest version';
+              btn.style.borderColor = 'rgba(76,175,125,0.3)';
+              btn.style.color = 'var(--green)';
+              setTimeout(() => {
+                label.textContent = 'Check for Updates';
+                btn.style.borderColor = 'var(--dark4)';
+                btn.style.color = 'var(--muted)';
+              }, 3000);
+            }
+          }, 1500);
+        });
+      } else {
+        label.textContent = '✅ Already latest version';
+        btn.style.color = 'var(--green)';
+        setTimeout(() => {
+          label.textContent = 'Check for Updates';
+          btn.style.color = 'var(--muted)';
+          btn.style.borderColor = 'var(--dark4)';
+        }, 3000);
+      }
+    });
+  } else {
+    location.reload(true);
+  }
 }
 
 function applyUpdate() {
@@ -953,12 +2513,12 @@ const platformLabels = {
 };
 
 const prompts = {
-  finance_tip: (p) => `Write a short engaging ${p} post about a practical personal finance tip for Pakistani audience. Include 1-2 relevant emojis, keep it under 150 words, end with "Visit mysmartcents.netlify.app for free finance tools!" and add 5 relevant hashtags.`,
-  tool_promo: (p) => `Write a short engaging ${p} post promoting SmartCents (mysmartcents.netlify.app) — a free personal finance tools website with loan calculator, budget planner and savings tracker. Pakistani audience. Under 150 words. Include emojis and 5 hashtags. Make it feel helpful not salesy.`,
-  affiliate_promo: (p) => `Write a short engaging ${p} post promoting one of these: Western Union money transfer, Travel Insurance, or Shokran UAE shopping rewards. Pakistani audience. Under 150 words. Include the benefit to the user, a call to action, emojis, and 5 hashtags.`,
-  money_quote: (p) => `Write an original motivational money/wealth quote post for ${p}. Make it inspiring, relatable for Pakistanis, add relevant emojis, end with "SmartCents — Free Finance Tools 👉 mysmartcents.netlify.app" and 5 hashtags.`,
-  seo_blog: (p) => `Suggest 3 SEO blog post titles for a Pakistani personal finance website called SmartCents (mysmartcents.netlify.app). Each title should target a high-search keyword. Also write a 2-sentence meta description for each. Format as a numbered list.`,
-  engagement: (p) => `Write an engaging question-based ${p} post to boost comments and shares. Topic: personal finance, saving money, or budgeting in Pakistan. Include emojis, a clear question, 2-3 answer options for people to comment, and 5 hashtags. End with SmartCents link.`
+  finance_tip: (p) => `Write a short engaging ${p} post about a practical personal finance tip for a global English-speaking audience (US/UK). Include 1-2 relevant emojis, keep it under 150 words, end with "Try our free finance tools at mysmartcents.github.io — no signup needed!" and add 5 relevant hashtags.`,
+  tool_promo: (p) => `Write a short engaging ${p} post promoting SmartCents (mysmartcents.github.io) — a free personal finance tools website with loan calculator, budget planner and savings tracker. Target US/UK/global English audience. Under 150 words. Include emojis and 5 hashtags. Make it feel helpful not salesy. Include the link: mysmartcents.github.io`,
+  affiliate_promo: (p) => `Write a short engaging ${p} post promoting one of these affiliate products: Western Union money transfer (https://kdbov.com/g/kryb7glvg72ae376f35fa82f40b179/) or EKTA Travel Insurance (https://ogsib.com/g/92qb79zvwn2ae376f35f239505df72/). Target US/UK/global English audience. Under 150 words. Include the affiliate link, benefit to the user, a call to action, emojis, and 5 hashtags.`,
+  money_quote: (p) => `Write an original motivational money/wealth quote post for ${p}. Make it inspiring and relatable for a global English-speaking audience, add relevant emojis, end with "SmartCents — Free Finance Tools 👉 mysmartcents.github.io" and 5 hashtags.`,
+  seo_blog: (p) => `Suggest 3 SEO blog post titles for SmartCents (mysmartcents.github.io) — a global personal finance website. Each title should target a high-search US/UK keyword related to loans, budgeting, savings or travel insurance. Also write a 2-sentence meta description for each. Format as a numbered list.`,
+  engagement: (p) => `Write an engaging question-based ${p} post to boost comments and shares. Topic: personal finance, saving money, or budgeting for a global English audience. Include emojis, a clear question, 2-3 answer options for people to comment, and 5 hashtags. End with "mysmartcents.github.io — free finance tools!"`
 };
 
 const shareURLs = {
@@ -1016,12 +2576,25 @@ function copyPost() {
   navigator.clipboard.writeText(post).then(() => showToast('Post copied!')).catch(() => showToast('Select and copy manually'));
 }
 
+const SC_FB_PAGE = 'https://www.facebook.com/profile.php?id=61577493070318';
+const SC_INSTAGRAM = 'https://www.instagram.com/mysmartcents/';
+const SC_PINTEREST = 'https://www.pinterest.com/mysmartcents/';
+
 function shareToFacebook() {
   const post = document.getElementById('post-result').value;
   if (!post) { showToast('Paste Claude reply first!'); return; }
   navigator.clipboard.writeText(post).then(() => {
-    showToast('Copied! Opening Facebook...');
-    setTimeout(() => window.open('https://www.facebook.com/groups/feed/', '_blank'), 1000);
+    showToast('Copied! Opening Facebook Page...');
+    setTimeout(() => window.open(SC_FB_PAGE, '_blank'), 800);
+  });
+}
+
+function shareToFBGroups() {
+  const post = document.getElementById('post-result').value;
+  if (!post) { showToast('Paste Claude reply first!'); return; }
+  navigator.clipboard.writeText(post).then(() => {
+    showToast('Copied! Opening Facebook Groups...');
+    setTimeout(() => window.open('https://www.facebook.com/groups/feed/', '_blank'), 800);
   });
 }
 
@@ -1030,18 +2603,25 @@ function shareToInstagram() {
   if (!post) { showToast('Paste Claude reply first!'); return; }
   navigator.clipboard.writeText(post).then(() => {
     showToast('Copied! Opening Instagram...');
-    setTimeout(() => window.open('https://www.instagram.com/', '_blank'), 1000);
+    setTimeout(() => window.open(SC_INSTAGRAM, '_blank'), 800);
   });
 }
 
 function shareToPinterest() {
   const post = document.getElementById('post-result').value;
   if (!post) { showToast('Paste Claude reply first!'); return; }
-  const encoded = encodeURIComponent('mysmartcents.netlify.app');
+  const url = encodeURIComponent('https://mysmartcents.github.io');
+  const desc = encodeURIComponent(post.substring(0, 500));
   navigator.clipboard.writeText(post).then(() => {
     showToast('Copied! Opening Pinterest...');
-    setTimeout(() => window.open('https://www.pinterest.com/pin/create/button/?url=' + encoded, '_blank'), 1000);
+    setTimeout(() => window.open(`https://www.pinterest.com/pin/create/button/?url=${url}&description=${desc}`, '_blank'), 800);
   });
+}
+
+function copyPost() {
+  const post = document.getElementById('post-result').value;
+  if (!post) { showToast('Paste Claude reply first!'); return; }
+  navigator.clipboard.writeText(post).then(() => showToast('Post copied! 📋'));
 }
 </script>
 </body>

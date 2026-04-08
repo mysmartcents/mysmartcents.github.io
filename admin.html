@@ -176,14 +176,8 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   display:flex;
   padding:10px 0 20px;
   z-index:100;
-  overflow-x:auto;
-  overflow-y:hidden;
-  scrollbar-width:none;
-  -ms-overflow-style:none;
-  -webkit-overflow-scrolling:touch;
 }
-.bottom-nav::-webkit-scrollbar { display:none; }
-.nav-item { flex:0 0 64px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:4px 0; }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:4px 0; }
 .nav-icon { font-size:1.2rem; }
 .nav-label { font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; font-family:'DM Mono',monospace; }
 .nav-item.active .nav-label { color:var(--gold); }
@@ -256,7 +250,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <div class="hstat-lbl">Live Links</div>
       </div>
       <div class="hstat">
-        <div class="hstat-val" id="sc-article-count">6</div>
+        <div class="hstat-val" id="sc-article-count">5</div>
         <div class="hstat-lbl">SC Articles</div>
       </div>
       <div class="hstat">
@@ -335,7 +329,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="p-icon green">💼</div>
       <div class="p-info">
         <div class="p-name">Admitad</div>
-        <div class="p-desc">6 live links · Western Union, Travel, Shokran, Acko Bike</div>
+        <div class="p-desc">5 live links · Western Union, Travel, Shokran</div>
       </div>
       <div class="p-badge badge-active">Active</div>
     </div>
@@ -426,9 +420,6 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     <div class="earn-row"><div class="earn-platform">Binance</div><input class="earn-input" type="number" placeholder="$0.00" id="earn-binance" oninput="updateTotal()"></div>
     <div class="earn-row"><div class="earn-platform">AdSense</div><input class="earn-input" type="number" placeholder="$0.00" id="earn-adsense" oninput="updateTotal()"></div>
     <div class="earn-row"><div class="earn-platform">Impact.com</div><input class="earn-input" type="number" placeholder="$0.00" id="earn-impact" oninput="updateTotal()"></div>
-    <div class="earn-row"><div class="earn-platform">Acko Bike</div><input class="earn-input" type="number" placeholder="$0.00" id="earn-acko" oninput="updateTotal()"></div>
-    <div class="earn-row"><div class="earn-platform">Zacks Trade</div><input class="earn-input" type="number" placeholder="$0.00" id="earn-zacks" oninput="updateTotal()"></div>
-    <div class="earn-row"><div class="earn-platform">Instant Funding</div><input class="earn-input" type="number" placeholder="$0.00" id="earn-instant" oninput="updateTotal()"></div>
 
     <div style="background:var(--dark2); border:1px solid rgba(201,168,76,0.3); border-radius:14px; padding:16px; margin-top:6px; display:flex; justify-content:space-between; align-items:center;">
       <div style="font-size:0.9rem; color:var(--muted);">Total This Month</div>
@@ -487,22 +478,12 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="link-url">https://ogsib.com/g/g86qhgosre2ae376f35f102b8feede/</div>
     </div>
 
-    <div class="link-card">
-      <div class="link-header">
-        <div class="link-name">🏍️ Acko Bike Insurance</div>
-        <button class="link-copy" onclick="copyLink('https://tjzuh.com/g/77fgwqsklk2ae376f35f829ab83632/')">Copy</button>
-      </div>
-      <div class="link-url">https://tjzuh.com/g/77fgwqsklk2ae376f35f829ab83632/</div>
-    </div>
-
-    <div class="sec-header" style="margin-top:16px"><div class="sec-title">CJ Affiliate — Active</div><div class="sec-count">LawDepot ✓ · Zacks ✓ · Instant Funding ✓</div></div>
+    <div class="sec-header" style="margin-top:16px"><div class="sec-title">CJ Affiliate — Active</div><div class="sec-count">LawDepot ✓</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏦 Allianz Worldwide Care</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🛡️ Auras Insurance (CJ)</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏧 Axos Bank</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏦 Barclays US Savings</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
-    <div class="link-card"><div class="link-header"><div class="link-name">⚖️ LawDepot</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url" style="color:var(--muted)">Best: Corporate Guarantee $342 EPC · Estate Planning $74 EPC</div></div>
-    <div class="link-card"><div class="link-header"><div class="link-name">📈 Zacks Trade</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url" style="color:var(--muted)">$259 EPC · https://www.anrdoezrs.net/click-101713917-17112428</div><button class="copy-btn" onclick="navigator.clipboard.writeText('https://www.anrdoezrs.net/click-101713917-17112428')">Copy</button></div>
-    <div class="link-card"><div class="link-header"><div class="link-name">💰 Instant Funding</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url" style="color:var(--muted)">$125 EPC · https://www.jdoqocy.com/click-101713917-17144677</div><button class="copy-btn" onclick="navigator.clipboard.writeText('https://www.jdoqocy.com/click-101713917-17144677')">Copy</button></div>
+    <div class="link-card"><div class="link-header"><div class="link-name">⚖️ LawDepot</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url" style="color:var(--muted)">CJ Affiliate — Approved ✓</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">💰 LendingTree</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">📊 TaxAct</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">📒 QuickBooks</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
@@ -549,7 +530,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="sec-header"><div class="sec-title">Traffic Sources</div></div>
       <div class="platform-card">
         <div class="p-icon green">🔍</div>
-        <div class="p-info"><div class="p-name">Google Search (SEO)</div><div class="p-desc">Organic — 6 articles indexed</div></div>
+        <div class="p-info"><div class="p-name">Google Search (SEO)</div><div class="p-desc">Organic — 5 articles indexed</div></div>
         <div class="p-badge badge-pending">Growing</div>
       </div>
       <div class="platform-card">
@@ -619,9 +600,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 4 on Medium (Budgeting)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
     <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 5 on Medium (Fiverr Guide)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
     <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 7 on Medium (Legal Documents — LawDepot)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 8 on Medium (Passive Income Ideas)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 9 on Medium (Prop Trading — Instant Funding)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 10 on Medium (Corporate Guarantee — LawDepot $342 EPC)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Publish Article 8 on Medium (Passive Income Ideas)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
     <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Set up Google Search Console + submit sitemap</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
     <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Fix AdSense — add privacy/terms links to index.html footer</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
     <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Push all new files to GitHub (icons, favicon, privacy, terms, articles)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
@@ -1148,29 +1127,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   <div class="nav-item active" onclick="switchTab('dashboard', this)">
     <div class="nav-icon">🏠</div><div class="nav-label">Home</div>
   </div>
-  <div class="nav-item" onclick="switchTab('earnings', this)">
-    <div class="nav-icon">💰</div><div class="nav-label">Earn</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('links', this)">
-    <div class="nav-icon">🔗</div><div class="nav-label">Links</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('traffic', this)">
-    <div class="nav-icon">📊</div><div class="nav-label">Traffic</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('todo', this)">
-    <div class="nav-icon">✅</div><div class="nav-label">Tasks</div>
-  </div>
   <div class="nav-item" onclick="switchTab('post', this)">
     <div class="nav-icon">✍️</div><div class="nav-label">Post</div>
   </div>
   <div class="nav-item" onclick="switchTab('research', this)">
     <div class="nav-icon">🔬</div><div class="nav-label">Research</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('seo', this)">
-    <div class="nav-icon">🔍</div><div class="nav-label">SEO</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('social', this)">
-    <div class="nav-icon">📣</div><div class="nav-label">Social</div>
   </div>
   <div class="nav-item" onclick="switchTab('notes', this)">
     <div class="nav-icon">📓</div><div class="nav-label">Notes</div>
@@ -1217,14 +1178,12 @@ const SEO_TASKS = [
   { label: 'Medium: Freelancing on Fiverr', url: 'https://medium.com/@smartcents/how-to-start-freelancing-on-fiverr-complete-beginner-guide-2026', cat: 'medium', published: true },
   { label: 'Medium: Passive Income 2026',   url: 'https://medium.com/@smartcents/how-to-build-passive-income-online-2026', cat: 'medium', published: true },
   { label: 'Medium: Legal Documents Online', url: 'https://medium.com/@smartcents/how-to-create-legal-documents-online-complete-guide-2026', cat: 'medium', published: true },
-  { label: 'Medium: Passive Income Ideas',    url: 'https://medium.com/@smartcents/7-passive-income-ideas-that-actually-work-2026', cat: 'medium', published: true },
-  { label: 'Medium: Prop Trading & Funding',  url: 'https://medium.com/@smartcents/how-to-get-funded-as-a-trader-2026-complete-guide-to-prop-trading', cat: 'medium', published: true },
-  { label: 'Medium: Corporate Guarantee',     url: 'https://medium.com/@smartcents/what-is-a-corporate-guarantee-and-why-every-business-owner-needs-one', cat: 'medium', published: true },
+  { label: 'Medium: Passive Income Ideas',  url: 'https://medium.com/@smartcents/7-passive-income-ideas-that-actually-work-2026', cat: 'medium', published: false },
 ];
 
 // Real counts — update these when new articles are published
 const SC_ARTICLES = 6;       // articles on SmartCents site
-const MEDIUM_PUBLISHED = 10; // published Medium articles
+const MEDIUM_PUBLISHED = 8;  // published Medium articles
 
 let seoErrors = [];
 
@@ -1347,13 +1306,11 @@ function submitSitemap(engine) {
 }
 
 function updateTotal() {
-  const ids = ['amazon','awin','admitad','cj','clickbank','fiverr','hostinger','binance','adsense','impact','acko'];
+  const ids = ['amazon','awin','admitad','cj','clickbank','fiverr','hostinger','binance','adsense','impact'];
   let total = 0;
   ids.forEach(id => {
-    const el = document.getElementById('earn-' + id);
-    const val = parseFloat(el.value) || 0;
+    const val = parseFloat(document.getElementById('earn-' + id).value) || 0;
     total += val;
-    localStorage.setItem('sc_earn_' + id, el.value || '');
   });
   document.getElementById('earn-total').textContent = total.toFixed(2);
   document.getElementById('total-earnings').textContent = total.toFixed(2);
@@ -1370,15 +1327,6 @@ function updateTotal() {
   document.getElementById('annual-pct').textContent = annualPct + '%';
   document.getElementById('annual-fill').style.width = annualPct + '%';
   document.getElementById('annual-current').textContent = total.toFixed(2);
-}
-
-function loadEarnings() {
-  const ids = ['amazon','awin','admitad','cj','clickbank','fiverr','hostinger','binance','adsense','impact','acko'];
-  ids.forEach(id => {
-    const saved = localStorage.getItem('sc_earn_' + id);
-    if (saved) document.getElementById('earn-' + id).value = saved;
-  });
-  updateTotal();
 }
 
 function toggleTodo(el) {
@@ -2370,7 +2318,6 @@ window.addEventListener('load', () => {
   } else {
     document.getElementById('key-status').textContent = '⚠️ No API key saved yet';
   }
-  loadEarnings();
 });
 
 

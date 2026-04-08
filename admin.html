@@ -174,19 +174,10 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   background:var(--dark2);
   border-top:1px solid var(--dark4);
   display:flex;
-  flex-wrap:nowrap;
-  flex-direction:row;
-  padding:10px 8px 20px;
+  padding:10px 0 20px;
   z-index:100;
-  overflow-x:scroll;
-  overflow-y:hidden;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-  -ms-overflow-style:none;
-  touch-action:pan-x;
 }
-.bottom-nav::-webkit-scrollbar { display:none; height:0; }
-.nav-item { min-width:60px; max-width:60px; flex:0 0 60px; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:4px 6px; user-select:none; -webkit-tap-highlight-color:transparent; }
+.nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; padding:4px 0; }
 .nav-icon { font-size:1.2rem; }
 .nav-label { font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; font-family:'DM Mono',monospace; }
 .nav-item.active .nav-label { color:var(--gold); }
@@ -259,11 +250,11 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <div class="hstat-lbl">Live Links</div>
       </div>
       <div class="hstat">
-        <div class="hstat-val" id="sc-article-count">6</div>
+        <div class="hstat-val" id="sc-article-count">5</div>
         <div class="hstat-lbl">SC Articles</div>
       </div>
       <div class="hstat">
-        <div class="hstat-val" id="medium-article-count">10</div>
+        <div class="hstat-val" id="medium-article-count">8</div>
         <div class="hstat-lbl">Medium</div>
       </div>
     </div>
@@ -487,27 +478,22 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="link-url">https://ogsib.com/g/g86qhgosre2ae376f35f102b8feede/</div>
     </div>
 
-    <div class="sec-header" style="margin-top:16px"><div class="sec-title">CJ Affiliate — Active</div><div class="sec-count">3 approved ✓</div></div>
-    <div class="link-card"><div class="link-header"><div class="link-name">⚖️ LawDepot</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url">Best link: <a href="https://www.jdoqocy.com/click-101713917-16995824" style="color:var(--gold);">Corporate Guarantee — $342 EPC</a></div></div>
-    <div class="link-card"><div class="link-header"><div class="link-name">📈 Zacks Trade</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url">Best link: <a href="https://www.jdoqocy.com/click-101713917-17112428" style="color:var(--gold);">SpoTower Taxes — $259 EPC</a></div></div>
-    <div class="link-card"><div class="link-header"><div class="link-name">🚀 Instant Funding</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url">Best link: <a href="https://www.jdoqocy.com/click-101713917-17144677" style="color:var(--gold);">Funding Accounts — $125 EPC</a></div></div>
+    <div class="sec-header" style="margin-top:16px"><div class="sec-title">CJ Affiliate — Active</div><div class="sec-count">LawDepot ✓</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏦 Allianz Worldwide Care</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🛡️ Auras Insurance (CJ)</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏧 Axos Bank</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏦 Barclays US Savings</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
+    <div class="link-card"><div class="link-header"><div class="link-name">⚖️ LawDepot</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url" style="color:var(--muted)">CJ Affiliate — Approved ✓</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">💰 LendingTree</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">📊 TaxAct</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">📒 QuickBooks</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏢 Northwestern Mutual</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
     <div class="link-card"><div class="link-header"><div class="link-name">🏛️ New York Life Insurance</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Pending</div></div><div class="link-url" style="color:var(--muted)">Manual review in progress...</div></div>
 
-    <div class="sec-header" style="margin-top:16px"><div class="sec-title">Admitad — New Approvals</div></div>
-    <div class="link-card"><div class="link-header"><div class="link-name">🏍️ Acko Bike IN</div><div class="p-badge badge-active" style="font-size:0.65rem;padding:4px 10px;">Active</div></div><div class="link-url"><a href="https://tjzuh.com/g/77fgwqsklk2ae376f35f829ab83632/" style="color:var(--gold);font-size:0.72rem;">tjzuh.com/g/77fgwqsklk...</a></div></div>
-
     <div class="sec-header" style="margin-top:16px"><div class="sec-title">Other Pending</div></div>
     <div class="link-card">
-      <div class="link-header"><div class="link-name">🎨 Fiverr</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Appeal Pending</div></div>
-      <div class="link-url" style="color:var(--muted)">Appeal submitted — awaiting decision...</div>
+      <div class="link-header"><div class="link-name">🎨 Fiverr</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">2–4 days</div></div>
+      <div class="link-url" style="color:var(--muted)">Awaiting approval...</div>
     </div>
     <div class="link-card">
       <div class="link-header"><div class="link-name">₿ Binance KOL</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Need 5K followers</div></div>
@@ -518,12 +504,8 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div class="link-url" style="color:var(--muted)">Awaiting Google approval...</div>
     </div>
     <div class="link-card">
-      <div class="link-header"><div class="link-name">⚡ Impact.com</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Under Review</div></div>
+      <div class="link-header"><div class="link-name">⚡ Impact.com</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">72 hrs</div></div>
       <div class="link-url" style="color:var(--muted)">Awaiting approval...</div>
-    </div>
-    <div class="link-card">
-      <div class="link-header"><div class="link-name">🌐 Awin</div><div class="p-badge badge-review" style="font-size:0.65rem;padding:4px 10px;">Appeal Pending</div></div>
-      <div class="link-url" style="color:var(--muted)">Appeal submitted — awaiting decision...</div>
     </div>
   </div>
 </div>
@@ -613,27 +595,18 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Fake followers bar removed from site</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
     <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Awin applied — under review</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
 
-    <div class="sec-header" style="margin-top:16px"><div class="sec-title">Medium Articles</div><div class="sec-count">10 published ✓</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 1 — How to Calculate Home Loan Interest</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 2 — Best Travel Insurance 2026</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 3 — Send Money Internationally</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 4 — Best Budgeting Methods 2026</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 5 — How to Build an Emergency Fund</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 6 — How to Build Passive Income Online</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 7 — How to Create Legal Documents Online (LawDepot)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 8 — 7 Passive Income Ideas That Actually Work</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 9 — How to Get Funded as a Trader (Instant Funding)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Article 10 — What is a Corporate Guarantee (LawDepot $342 EPC)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
-
     <div class="sec-header" style="margin-top:16px"><div class="sec-title">Pending Actions</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Set up Google Search Console + submit sitemap</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Next</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Fix AdSense — add privacy/terms links to index.html footer + resubmit</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Next</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Push all new files to GitHub (icons, favicon, privacy, terms, articles)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Next</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Apply for Medium Partner Program (10 articles — eligible)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Next</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Add Fiverr affiliate link to site when appeal approved</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Awin appeal — awaiting approval</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Payoneer reapplication — awaiting approval</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
-    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">AdSense — awaiting approval after resubmission</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
+    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 3 on Medium (Money Transfers)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 4 on Medium (Budgeting)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 5 on Medium (Fiverr Guide)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Publish Article 7 on Medium (Legal Documents — LawDepot)</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Publish Article 8 on Medium (Passive Income Ideas)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Set up Google Search Console + submit sitemap</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Fix AdSense — add privacy/terms links to index.html footer</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Push all new files to GitHub (icons, favicon, privacy, terms, articles)</div><div class="todo-tag" style="background:rgba(201,168,76,0.1);color:var(--gold)">Today</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Add Fiverr link to site when approved</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">Add Hostinger link when approved (500+ visitors)</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-check"></div><div class="todo-text">AdSense approved — ads auto-appear</div><div class="todo-tag" style="background:rgba(74,158,245,0.1);color:var(--blue)">Waiting</div></div>
 
     <div class="sec-header" style="margin-top:16px"><div class="sec-title">Traffic Tasks</div></div>
     <div class="todo-item done" onclick="toggleTodo(this)"><div class="todo-check">✓</div><div class="todo-text">Create Facebook Page</div><div class="todo-tag" style="background:rgba(76,175,125,0.1);color:var(--green)">Done</div></div>
@@ -1150,33 +1123,15 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   </div>
 </div>
 
-<div class="bottom-nav" id="bottom-nav">
+<div class="bottom-nav">
   <div class="nav-item active" onclick="switchTab('dashboard', this)">
     <div class="nav-icon">🏠</div><div class="nav-label">Home</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('earnings', this)">
-    <div class="nav-icon">💰</div><div class="nav-label">Earnings</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('links', this)">
-    <div class="nav-icon">🔗</div><div class="nav-label">Links</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('traffic', this)">
-    <div class="nav-icon">📊</div><div class="nav-label">Traffic</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('todo', this)">
-    <div class="nav-icon">✅</div><div class="nav-label">Tasks</div>
   </div>
   <div class="nav-item" onclick="switchTab('post', this)">
     <div class="nav-icon">✍️</div><div class="nav-label">Post</div>
   </div>
   <div class="nav-item" onclick="switchTab('research', this)">
     <div class="nav-icon">🔬</div><div class="nav-label">Research</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('seo', this)">
-    <div class="nav-icon">🚀</div><div class="nav-label">SEO</div>
-  </div>
-  <div class="nav-item" onclick="switchTab('social', this)">
-    <div class="nav-icon">📣</div><div class="nav-label">Social</div>
   </div>
   <div class="nav-item" onclick="switchTab('notes', this)">
     <div class="nav-icon">📓</div><div class="nav-label">Notes</div>
@@ -1216,21 +1171,19 @@ const SEO_TASKS = [
   { label: 'SmartCents Homepage',    url: 'https://mysmartcents.github.io/', cat: 'site' },
   { label: 'SC: Home Loan Calculator', url: 'https://mysmartcents.github.io/#tools', cat: 'site' },
   { label: 'SC: Finance Blog',       url: 'https://mysmartcents.github.io/#blog', cat: 'site' },
-  { label: 'Medium: Home Loan Interest',      url: 'https://medium.com/@smartcents/how-to-calculate-home-loan-interest-complete-guide-f18138a55c45', cat: 'medium', published: true },
-  { label: 'Medium: Travel Insurance',        url: 'https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026', cat: 'medium', published: true },
-  { label: 'Medium: Send Money',              url: 'https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026', cat: 'medium', published: true },
-  { label: 'Medium: Budgeting Methods',       url: 'https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-2026', cat: 'medium', published: true },
-  { label: 'Medium: Emergency Fund',          url: 'https://medium.com/@smartcents/how-to-build-an-emergency-fund-from-scratch-in-2026', cat: 'medium', published: true },
-  { label: 'Medium: Passive Income (Guide)',  url: 'https://medium.com/@smartcents/how-to-build-passive-income-online-2026', cat: 'medium', published: true },
-  { label: 'Medium: Legal Documents Online',  url: 'https://medium.com/@smartcents/how-to-create-legal-documents-online-complete-guide-2026', cat: 'medium', published: true },
-  { label: 'Medium: 7 Passive Income Ideas',  url: 'https://medium.com/@smartcents/7-passive-income-ideas-that-actually-work-2026', cat: 'medium', published: true },
-  { label: 'Medium: Prop Trading / Funding',  url: 'https://medium.com/@smartcents/how-to-get-funded-as-a-trader-in-2026', cat: 'medium', published: true },
-  { label: 'Medium: Corporate Guarantee',     url: 'https://medium.com/@smartcents/what-is-a-corporate-guarantee-2026', cat: 'medium', published: true },
+  { label: 'Medium: Home Loan Interest',    url: 'https://medium.com/@smartcents/how-to-calculate-home-loan-interest-complete-guide-f18138a55c45', cat: 'medium', published: true },
+  { label: 'Medium: Travel Insurance',      url: 'https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026', cat: 'medium', published: true },
+  { label: 'Medium: Send Money',            url: 'https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026', cat: 'medium', published: true },
+  { label: 'Medium: Budgeting Methods',     url: 'https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-2026', cat: 'medium', published: true },
+  { label: 'Medium: Freelancing on Fiverr', url: 'https://medium.com/@smartcents/how-to-start-freelancing-on-fiverr-complete-beginner-guide-2026', cat: 'medium', published: true },
+  { label: 'Medium: Passive Income 2026',   url: 'https://medium.com/@smartcents/how-to-build-passive-income-online-2026', cat: 'medium', published: true },
+  { label: 'Medium: Legal Documents Online', url: 'https://medium.com/@smartcents/how-to-create-legal-documents-online-complete-guide-2026', cat: 'medium', published: true },
+  { label: 'Medium: Passive Income Ideas',  url: 'https://medium.com/@smartcents/7-passive-income-ideas-that-actually-work-2026', cat: 'medium', published: false },
 ];
 
 // Real counts — update these when new articles are published
 const SC_ARTICLES = 6;       // articles on SmartCents site
-const MEDIUM_PUBLISHED = 10; // published Medium articles
+const MEDIUM_PUBLISHED = 8;  // published Medium articles
 
 let seoErrors = [];
 
@@ -1421,7 +1374,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.02';
+const APP_VERSION = '1.25';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = '182976820422-mk4mt230b4r2g542cuiosno45lntr12t.apps.googleusercontent.com';

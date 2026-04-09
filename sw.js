@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const CACHE_NAME = 'smartcents-v2';
+=======
+const CACHE_NAME = 'smartcents-v1';
+>>>>>>> 52d137c0ae334f55f6fdceed98c39f33e3beb751
 const ASSETS = [
   '/',
   '/index.html',

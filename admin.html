@@ -2439,7 +2439,7 @@ document.getElementById('medium-article-count').textContent = MEDIUM_PUBLISHED;
 document.getElementById('version-label').textContent = 'v' + APP_VERSION;
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then(reg => {
+  navigator.serviceWorker.register('admin-sw.js', { scope: '/admin.html' }).then(reg => {
     reg.addEventListener('updatefound', () => {
       const newWorker = reg.installing;
       newWorker.addEventListener('statechange', () => {

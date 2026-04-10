@@ -1737,7 +1737,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.13';
+const APP_VERSION = '1.14';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2896,110 +2896,127 @@ function copyAndOpenMedium(topic) {
 }
 
 async function postAllToBlogger() {
-  const topics = Object.keys(bulkResults);
-  if (topics.length === 0) { showToast('No content generated yet!'); return; }
-  showToast(`Posting ${topics.length} articles to Blogger...`);
-  let success = 0;
+  const topics = Object.keys(bulkResults).filter(t => bulkResults[t]?.blogger);
+  if (topics.length === 0) { showToast('No Blogger content found! Generate content first.'); return; }
+
+  const apiKey = getBloggerKey();
+  if (!apiKey) { showToast('Add Blogger API key in Settings tab first!'); return; }
+
+  let success = 0, failed = 0;
+  showToast(`Starting: posting ${topics.length} articles to Blogger...`);
+
   for (const topic of topics) {
-    if (bulkResults[topic]?.blogger) {
-      try { await postBulkToBlogger(topic); success++; await new Promise(r => setTimeout(r, 1000)); } catch(e) {}
+    try {
+      await postBulkToBlogger(topic);
+      success++;
+      showToast(`✅ ${success}/${topics.length} posted to Blogger...`);
+      await new Promise(r => setTimeout(r, 1500));
+    } catch(e) {
+      failed++;
+      console.error(`Blogger post failed for ${topic}:`, e);
     }
   }
-  showToast(`✅ Posted ${success}/${topics.length} to Blogger!`);
+  showToast(`✅ Blogger done: ${success} posted, ${failed} failed`);
 }
 
 async function postAllToFacebook() {
-  const topics = Object.keys(bulkResults);
-  if (topics.length === 0) { showToast('No content generated yet!'); return; }
-  showToast(`Posting ${topics.length} articles to Facebook...`);
-  let success = 0;
+  const topics = Object.keys(bulkResults).filter(t => bulkResults[t]?.facebook);
+  if (topics.length === 0) { showToast('No Facebook content found! Generate content first.'); return; }
+
+  const token = getFBToken();
+  if (!token) { showToast('No Facebook token found!'); return; }
+
+  let success = 0, failed = 0;
+  showToast(`Starting: posting ${topics.length} articles to Facebook...`);
+
   for (const topic of topics) {
-    if (bulkResults[topic]?.facebook) {
-      try { await postBulkToFacebook(topic); success++; await new Promise(r => setTimeout(r, 2000)); } catch(e) {}
+    try {
+      await postBulkToFacebook(topic);
+      success++;
+      showToast(`✅ ${success}/${topics.length} posted to Facebook...`);
+      await new Promise(r => setTimeout(r, 2500));
+    } catch(e) {
+      failed++;
+      console.error(`Facebook post failed for ${topic}:`, e);
     }
   }
-  showToast(`✅ Posted ${success}/${topics.length} to Facebook! Instagram + Pinterest will follow.`);
+  showToast(`✅ Facebook done: ${success} posted, ${failed} failed`);
 }
 
 async function postBulkToBlogger(topic) {
   const content = bulkResults[topic]?.blogger;
-  if (!content) { showToast('No Blogger content for this topic!'); return; }
+  if (!content) throw new Error('No Blogger content');
+
   const apiKey = getBloggerKey();
-  if (!apiKey) { showToast('Add Blogger API key in Settings!'); return; }
+  const freshToken = await refreshBloggerToken().catch(() => null);
+  const authHeader = freshToken ? { 'Authorization': `Bearer ${freshToken}` } : null;
+
+  if (!apiKey && !freshToken) throw new Error('No Blogger token or API key');
 
   const titleMatch = content.match(/TITLE:\s*(.+)/);
   const title = titleMatch ? titleMatch[1].trim() : (topicNames[topic] || topic);
   const imgURL = bulkResults[topic]?._imgLandscape || '';
-
   const imgHTML = imgURL ? `<div style="text-align:center;margin-bottom:24px;"><img src="${imgURL}" alt="${title}" style="max-width:100%;border-radius:8px;"></div>` : '';
-  const htmlContent = `<div style="font-family:Georgia,serif;max-width:800px;margin:0 auto;line-height:1.8;">${imgHTML}${content.replace(/\n/g,'<br>')}<hr style="margin:30px 0;border:none;border-top:1px solid #eee;"><p style="background:#f9f9f9;padding:16px;border-radius:8px;border-left:4px solid #C9A84C;"><strong>Free Finance Tools:</strong> <a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents</a> — Loan Calculator, Budget Planner & Savings Tracker. No signup needed!</p></div>`;
+  const htmlContent = `<div style="font-family:Georgia,serif;max-width:800px;margin:0 auto;line-height:1.8;">${imgHTML}${content.replace(/\n/g,'<br>')}<hr style="margin:30px 0;border:none;border-top:1px solid #eee;"><p style="background:#f9f9f9;padding:16px;border-radius:8px;border-left:4px solid #C9A84C;"><strong>Free Finance Tools:</strong> <a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents</a></p></div>`;
+  const postBody = { title, content: htmlContent, labels: ['Personal Finance','SmartCents','Money Tips'] };
 
-  showToast('Posting to Blogger...');
-  try {
-    const freshToken = await refreshBloggerToken();
-    const authToken = freshToken || apiKey;
+  // Try with OAuth token first
+  if (freshToken) {
     const res = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
-      body: JSON.stringify({ title, content: htmlContent, labels: ['Personal Finance','SmartCents','Money Tips'] })
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${freshToken}` },
+      body: JSON.stringify(postBody)
     });
     const data = await res.json();
-    if (data.url) {
-      showToast('✅ Posted to Blogger with image!');
-    } else {
-      // fallback to API key
-      const res2 = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts?key=${apiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content: htmlContent, labels: ['Personal Finance','SmartCents'] })
-      });
-      const data2 = await res2.json();
-      if (data2.url) { showToast('✅ Posted to Blogger!'); }
-      else { showToast('❌ Blogger: ' + (data2.error?.message || 'Error')); }
-    }
-  } catch(e) { showToast('❌ Failed: ' + e.message); }
+    if (data.url || data.id) return data;
+    if (data.error) throw new Error(data.error.message);
+  }
+
+  // Fallback to API key
+  if (apiKey) {
+    const res2 = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(postBody)
+    });
+    const data2 = await res2.json();
+    if (data2.url || data2.id) return data2;
+    throw new Error(data2.error?.message || 'Blogger post failed');
+  }
+
+  throw new Error('All Blogger post methods failed');
 }
 
 async function postBulkToFacebook(topic) {
   const content = bulkResults[topic]?.facebook;
-  if (!content) { showToast('No Facebook content for this topic!'); return; }
+  if (!content) throw new Error('No Facebook content');
+
   const token = getFBToken();
   const pageId = getFBPageId();
+  if (!token) throw new Error('No Facebook token');
+
   const imgURL = bulkResults[topic]?._imgLandscape || '';
 
-  showToast('Posting to Facebook...');
-  try {
-    let res, data;
-    if (imgURL) {
-      // Post with image
-      res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/photos`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: imgURL, caption: content, access_token: token })
-      });
-    } else {
-      // Post text only
-      res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: content, access_token: token })
-      });
-    }
-    data = await res.json();
-    if (data.id || data.post_id) {
-      showToast('✅ Posted to Facebook with image! Instagram + Pinterest will follow.');
-    } else {
-      // Fallback to text only
-      const res2 = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: content, access_token: token })
-      });
-      const data2 = await res2.json();
-      if (data2.id) { showToast('✅ Posted to Facebook!'); }
-      else { showToast('❌ Facebook: ' + (data2.error?.message || 'Error')); }
-    }
-  } catch(e) { showToast('❌ Failed: ' + e.message); }
+  // Try posting with image first
+  if (imgURL) {
+    const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/photos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: imgURL, caption: content, access_token: token })
+    });
+    const data = await res.json();
+    if (data.id || data.post_id) return data;
+  }
+
+  // Fallback: post text only
+  const res2 = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: content, access_token: token })
+  });
+  const data2 = await res2.json();
+  if (data2.id) return data2;
+  throw new Error(data2.error?.message || 'Facebook post failed');
 }
 
 // Load saved bulk results on startup

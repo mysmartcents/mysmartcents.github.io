@@ -2033,29 +2033,22 @@ async function postToBloggerFromStudio() {
 }
 
 // ── BLOGGER TOKEN — AUTO-REFRESH SYSTEM ──────────────────────
-const BLOGGER_REFRESH_TOKEN = localStorage.getItem('sc_blogger_refresh_token') || '';
-const BLOGGER_CLIENT_ID     = '407408718192.apps.googleusercontent.com';
-const BLOGGER_CLIENT_SECRET = 'd-FL95Q19q7MQmFpd7hHD0Ty'; // OAuth Playground default
+const BLOGGER_REFRESH_TOKEN = '1//04oVH7ZsBtHfTCgYIARAAGAQSNwF-L9Ir8lz1WZPBR97qU0faKZbW2qDGHwxqBRiw0aOAxzDn0_5cVEF-bYXVEhQsHRuFM3DDm4g';
+const BLOGGER_CLIENT_ID     = '182976820422-mk4mt230b4r2g542cuiosno45lntr12t.apps.googleusercontent.com';
+const BLOGGER_CLIENT_SECRET = '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';
 
 async function refreshBloggerToken() {
   try {
-    const res = await fetch('https://oauth2.googleapis.com/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        client_id: BLOGGER_CLIENT_ID,
-        client_secret: BLOGGER_CLIENT_SECRET,
-        refresh_token: BLOGGER_REFRESH_TOKEN,
-        grant_type: 'refresh_token'
-      })
-    });
+    // Use Cloudflare proxy to avoid CORS — direct calls to Google blocked by browser
+    const res = await fetch('https://smartcents-auth.shaheryardesigns.workers.dev/blogger-token');
     const data = await res.json();
     if (data.access_token) {
       localStorage.setItem('sc_blogger_token', data.access_token);
       localStorage.setItem('sc_blogger_token_time', Date.now());
       return data.access_token;
     }
-  } catch(e) {}
+    console.error('Blogger refresh error:', data);
+  } catch(e) { console.error('Blogger token refresh failed:', e); }
   return null;
 }
 
@@ -2083,7 +2076,7 @@ function saveBloggerToken() {
         showToast('Blogger token refreshed! 🟠');
       } else {
         s.style.color = 'var(--red)';
-        s.textContent = '⚠️ Auto-refresh failed — paste token manually';
+        s.textContent = '⚠️ Auto-refresh failed — check console';
       }
     });
     return;
@@ -2100,28 +2093,28 @@ function clearBloggerToken() {
   localStorage.removeItem('sc_blogger_token');
   localStorage.removeItem('sc_blogger_token_time');
   const s = document.getElementById('blogger-token-status');
-  s.style.color = 'var(--red)'; s.textContent = '⚠️ Token cleared';
-  showToast('Token cleared');
+  s.style.color = 'var(--muted)'; s.textContent = '⚠️ Cache cleared — will auto-refresh on next action';
+  showToast('Token cache cleared');
 }
 
 // Auto-refresh token on page load silently
 refreshBloggerToken().then(tok => {
   if (tok) {
     const s = document.getElementById('blogger-token-status');
-    if (s) { s.style.color = 'var(--green)'; s.textContent = '✅ Token ready (auto-refreshed)'; }
+    if (s) { s.style.color = 'var(--green)'; s.textContent = '✅ Blogger ready — permanent token active'; }
   }
 });
 
 // ── FACEBOOK PAGE TOKEN ───────────────────────────────────────
-function getFBToken() { return localStorage.getItem('sc_fb_token') || ''; }
-function getFBPageId() { return localStorage.getItem('sc_fb_page_id') || '1105657479290118'; }
+const FB_PERMANENT_TOKEN = 'EAAUggZCCmkAcBRAR0uY8kEsNClcb78en0cinC6ZCjdfnkvRuloWSPyY4ZC2FKPUowg0TypKt3BlVPvQKuDuIyetzerTX9jfyYav8Y85YWGtqsBaYunZAKGJ3KPn5y85bTeABm1SsCY21ZBc6OQXs3BrZAsX5yzq9UL4ZBXFr79ch6m2T2vZAPoantfMVVr8TGgZDZD';
+const FB_PERMANENT_PAGE_ID = '1105657479290118';
+function getFBToken() { return localStorage.getItem('sc_fb_token') || FB_PERMANENT_TOKEN; }
+function getFBPageId() { return localStorage.getItem('sc_fb_page_id') || FB_PERMANENT_PAGE_ID; }
 function saveFBToken() {
   const t = document.getElementById('fb-token-input').value.trim();
   const p = document.getElementById('fb-page-id-input').value.trim();
-  if (!t) { showToast('Paste your Facebook token first!'); return; }
-  localStorage.setItem('sc_fb_token', t);
+  if (t) { localStorage.setItem('sc_fb_token', t); document.getElementById('fb-token-input').value = ''; }
   if (p) localStorage.setItem('sc_fb_page_id', p);
-  document.getElementById('fb-token-input').value = '';
   const s = document.getElementById('fb-token-status');
   s.style.color = 'var(--green)'; s.textContent = '✅ Token saved — ready to post';
   showToast('Facebook token saved! 📘');
@@ -2562,19 +2555,20 @@ function renderGroups() {
 
 // Load key status on init
 window.addEventListener('load', () => {
-  // Blogger token status
-  const bToken = getBloggerToken();
+  // Blogger — async auto-refresh on load
   const bStatus = document.getElementById('blogger-token-status');
   if (bStatus) {
-    bStatus.style.color = bToken ? 'var(--green)' : 'var(--muted)';
-    bStatus.textContent = bToken ? '✅ Token saved — ready to post' : '⚠️ No token saved yet — get one from OAuth Playground';
+    bStatus.style.color = 'var(--muted)'; bStatus.textContent = '🔄 Auto-refreshing Blogger token...';
+    getBloggerToken().then(t => {
+      if (t) { bStatus.style.color = 'var(--green)'; bStatus.textContent = '✅ Blogger ready — permanent token active'; }
+      else { bStatus.style.color = 'var(--red)'; bStatus.textContent = '❌ Auto-refresh failed'; }
+    });
   }
-  // Facebook token status
-  const fbToken = getFBToken();
+  // Facebook — always ready with permanent token
   const fbStatus = document.getElementById('fb-token-status');
   if (fbStatus) {
-    fbStatus.style.color = fbToken ? 'var(--green)' : 'var(--muted)';
-    fbStatus.textContent = fbToken ? '✅ Token saved — ready to post' : '⚠️ No token saved yet — get one from Graph API Explorer';
+    fbStatus.style.color = 'var(--green)';
+    fbStatus.textContent = '✅ Facebook ready — permanent System User token active';
   }
   // Pre-fill FB page ID
   const fbPageInput = document.getElementById('fb-page-id-input');
@@ -2648,7 +2642,7 @@ document.getElementById('medium-article-count').textContent = MEDIUM_PUBLISHED;
 document.getElementById('version-label').textContent = 'v' + APP_VERSION;
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('admin-sw.js', { scope: '/admin.html' }).then(reg => {
+  navigator.serviceWorker.register('admin-sw.js', { scope: '/' }).then(reg => {
     reg.addEventListener('updatefound', () => {
       const newWorker = reg.installing;
       newWorker.addEventListener('statechange', () => {

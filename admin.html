@@ -2033,7 +2033,7 @@ async function postToBloggerFromStudio() {
 }
 
 // ── BLOGGER TOKEN — AUTO-REFRESH SYSTEM ──────────────────────
-const BLOGGER_REFRESH_TOKEN = '1//04983b9sCEqvxCgYIARAAGAQSNwF-L9IrKdlyZ_OQBDwQenobxYFCHDWxEMwuOja7sYUMSIo_JT-rTX0p4eZUqHKDjMWvOunHxIs';
+const BLOGGER_REFRESH_TOKEN = localStorage.getItem('sc_blogger_refresh_token') || '';
 const BLOGGER_CLIENT_ID     = '407408718192.apps.googleusercontent.com';
 const BLOGGER_CLIENT_SECRET = 'd-FL95Q19q7MQmFpd7hHD0Ty'; // OAuth Playground default
 

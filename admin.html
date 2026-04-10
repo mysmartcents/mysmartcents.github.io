@@ -3043,28 +3043,39 @@ function copyAndOpenMedium(topic) {
   });
 }
 
+function getBloggerKey() {
+  return localStorage.getItem('sc_blogger_key') || '';
+}
+
 async function postAllToBlogger() {
   const topics = Object.keys(bulkResults).filter(t => bulkResults[t]?.blogger);
   if (topics.length === 0) { showToast('No Blogger content found! Generate content first.'); return; }
 
+  const freshToken = await refreshBloggerToken().catch(() => null);
   const apiKey = getBloggerKey();
-  if (!apiKey) { showToast('Add Blogger API key in Settings tab first!'); return; }
+
+  if (!freshToken && !apiKey) {
+    showToast('❌ No Blogger token! Go to Settings → Blogger → save your token.');
+    return;
+  }
 
   let success = 0, failed = 0;
-  showToast(`Starting: posting ${topics.length} articles to Blogger...`);
+  const name = topicNames;
 
   for (const topic of topics) {
     try {
+      showToast(`⏳ Posting ${topicNames[topic] || topic} to Blogger... (${success+failed+1}/${topics.length})`);
       await postBulkToBlogger(topic);
       success++;
-      showToast(`✅ ${success}/${topics.length} posted to Blogger...`);
-      await new Promise(r => setTimeout(r, 1500));
+      await new Promise(r => setTimeout(r, 2000));
     } catch(e) {
       failed++;
-      console.error(`Blogger post failed for ${topic}:`, e);
+      showToast(`❌ Failed: ${topicNames[topic] || topic} — ${e.message}`);
+      console.error(`Blogger failed for ${topic}:`, e.message);
+      await new Promise(r => setTimeout(r, 1000));
     }
   }
-  showToast(`✅ Blogger done: ${success} posted, ${failed} failed`);
+  showToast(`✅ Blogger complete: ${success} posted, ${failed} failed`);
 }
 
 async function postAllToFacebook() {

@@ -842,14 +842,40 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     <!-- API KEY -->
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
       <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:6px;">🔑 Claude API Key</div>
-      <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:6px;">🔑 Gemini API Key (Free)</div>
-      <div style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">Free — get from aistudio.google.com/apikey · No credit card needed</div>
-      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
-        <input id="claude-api-key" type="password" placeholder="AIza..." style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.82rem;outline:none;">
-        <button onclick="saveClaudeKey()" style="background:var(--gold);color:#080808;border:none;padding:9px 14px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">Save</button>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;">🤖 AI Content Providers (auto-fallback)</div>
+      <div style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:10px;">Add multiple keys — app switches automatically when quota runs out</div>
+
+      <div style="background:var(--dark3);border:1px solid var(--dark5);border-radius:10px;padding:10px;margin-bottom:8px;">
+        <div style="font-size:0.75rem;font-weight:700;color:#4285F4;margin-bottom:6px;">🔵 Gemini (Free — 1M tokens/day)</div>
+        <div style="font-size:0.68rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;">Get free key: aistudio.google.com/apikey</div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:6px;">
+          <input id="claude-api-key" type="password" placeholder="AIza..." style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:8px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:0.8rem;outline:none;">
+          <button onclick="saveClaudeKey()" style="background:#4285F4;color:#fff;border:none;padding:8px 12px;border-radius:6px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">Save</button>
+        </div>
+        <div id="claude-key-status" style="font-size:0.68rem;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;"></div>
       </div>
-      <div id="claude-key-status" style="font-size:0.72rem;color:var(--muted);margin-top:6px;font-family:'DM Mono',monospace;"></div>
-      <a href="https://aistudio.google.com/apikey" target="_blank" style="display:block;margin-top:8px;text-align:center;background:rgba(66,133,244,0.1);border:1px solid rgba(66,133,244,0.3);color:#4285F4;padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">🔗 Get Free Gemini API Key →</a>
+
+      <div style="background:var(--dark3);border:1px solid var(--dark5);border-radius:10px;padding:10px;margin-bottom:8px;">
+        <div style="font-size:0.75rem;font-weight:700;color:#F55036;margin-bottom:6px;">🔴 Groq (Free — 14,400 req/day, very fast)</div>
+        <div style="font-size:0.68rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;">Get free key: console.groq.com → API Keys</div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:6px;">
+          <input id="groq-api-key" type="password" placeholder="gsk_..." style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:8px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:0.8rem;outline:none;">
+          <button onclick="saveGroqKey()" style="background:#F55036;color:#fff;border:none;padding:8px 12px;border-radius:6px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">Save</button>
+        </div>
+        <div id="groq-key-status" style="font-size:0.68rem;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;"></div>
+      </div>
+
+      <div style="background:var(--dark3);border:1px solid var(--dark5);border-radius:10px;padding:10px;margin-bottom:8px;">
+        <div style="font-size:0.75rem;font-weight:700;color:#39594D;margin-bottom:6px;">🟢 Cohere (Free — 1000 req/month)</div>
+        <div style="font-size:0.68rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px;">Get free key: dashboard.cohere.com → API Keys</div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:6px;">
+          <input id="cohere-api-key" type="password" placeholder="..." style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:8px 10px;border-radius:6px;font-family:'DM Mono',monospace;font-size:0.8rem;outline:none;">
+          <button onclick="saveCohereKey()" style="background:#39594D;color:#fff;border:none;padding:8px 12px;border-radius:6px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">Save</button>
+        </div>
+        <div id="cohere-key-status" style="font-size:0.68rem;color:var(--muted);margin-top:4px;font-family:'DM Mono',monospace;"></div>
+      </div>
+
+      <div id="ai-provider-status" style="background:var(--dark3);border:1px solid var(--dark5);border-radius:8px;padding:8px;font-size:0.72rem;font-family:'DM Mono',monospace;color:var(--muted);">No providers configured</div>
     </div>
 
     <!-- SELECT ARTICLES -->
@@ -1737,7 +1763,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.14';
+const APP_VERSION = '1.16';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2540,17 +2566,59 @@ async function postToFacebookPage() {
 }
 
 // BULK GENERATOR
+// MULTI-PROVIDER AI SYSTEM
 function saveClaudeKey() {
   const key = document.getElementById('claude-api-key').value.trim();
-  if (!key || !key.startsWith('AIza')) { showToast('Enter a valid Gemini API key (starts with AIza...)'); return; }
+  if (!key || !key.startsWith('AIza')) { showToast('Enter a valid Gemini key (starts with AIza...)'); return; }
   localStorage.setItem('sc_gemini_key', key);
   document.getElementById('claude-api-key').value = '';
-  document.getElementById('claude-key-status').textContent = '✅ Gemini API key saved — ready to generate!';
+  document.getElementById('claude-key-status').textContent = '✅ Gemini key saved';
   document.getElementById('claude-key-status').style.color = 'var(--green)';
-  showToast('Gemini API key saved! ⚡');
+  updateProviderStatus();
+  showToast('Gemini API key saved! ✅');
+}
+
+function saveGroqKey() {
+  const key = document.getElementById('groq-api-key').value.trim();
+  if (!key || !key.startsWith('gsk_')) { showToast('Enter a valid Groq key (starts with gsk_...)'); return; }
+  localStorage.setItem('sc_groq_key', key);
+  document.getElementById('groq-api-key').value = '';
+  document.getElementById('groq-key-status').textContent = '✅ Groq key saved';
+  document.getElementById('groq-key-status').style.color = 'var(--green)';
+  updateProviderStatus();
+  showToast('Groq API key saved! ✅');
+}
+
+function saveCohereKey() {
+  const key = document.getElementById('cohere-api-key').value.trim();
+  if (!key || key.length < 10) { showToast('Enter a valid Cohere key'); return; }
+  localStorage.setItem('sc_cohere_key', key);
+  document.getElementById('cohere-api-key').value = '';
+  document.getElementById('cohere-key-status').textContent = '✅ Cohere key saved';
+  document.getElementById('cohere-key-status').style.color = 'var(--green)';
+  updateProviderStatus();
+  showToast('Cohere API key saved! ✅');
 }
 
 function getClaudeKey() { return localStorage.getItem('sc_gemini_key') || ''; }
+function getGroqKey() { return localStorage.getItem('sc_groq_key') || ''; }
+function getCohereKey() { return localStorage.getItem('sc_cohere_key') || ''; }
+
+function updateProviderStatus() {
+  const el = document.getElementById('ai-provider-status');
+  if (!el) return;
+  const providers = [];
+  if (getClaudeKey()) providers.push('🔵 Gemini');
+  if (getGroqKey()) providers.push('🔴 Groq');
+  if (getCohereKey()) providers.push('🟢 Cohere');
+  if (providers.length === 0) {
+    el.textContent = '⚠️ No AI providers configured — add at least one key above';
+    el.style.color = 'var(--red)';
+  } else {
+    el.textContent = `✅ ${providers.length} provider(s) ready: ${providers.join(' → ')} (auto-fallback enabled)`;
+    el.style.color = 'var(--green)';
+  }
+}
 
 function checkAllBulk(val) {
   document.querySelectorAll('#bulk-topic-checks input[type=checkbox]').forEach(c => c.checked = val);
@@ -2558,9 +2626,10 @@ function checkAllBulk(val) {
 
 let bulkResults = JSON.parse(localStorage.getItem('sc_bulk_results') || '{}');
 
-async function callClaude(prompt) {
+// GEMINI API
+async function callGemini(prompt) {
   const key = getClaudeKey();
-  if (!key) throw new Error('No Gemini API key — add it above');
+  if (!key) throw new Error('NO_KEY');
   const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -2569,12 +2638,92 @@ async function callClaude(prompt) {
       generationConfig: { temperature: 0.7, maxOutputTokens: 1500 }
     })
   });
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error?.message || 'Gemini API error ' + res.status);
-  }
+  if (res.status === 429) throw new Error('QUOTA_EXCEEDED');
+  if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Gemini error'); }
   const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No content generated';
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+// GROQ API
+async function callGroq(prompt) {
+  const key = getGroqKey();
+  if (!key) throw new Error('NO_KEY');
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+    body: JSON.stringify({
+      model: 'llama-3.1-8b-instant',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 1500,
+      temperature: 0.7
+    })
+  });
+  if (res.status === 429) throw new Error('QUOTA_EXCEEDED');
+  if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || 'Groq error'); }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || '';
+}
+
+// COHERE API
+async function callCohere(prompt) {
+  const key = getCohereKey();
+  if (!key) throw new Error('NO_KEY');
+  const res = await fetch('https://api.cohere.com/v2/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+    body: JSON.stringify({
+      model: 'command-r',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 1500
+    })
+  });
+  if (res.status === 429) throw new Error('QUOTA_EXCEEDED');
+  if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Cohere error'); }
+  const data = await res.json();
+  return data.message?.content?.[0]?.text || data.text || '';
+}
+
+// MAIN CALL FUNCTION — auto-fallback across providers
+async function callClaude(prompt) {
+  const providers = [
+    { name: 'Gemini', fn: callGemini, hasKey: () => !!getClaudeKey() },
+    { name: 'Groq', fn: callGroq, hasKey: () => !!getGroqKey() },
+    { name: 'Cohere', fn: callCohere, hasKey: () => !!getCohereKey() }
+  ].filter(p => p.hasKey());
+
+  if (providers.length === 0) throw new Error('No AI providers configured — add at least one API key in Bulk tab');
+
+  let lastError = null;
+  for (const provider of providers) {
+    try {
+      logBulkStep(`🤖 Using ${provider.name}...`);
+      const result = await provider.fn(prompt);
+      if (result && result.length > 50) return result;
+    } catch(e) {
+      if (e.message === 'NO_KEY') continue;
+      if (e.message === 'QUOTA_EXCEEDED') {
+        logBulkStep(`⚠️ ${provider.name} quota exceeded — trying next provider...`, 'var(--gold)');
+        lastError = e;
+        continue;
+      }
+      // Rate limit — wait 10s then try next
+      logBulkStep(`⚠️ ${provider.name} error: ${e.message} — trying next...`, 'var(--gold)');
+      await new Promise(r => setTimeout(r, 2000));
+      lastError = e;
+    }
+  }
+  throw lastError || new Error('All AI providers failed or quota exceeded');
+}
+
+let bulkLogEl = null;
+function logBulkStep(msg) {
+  if (!bulkLogEl) bulkLogEl = document.getElementById('bulk-log');
+  if (!bulkLogEl) return;
+  const div = document.createElement('div');
+  div.style.color = 'var(--gold)';
+  div.textContent = msg;
+  bulkLogEl.appendChild(div);
+  bulkLogEl.scrollTop = bulkLogEl.scrollHeight;
 }
 
 function getPollinationsImageURL(topic, style) {
@@ -2593,10 +2742,9 @@ function getPollinationsImageURL(topic, style) {
 }
 
 async function startBulkGeneration() {
-  const key = getClaudeKey();
-  if (!key) {
-    showToast('Add Gemini API key first!');
-    document.getElementById('claude-api-key').focus();
+  const providers = [getClaudeKey(), getGroqKey(), getCohereKey()].filter(Boolean);
+  if (providers.length === 0) {
+    showToast('Add at least one AI API key first!');
     return;
   }
 
@@ -2682,7 +2830,7 @@ async function startBulkGeneration() {
         logStep(`❌ ${topicName} / ${platform}: ${e.message}`, 'var(--red)');
         updateProgress(`❌ ${topicName} / ${platform}`);
       }
-      await new Promise(r => setTimeout(r, 600));
+      await new Promise(r => setTimeout(r, 4500)); // 4.5s delay = max 13 req/min, under free tier limit
     }
   }
 
@@ -3030,9 +3178,20 @@ window.addEventListener('load', () => {
   }
   const key = getClaudeKey();
   if (key) {
-    document.getElementById('claude-key-status').textContent = '✅ Gemini API key is saved and ready';
+    document.getElementById('claude-key-status').textContent = '✅ Gemini key is saved and ready';
     document.getElementById('claude-key-status').style.color = 'var(--green)';
   }
+  const groqKey = getGroqKey();
+  if (groqKey) {
+    document.getElementById('groq-key-status').textContent = '✅ Groq key is saved and ready';
+    document.getElementById('groq-key-status').style.color = 'var(--green)';
+  }
+  const cohereKey = getCohereKey();
+  if (cohereKey) {
+    document.getElementById('cohere-key-status').textContent = '✅ Cohere key is saved and ready';
+    document.getElementById('cohere-key-status').style.color = 'var(--green)';
+  }
+  updateProviderStatus();
 });
 
 // IMAGE STUDIO

@@ -1493,7 +1493,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.06';
+const APP_VERSION = '1.07';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -1842,12 +1842,31 @@ const topicArticleURLs = {
   tip:         'https://mysmartcents.github.io'
 };
 
+const topicMediumURLs = {
+  loan:        'https://medium.com/@smartcents/how-to-calculate-home-loan-interest-complete-guide-f18138a55c45',
+  budget:      'https://medium.com/@smartcents/best-budgeting-methods-to-save-money-fast-2026',
+  savings:     'https://medium.com/@smartcents',
+  travel:      'https://medium.com/@smartcents/best-travel-insurance-for-international-trips-2026',
+  money:       'https://medium.com/@smartcents/how-to-send-money-internationally-cheapest-methods-2026',
+  passive:     'https://medium.com/@smartcents/how-to-build-passive-income-online-2026',
+  fiverr:      'https://medium.com/@smartcents/how-to-start-freelancing-on-fiverr-complete-beginner-guide-2026',
+  emergency:   'https://medium.com/@smartcents/how-to-build-an-emergency-fund-from-scratch-in-2026',
+  legal:       'https://medium.com/@smartcents/how-to-create-legal-documents-online-complete-guide-2026',
+  proptrading: 'https://medium.com/@smartcents/how-to-get-funded-as-a-trader-2026-complete-guide-to-prop-trading',
+  corporate:   'https://medium.com/@smartcents/what-is-a-corporate-guarantee-and-why-every-business-owner-needs-one',
+  ackocar:     'https://medium.com/@smartcents',
+  sbicard:     'https://medium.com/@smartcents',
+  maxlife:     'https://medium.com/@smartcents',
+  tip:         'https://medium.com/@smartcents'
+};
+
 // PLATFORM PROMPTS
 function buildPrompts(topic) {
   const aff = topicAffiliates[topic];
   const name = topicNames[topic];
   const site = 'https://mysmartcents.github.io';
   const articleURL = topicArticleURLs[topic] || site;
+  const mediumURL = topicMediumURLs[topic] || 'https://medium.com/@smartcents';
   const fb = 'https://web.facebook.com/profile.php?id=1105657479290118';
   const ig = 'https://www.instagram.com/mysmartcents/';
   const pin = 'https://www.pinterest.com/mysmartcents/';
@@ -1894,6 +1913,7 @@ POST CONTENT:
 - Bullet points for tips and key takeaways
 - ${aff.name} link: ${aff.url}
 - "Read the full guide: ${articleURL}"
+- "Also published on Medium: ${mediumURL}"
 - SmartCents free tools: ${site}
 - Social follow CTA: Facebook | Instagram | Pinterest
 - Final CTA paragraph encouraging readers to visit SmartCents]
@@ -1913,6 +1933,7 @@ POST CONTENT:
 - ${aff.name}: ${aff.url}
 - "Free tools at ${site}"
 - "📖 Read the full guide: ${articleURL}"
+- "Also on Medium: ${mediumURL}"
 - "Follow SmartCents for daily finance tips! 👉 ${fb}"
 - 5 relevant hashtags at the end]
 
@@ -1931,6 +1952,7 @@ CAPTION:
 - Emojis throughout
 - ${aff.name} mention
 - "🔗 Link in bio → ${site}"
+- "📖 Full guide: ${articleURL}"
 - Call to action (save this post / share with someone)]
 
 FIRST COMMENT HASHTAGS:
@@ -1952,8 +1974,9 @@ PIN DESCRIPTION:
 - Keyword-rich opening sentence
 - What the reader will learn/gain
 - Step-by-step value points
-- ${aff.url}
-- ${site}
+- ${aff.name}: ${aff.url}
+- "Read the full guide: ${articleURL}"
+- "More finance tips at ${site}"
 - Clear call to action at end
 - 5-8 relevant keywords woven naturally]
 

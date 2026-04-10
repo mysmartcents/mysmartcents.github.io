@@ -830,6 +830,88 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   </div>
 </div>
 
+<!-- BULK GENERATOR TAB -->
+<div class="tab-content" id="tab-bulk">
+  <div style="padding:16px 16px 0">
+    <div style="font-size:1.4rem;font-weight:800;margin-bottom:4px;">⚡ Bulk Generator</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:16px;">Generate content for all 10 articles × all platforms in one go</div>
+  </div>
+
+  <div class="section">
+
+    <!-- API KEY -->
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:6px;">🔑 Claude API Key</div>
+      <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:6px;">🔑 Gemini API Key (Free)</div>
+      <div style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">Free — get from aistudio.google.com/apikey · No credit card needed</div>
+      <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+        <input id="claude-api-key" type="password" placeholder="AIza..." style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.82rem;outline:none;">
+        <button onclick="saveClaudeKey()" style="background:var(--gold);color:#080808;border:none;padding:9px 14px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">Save</button>
+      </div>
+      <div id="claude-key-status" style="font-size:0.72rem;color:var(--muted);margin-top:6px;font-family:'DM Mono',monospace;"></div>
+      <a href="https://aistudio.google.com/apikey" target="_blank" style="display:block;margin-top:8px;text-align:center;background:rgba(66,133,244,0.1);border:1px solid rgba(66,133,244,0.3);color:#4285F4;padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">🔗 Get Free Gemini API Key →</a>
+    </div>
+
+    <!-- SELECT ARTICLES -->
+    <div class="sec-header"><div class="sec-title">Select Articles to Generate</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;" id="bulk-topic-checks">
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="loan" checked style="accent-color:var(--gold);"> 🏠 Loan Calculator</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="budget" checked style="accent-color:var(--gold);"> 📊 Budget Planner</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="travel" checked style="accent-color:var(--gold);"> ✈️ Travel Insurance</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="money" checked style="accent-color:var(--gold);"> 💸 Money Transfer</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="passive" checked style="accent-color:var(--gold);"> 💰 Passive Income</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="fiverr" checked style="accent-color:var(--gold);"> 🎨 Freelancing</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="emergency" checked style="accent-color:var(--gold);"> 🚨 Emergency Fund</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="legal" checked style="accent-color:var(--gold);"> ⚖️ Legal Documents</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="proptrading" checked style="accent-color:var(--gold);"> 📈 Prop Trading</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" value="corporate" checked style="accent-color:var(--gold);"> 🏢 Corporate Guarantee</label>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="checkAllBulk(true)" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">✅ Select All</button>
+        <button onclick="checkAllBulk(false)" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">⬜ Deselect All</button>
+      </div>
+    </div>
+
+    <!-- SELECT PLATFORMS -->
+    <div class="sec-header"><div class="sec-title">Select Platforms</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" id="bulk-plat-blogger" checked style="accent-color:var(--gold);"> 🟠 Blogger</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" id="bulk-plat-facebook" checked style="accent-color:var(--gold);"> 📘 Facebook</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" id="bulk-plat-instagram" checked style="accent-color:var(--gold);"> 📸 Instagram</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" id="bulk-plat-pinterest" checked style="accent-color:var(--gold);"> 📌 Pinterest</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:0.8rem;cursor:pointer;"><input type="checkbox" id="bulk-plat-medium" style="accent-color:var(--gold);"> 📝 Medium</label>
+      </div>
+    </div>
+
+    <!-- GENERATE BUTTON -->
+    <button onclick="startBulkGeneration()" id="bulk-gen-btn" style="width:100%;background:var(--gold);color:#080808;border:none;padding:16px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;cursor:pointer;margin-bottom:14px;">⚡ Generate All Content</button>
+
+    <!-- PROGRESS -->
+    <div id="bulk-progress" style="display:none;background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="font-size:0.85rem;font-weight:700;color:var(--gold);" id="bulk-progress-label">Generating...</div>
+        <div style="font-size:0.78rem;color:var(--muted);font-family:'DM Mono',monospace;" id="bulk-progress-count">0/0</div>
+      </div>
+      <div style="background:var(--dark4);border-radius:100px;height:8px;overflow:hidden;">
+        <div id="bulk-progress-bar" style="height:100%;background:var(--gold);border-radius:100px;width:0%;transition:width 0.3s;"></div>
+      </div>
+      <div id="bulk-log" style="margin-top:10px;font-size:0.72rem;font-family:'DM Mono',monospace;color:var(--muted);max-height:120px;overflow-y:auto;"></div>
+    </div>
+
+    <!-- RESULTS -->
+    <div id="bulk-results" style="display:none;">
+      <div class="sec-header">
+        <div class="sec-title">Generated Content</div>
+        <div class="sec-count" id="bulk-results-count"></div>
+      </div>
+      <div id="bulk-results-list"></div>
+    </div>
+
+  </div>
+</div>
+
 <!-- IMAGE STUDIO TAB -->
 <div class="tab-content" id="tab-images">
   <div style="padding:16px 16px 0">
@@ -1378,6 +1460,9 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   <div class="nav-item" onclick="switchTab('post', this)">
     <div class="nav-icon">✍️</div><div class="nav-label">Post</div>
   </div>
+  <div class="nav-item" onclick="switchTab('bulk', this)">
+    <div class="nav-icon">⚡</div><div class="nav-label">Bulk</div>
+  </div>
   <div class="nav-item" onclick="switchTab('images', this)">
     <div class="nav-icon">🎨</div><div class="nav-label">Images</div>
   </div>
@@ -1644,7 +1729,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.08';
+const APP_VERSION = '1.10';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2445,6 +2530,300 @@ async function postToFacebookPage() {
     btn.style.opacity = '1';
   }
 }
+
+// BULK GENERATOR
+function saveClaudeKey() {
+  const key = document.getElementById('claude-api-key').value.trim();
+  if (!key || !key.startsWith('AIza')) { showToast('Enter a valid Gemini API key (starts with AIza...)'); return; }
+  localStorage.setItem('sc_gemini_key', key);
+  document.getElementById('claude-api-key').value = '';
+  document.getElementById('claude-key-status').textContent = '✅ Gemini API key saved — ready to generate!';
+  document.getElementById('claude-key-status').style.color = 'var(--green)';
+  showToast('Gemini API key saved! ⚡');
+}
+
+function getClaudeKey() { return localStorage.getItem('sc_gemini_key') || ''; }
+
+function checkAllBulk(val) {
+  document.querySelectorAll('#bulk-topic-checks input[type=checkbox]').forEach(c => c.checked = val);
+}
+
+let bulkResults = JSON.parse(localStorage.getItem('sc_bulk_results') || '{}');
+
+async function callClaude(prompt) {
+  const key = getClaudeKey();
+  if (!key) throw new Error('No Gemini API key — add it above');
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.7, maxOutputTokens: 1500 }
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || 'Gemini API error ' + res.status);
+  }
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No content generated';
+}
+
+function buildBulkPrompt(topic, platform) {
+  const aff = topicAffiliates[topic];
+  const name = topicNames[topic];
+  const articleURL = topicArticleURLs[topic] || 'https://mysmartcents.github.io';
+  const mediumURL = topicMediumURLs[topic] || 'https://medium.com/@smartcents';
+  const site = 'https://mysmartcents.github.io';
+
+  const prompts = {
+    blogger: `Write a complete blog post about "${name}" for SmartCents blog. Global English audience (US/UK).
+
+Requirements:
+- 600-800 words, informative and helpful
+- Include title, meta description, and 5 labels at the top
+- 4-5 sections with clear headings
+- Include affiliate link: ${aff.name} → ${aff.url}
+- Include: "Read the full guide: ${articleURL}"
+- Include: "Originally on Medium: ${mediumURL}"
+- End with: "Free finance tools at ${site}"
+- Format: TITLE: / META: / LABELS: / CONTENT:`,
+
+    facebook: `Write a Facebook post about "${name}" for SmartCents page. Global English audience.
+
+Requirements:
+- 100-150 words max
+- Strong opening hook
+- 3-4 key points with emojis
+- Include: ${aff.name} → ${aff.url}
+- Include: "Full guide: ${articleURL}"
+- End with 5 relevant hashtags
+- Conversational, helpful tone`,
+
+    instagram: `Write an Instagram caption about "${name}" for @mysmartcents. Global English audience.
+
+Requirements:
+- 80-120 words
+- Strong hook first line
+- Line breaks for readability
+- Emojis throughout
+- Include affiliate: ${aff.name}
+- End with: "🔗 Link in bio → ${site}"
+- List 15-20 hashtags separately at end labeled HASHTAGS:`,
+
+    pinterest: `Write a Pinterest pin description about "${name}" for SmartCents. Global English audience.
+
+Requirements:
+- 150-200 words
+- Keyword-rich opening sentence
+- 5-7 value points
+- Include: ${aff.url}
+- Include: "Full guide: ${articleURL}"
+- End with clear call to action
+- Format: TITLE: / DESCRIPTION: / BOARD:`,
+
+    medium: `Write a Medium article update/teaser about "${name}" for @smartcents. Global English audience.
+
+Requirements:
+- 200-300 words teaser/summary
+- Compelling hook
+- Key insights from the topic
+- Include: ${aff.name} → ${aff.url}
+- End with: "Read the full article: ${mediumURL}"
+- Include 5 tags labeled TAGS:`
+  };
+
+  return prompts[platform] || '';
+}
+
+async function startBulkGeneration() {
+  const key = getClaudeKey();
+  if (!key) {
+    showToast('Add Gemini API key first!');
+    document.getElementById('claude-api-key').focus();
+    return;
+  }
+
+  const selectedTopics = Array.from(document.querySelectorAll('#bulk-topic-checks input:checked')).map(c => c.value);
+  if (selectedTopics.length === 0) { showToast('Select at least one article!'); return; }
+
+  const selectedPlatforms = ['blogger','facebook','instagram','pinterest','medium'].filter(p =>
+    document.getElementById('bulk-plat-' + p)?.checked
+  );
+  if (selectedPlatforms.length === 0) { showToast('Select at least one platform!'); return; }
+
+  const total = selectedTopics.length * selectedPlatforms.length;
+  let done = 0;
+
+  const btn = document.getElementById('bulk-gen-btn');
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+
+  document.getElementById('bulk-progress').style.display = 'block';
+  document.getElementById('bulk-progress-count').textContent = `0/${total}`;
+  const log = document.getElementById('bulk-log');
+  log.innerHTML = '';
+
+  function logStep(msg, color) {
+    const div = document.createElement('div');
+    div.style.color = color || 'var(--muted)';
+    div.textContent = msg;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  for (const topic of selectedTopics) {
+    const topicName = topicNames[topic] || topic;
+    if (!bulkResults[topic]) bulkResults[topic] = {};
+
+    for (const platform of selectedPlatforms) {
+      document.getElementById('bulk-progress-label').textContent = `Generating: ${topicName} → ${platform}`;
+      logStep(`⏳ ${topicName} / ${platform}...`);
+
+      try {
+        const prompt = buildBulkPrompt(topic, platform);
+        const content = await callClaude(prompt);
+        bulkResults[topic][platform] = content;
+        done++;
+        const pct = Math.round((done / total) * 100);
+        document.getElementById('bulk-progress-bar').style.width = pct + '%';
+        document.getElementById('bulk-progress-count').textContent = `${done}/${total}`;
+        logStep(`✅ ${topicName} / ${platform} done`, 'var(--green)');
+      } catch(e) {
+        logStep(`❌ ${topicName} / ${platform}: ${e.message}`, 'var(--red)');
+        done++;
+      }
+
+      // Small delay to avoid rate limiting
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
+
+  localStorage.setItem('sc_bulk_results', JSON.stringify(bulkResults));
+  document.getElementById('bulk-progress-label').textContent = `✅ Complete! ${done}/${total} generated`;
+
+  btn.textContent = '⚡ Generate All Content';
+  btn.disabled = false;
+  btn.style.opacity = '1';
+
+  renderBulkResults();
+  showToast(`Generated ${done}/${total} pieces of content! ⚡`);
+}
+
+function renderBulkResults() {
+  const container = document.getElementById('bulk-results-list');
+  const topics = Object.keys(bulkResults);
+  if (topics.length === 0) {
+    document.getElementById('bulk-results').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('bulk-results').style.display = 'block';
+  let totalPieces = 0;
+  topics.forEach(t => totalPieces += Object.keys(bulkResults[t]).length);
+  document.getElementById('bulk-results-count').textContent = `${totalPieces} pieces`;
+
+  const platColors = {
+    blogger: '#FF6B00', facebook: '#4A9EF5',
+    instagram: '#E1306C', pinterest: '#E60023', medium: 'var(--gold)'
+  };
+  const platIcons = {
+    blogger: '🟠', facebook: '📘', instagram: '📸', pinterest: '📌', medium: '📝'
+  };
+
+  container.innerHTML = topics.map(topic => {
+    const name = topicNames[topic] || topic;
+    const platforms = bulkResults[topic];
+    return `
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <div style="font-size:0.9rem;font-weight:700;color:var(--gold);margin-bottom:10px;">${name}</div>
+      ${Object.entries(platforms).map(([plat, content]) => `
+        <div style="background:var(--dark3);border:1px solid var(--dark5);border-radius:10px;padding:10px;margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-size:0.78rem;font-weight:700;color:${platColors[plat] || 'var(--text)'};">${platIcons[plat] || ''} ${plat.toUpperCase()}</div>
+            <div style="display:flex;gap:6px;">
+              <button onclick="copyBulkContent('${topic}','${plat}')" style="background:var(--dark4);border:none;color:var(--text);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">📋 Copy</button>
+              ${plat === 'blogger' ? `<button onclick="postBulkToBlogger('${topic}')" style="background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">🟠 Post</button>` : ''}
+              ${plat === 'facebook' ? `<button onclick="postBulkToFacebook('${topic}')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">📘 Post</button>` : ''}
+            </div>
+          </div>
+          <div style="font-size:0.75rem;color:var(--muted);font-family:'DM Mono',monospace;line-height:1.5;max-height:80px;overflow:hidden;white-space:pre-wrap;">${content.substring(0, 200)}...</div>
+        </div>
+      `).join('')}
+    </div>`;
+  }).join('');
+}
+
+function copyBulkContent(topic, platform) {
+  const content = bulkResults[topic]?.[platform];
+  if (!content) { showToast('No content found!'); return; }
+  navigator.clipboard.writeText(content).then(() => showToast('Copied! 📋'));
+}
+
+async function postBulkToBlogger(topic) {
+  const content = bulkResults[topic]?.blogger;
+  if (!content) { showToast('No Blogger content for this topic!'); return; }
+  const apiKey = getBloggerKey();
+  if (!apiKey) { showToast('Add Blogger API key in Settings!'); return; }
+
+  const titleMatch = content.match(/TITLE:\s*(.+)/);
+  const title = titleMatch ? titleMatch[1].trim() : (topicNames[topic] || topic);
+  const htmlContent = `<div style="font-family:Georgia,serif;max-width:800px;margin:0 auto;line-height:1.8;">${content.replace(/\n/g,'<br>')}<hr><p><a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents — Free Finance Tools</a></p></div>`;
+
+  showToast('Posting to Blogger...');
+  try {
+    const res = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts?key=${apiKey}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ title, content: htmlContent, labels: ['Personal Finance','SmartCents'] })
+    });
+    const data = await res.json();
+    if (data.url) {
+      showToast('✅ Posted to Blogger!');
+      renderBulkResults();
+    } else {
+      showToast('❌ Blogger error: ' + (data.error?.message || 'Unknown'));
+    }
+  } catch(e) { showToast('❌ Failed: ' + e.message); }
+}
+
+async function postBulkToFacebook(topic) {
+  const content = bulkResults[topic]?.facebook;
+  if (!content) { showToast('No Facebook content for this topic!'); return; }
+  const token = getFBToken();
+  const pageId = getFBPageId();
+  showToast('Posting to Facebook...');
+  try {
+    const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ message: content, access_token: token })
+    });
+    const data = await res.json();
+    if (data.id) {
+      showToast('✅ Posted to Facebook! Instagram + Pinterest will follow.');
+    } else {
+      showToast('❌ Facebook error: ' + (data.error?.message || 'Unknown'));
+    }
+  } catch(e) { showToast('❌ Failed: ' + e.message); }
+}
+
+// Load saved bulk results on startup
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('sc_bulk_results');
+  if (saved) {
+    try {
+      bulkResults = JSON.parse(saved);
+      if (Object.keys(bulkResults).length > 0) renderBulkResults();
+    } catch(e) {}
+  }
+  const key = getClaudeKey();
+  if (key) {
+    document.getElementById('claude-key-status').textContent = '✅ Gemini API key is saved and ready';
+    document.getElementById('claude-key-status').style.color = 'var(--green)';
+  }
+});
 
 // IMAGE STUDIO
 const imgBriefs = {};

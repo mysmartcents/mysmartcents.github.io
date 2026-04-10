@@ -830,6 +830,154 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   </div>
 </div>
 
+<!-- IMAGE STUDIO TAB -->
+<div class="tab-content" id="tab-images">
+  <div style="padding:16px 16px 0">
+    <div style="font-size:1.4rem;font-weight:800;margin-bottom:4px;">🎨 Image Studio</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:16px;">Generate image briefs & open Canva with correct dimensions</div>
+  </div>
+
+  <div class="section">
+
+    <!-- STEP 1: SELECT TOPIC -->
+    <div class="sec-header"><div class="sec-title">Step 1 — Select Topic</div></div>
+    <select id="img-topic" style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;outline:none;margin-bottom:12px;">
+      <option value="">— Choose a topic —</option>
+      <option value="loan">🏠 Loan Calculator</option>
+      <option value="budget">📊 Budget Planner</option>
+      <option value="savings">🎯 Savings Tracker</option>
+      <option value="travel">✈️ Travel Insurance</option>
+      <option value="money">💸 Money Transfer</option>
+      <option value="passive">💰 Passive Income</option>
+      <option value="fiverr">🎨 Freelancing on Fiverr</option>
+      <option value="emergency">🚨 Emergency Fund</option>
+      <option value="legal">⚖️ Legal Documents</option>
+      <option value="proptrading">📈 Prop Trading</option>
+      <option value="corporate">🏢 Corporate Guarantee</option>
+      <option value="ackocar">🚗 Car Insurance India</option>
+      <option value="sbicard">💳 SBI Credit Card India</option>
+      <option value="maxlife">🛡️ MaxLife Insurance India</option>
+    </select>
+
+    <!-- STEP 2: GENERATE -->
+    <button onclick="generateImageBriefs()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;margin-bottom:16px;">🎨 Generate Image Briefs</button>
+
+    <!-- IMAGE RESULTS -->
+    <div id="image-results" style="display:none;">
+
+      <!-- PLATFORM TABS -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="img-tab-btns">
+        <button onclick="showImgTab('blogger')" class="itab-btn active" style="background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">🟠 Blogger</button>
+        <button onclick="showImgTab('facebook')" class="itab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">📘 Facebook</button>
+        <button onclick="showImgTab('instagram')" class="itab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">📸 Instagram</button>
+        <button onclick="showImgTab('pinterest')" class="itab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">📌 Pinterest</button>
+        <button onclick="showImgTab('medium')" class="itab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">📝 Medium</button>
+      </div>
+
+      <!-- BLOGGER IMAGE -->
+      <div id="itab-blogger" class="itab-content">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="font-size:0.78rem;font-weight:700;color:#FF6B00;">🟠 BLOGGER / FACEBOOK — 1200×628px Landscape</div>
+            <a href="https://www.canva.com/design?create&type=BlogBanner" target="_blank" style="background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:6px 12px;border-radius:8px;font-size:0.72rem;font-weight:700;text-decoration:none;font-family:'Syne',sans-serif;">Open Canva →</a>
+          </div>
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CANVA SIZE: 1200 × 628 pixels | Brand: #C9A84C gold on #0D0D0D dark</div>
+          <div id="img-brief-blogger" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.7;white-space:pre-wrap;margin-bottom:10px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="copyImgBrief('blogger')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📋 Copy Brief</button>
+            <button onclick="copyGeminiPrompt('blogger')" style="background:rgba(66,133,244,0.1);border:1px solid rgba(66,133,244,0.3);color:#4285F4;padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🤖 Gemini Prompt</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <a href="https://www.canva.com/create/blog-banners/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(0,196,204,0.1);border:1px solid rgba(0,196,204,0.3);color:#00C4CC;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">🎨 Canva Blog Banner</a>
+          <a href="https://designer.microsoft.com/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(0,120,212,0.1);border:1px solid rgba(0,120,212,0.3);color:#0078D4;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">✨ MS Designer</a>
+        </div>
+      </div>
+
+      <!-- FACEBOOK IMAGE (same as blogger) -->
+      <div id="itab-facebook" class="itab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="font-size:0.78rem;font-weight:700;color:#4A9EF5;">📘 FACEBOOK POST — 1200×630px Landscape</div>
+          </div>
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CANVA SIZE: 1200 × 630 pixels | Same image as Blogger ✅</div>
+          <div style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);border-radius:8px;padding:10px;font-size:0.78rem;color:var(--green);font-family:'DM Mono',monospace;">✅ Use the same Blogger image for Facebook — dimensions are nearly identical. Just save the Blogger image and use it for Facebook too!</div>
+        </div>
+        <a href="https://www.canva.com/create/facebook-posts/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">🎨 Open Canva Facebook Template</a>
+      </div>
+
+      <!-- INSTAGRAM IMAGE -->
+      <div id="itab-instagram" class="itab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="font-size:0.78rem;font-weight:700;color:#E1306C;">📸 INSTAGRAM — 1080×1080px Square</div>
+          </div>
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CANVA SIZE: 1080 × 1080 pixels | Bold text, clean design, finance theme</div>
+          <div id="img-brief-instagram" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.7;white-space:pre-wrap;margin-bottom:10px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="copyImgBrief('instagram')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📋 Copy Brief</button>
+            <button onclick="copyGeminiPrompt('instagram')" style="background:rgba(66,133,244,0.1);border:1px solid rgba(66,133,244,0.3);color:#4285F4;padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🤖 Gemini Prompt</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <a href="https://www.canva.com/create/instagram-posts/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(225,48,108,0.1);border:1px solid rgba(225,48,108,0.3);color:#E1306C;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">🎨 Canva Instagram</a>
+          <a href="https://designer.microsoft.com/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(0,120,212,0.1);border:1px solid rgba(0,120,212,0.3);color:#0078D4;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">✨ MS Designer</a>
+        </div>
+      </div>
+
+      <!-- PINTEREST IMAGE -->
+      <div id="itab-pinterest" class="itab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <div style="font-size:0.78rem;font-weight:700;color:#E60023;">📌 PINTEREST — 1000×1500px Vertical</div>
+          </div>
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CANVA SIZE: 1000 × 1500 pixels | Tall infographic — most important for Pinterest!</div>
+          <div id="img-brief-pinterest" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.7;white-space:pre-wrap;margin-bottom:10px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="copyImgBrief('pinterest')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📋 Copy Brief</button>
+            <button onclick="copyGeminiPrompt('pinterest')" style="background:rgba(66,133,244,0.1);border:1px solid rgba(66,133,244,0.3);color:#4285F4;padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🤖 Gemini Prompt</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <a href="https://www.canva.com/create/pinterest-graphics/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(230,0,35,0.1);border:1px solid rgba(230,0,35,0.3);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">🎨 Canva Pinterest</a>
+          <a href="https://designer.microsoft.com/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(0,120,212,0.1);border:1px solid rgba(0,120,212,0.3);color:#0078D4;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">✨ MS Designer</a>
+        </div>
+      </div>
+
+      <!-- MEDIUM IMAGE -->
+      <div id="itab-medium" class="itab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;">📝 MEDIUM — 1500×750px Landscape</div>
+          <div style="font-size:0.7rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:8px;">CANVA SIZE: 1500 × 750 pixels | Same style as Blogger but wider</div>
+          <div style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);border-radius:8px;padding:10px;font-size:0.78rem;color:var(--green);font-family:'DM Mono',monospace;">✅ Use the same Blogger image for Medium — just resize in Canva to 1500×750px. Click "Resize" in Canva and type the new dimensions.</div>
+        </div>
+        <a href="https://www.canva.com/create/blog-banners/" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;text-decoration:none;">🎨 Open Canva Blog Banner</a>
+      </div>
+
+      <!-- BRAND COLORS REFERENCE -->
+      <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:12px;padding:14px;margin-top:14px;">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:10px;">🎨 SmartCents Brand Colors</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div style="text-align:center;">
+            <div style="width:100%;height:40px;background:#C9A84C;border-radius:8px;margin-bottom:4px;"></div>
+            <div style="font-size:0.7rem;font-family:'DM Mono',monospace;color:var(--muted);">#C9A84C<br>Gold</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:100%;height:40px;background:#0D0D0D;border:1px solid var(--dark4);border-radius:8px;margin-bottom:4px;"></div>
+            <div style="font-size:0.7rem;font-family:'DM Mono',monospace;color:var(--muted);">#0D0D0D<br>Dark</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="width:100%;height:40px;background:#E8E8E0;border-radius:8px;margin-bottom:4px;"></div>
+            <div style="font-size:0.7rem;font-family:'DM Mono',monospace;color:var(--dark);">#E8E8E0<br>Light</div>
+          </div>
+        </div>
+        <button onclick="navigator.clipboard.writeText('#C9A84C, #0D0D0D, #E8E8E0').then(()=>showToast('Brand colors copied!'))" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;margin-top:8px;">📋 Copy Brand Colors</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- NOTES TAB -->
 <div class="tab-content" id="tab-notes">
   <div style="padding:16px 16px 0">
@@ -1230,6 +1378,9 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
   <div class="nav-item" onclick="switchTab('post', this)">
     <div class="nav-icon">✍️</div><div class="nav-label">Post</div>
   </div>
+  <div class="nav-item" onclick="switchTab('images', this)">
+    <div class="nav-icon">🎨</div><div class="nav-label">Images</div>
+  </div>
   <div class="nav-item" onclick="switchTab('research', this)">
     <div class="nav-icon">🔬</div><div class="nav-label">Research</div>
   </div>
@@ -1493,7 +1644,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.07';
+const APP_VERSION = '1.08';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2293,6 +2444,122 @@ async function postToFacebookPage() {
     btn.textContent = '📘 Auto-Post to Facebook Page';
     btn.style.opacity = '1';
   }
+}
+
+// IMAGE STUDIO
+const imgBriefs = {};
+const geminiPrompts = {};
+
+const imgTopicData = {
+  loan:        { title: 'Home Loan Calculator', keywords: 'home loan, mortgage, monthly payment, interest rate' },
+  budget:      { title: 'Budget Planner', keywords: 'budget, savings, monthly expenses, financial planning' },
+  savings:     { title: 'Savings Tracker', keywords: 'savings goal, emergency fund, financial goals' },
+  travel:      { title: 'Travel Insurance', keywords: 'travel insurance, international travel, trip protection' },
+  money:       { title: 'International Money Transfer', keywords: 'send money, wire transfer, remittance, Western Union' },
+  passive:     { title: 'Passive Income', keywords: 'passive income, investments, make money online' },
+  fiverr:      { title: 'Freelancing on Fiverr', keywords: 'freelancing, Fiverr, work from home, gig economy' },
+  emergency:   { title: 'Emergency Fund', keywords: 'emergency fund, savings, financial safety net' },
+  legal:       { title: 'Legal Documents Online', keywords: 'legal documents, contracts, wills, LawDepot' },
+  proptrading: { title: 'Prop Trading & Funding', keywords: 'prop trading, funded trader, trading account' },
+  corporate:   { title: 'Corporate Guarantee', keywords: 'corporate guarantee, business finance, loan guarantee' },
+  ackocar:     { title: 'Car Insurance India', keywords: 'car insurance India, Acko, vehicle insurance' },
+  sbicard:     { title: 'SBI Credit Card', keywords: 'SBI credit card, India credit card, cashback rewards' },
+  maxlife:     { title: 'Life Insurance India', keywords: 'MaxLife insurance, term plan, life cover India' }
+};
+
+function generateImageBriefs() {
+  const topic = document.getElementById('img-topic').value;
+  if (!topic) { showToast('Select a topic first!'); return; }
+  const d = imgTopicData[topic] || { title: topic, keywords: topic };
+  const gold = '#C9A84C', dark = '#0D0D0D', light = '#E8E8E0';
+
+  imgBriefs.blogger = `CANVA DESIGN BRIEF — BLOGGER/FACEBOOK
+Size: 1200 × 628 pixels | Topic: ${d.title}
+
+LAYOUT:
+- Dark background (${dark})
+- Large bold title in gold (${gold}): "${d.title}"
+- Subtitle in light (${light}): "SmartCents — Free Finance Tools"
+- SmartCents branding bottom left
+- Finance icon or graphic right side
+- Thin gold border accent
+
+TEXT: "${d.title}" + "SmartCents | mysmartcents.github.io"
+STYLE: Professional, minimal, dark gold theme`;
+
+  imgBriefs.instagram = `CANVA DESIGN BRIEF — INSTAGRAM SQUARE
+Size: 1080 × 1080 pixels | Topic: ${d.title}
+
+LAYOUT:
+- Dark background with gold accent
+- Large centered bold hook headline
+- 3-4 bullet points as key takeaways
+- SmartCents branding at bottom
+- Eye-catching icon centered
+
+TEXT: Short hook + 3 tips + "@mysmartcents | Free Finance Tools"
+STYLE: Bold, eye-catching, scroll-stopping, mobile-first`;
+
+  imgBriefs.pinterest = `CANVA DESIGN BRIEF — PINTEREST VERTICAL
+Size: 1000 × 1500 pixels (TALL) | Topic: ${d.title}
+
+LAYOUT (top to bottom):
+1. TOP (30%): Bold title + hook on dark gold background
+2. MIDDLE (50%): 5-7 numbered tips — infographic style
+3. BOTTOM (20%): SmartCents branding + mysmartcents.github.io
+
+CONTENT: "Complete Guide to ${d.title}" + 5-7 actionable tips
+COLORS: ${gold} + ${dark} + ${light}
+STYLE: Save-worthy infographic, readable, valuable`;
+
+  geminiPrompts.blogger = `Create a professional blog banner for "${d.title}". Dark background (#0D0D0D), gold text (#C9A84C). Bold title, "SmartCents — Free Finance Tools" subtitle. 1200x628px landscape. Finance theme. Keywords: ${d.keywords}`;
+
+  geminiPrompts.instagram = `Create a square Instagram post about "${d.title}". Dark background, gold accents (#C9A84C). Bold hook headline, 3 key tips, "@mysmartcents" at bottom. 1080x1080px. Scroll-stopping mobile design. Keywords: ${d.keywords}`;
+
+  geminiPrompts.pinterest = `Create a tall Pinterest infographic pin about "${d.title}". 1000x1500px vertical. Dark background (#0D0D0D), gold (#C9A84C) accents. Bold title at top, 5-7 numbered tips middle, "mysmartcents.github.io" at bottom. Save-worthy infographic style. Keywords: ${d.keywords}`;
+
+  document.getElementById('img-brief-blogger').textContent = imgBriefs.blogger;
+  document.getElementById('img-brief-instagram').textContent = imgBriefs.instagram;
+  document.getElementById('img-brief-pinterest').textContent = imgBriefs.pinterest;
+  document.getElementById('image-results').style.display = 'block';
+  showImgTab('blogger');
+  showToast('Image briefs ready! 🎨');
+  document.getElementById('image-results').scrollIntoView({behavior:'smooth'});
+}
+
+function showImgTab(name) {
+  document.querySelectorAll('.itab-content').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('.itab-btn').forEach(b => {
+    b.style.background = 'var(--dark2)'; b.style.borderColor = 'var(--dark4)'; b.style.color = 'var(--muted)';
+  });
+  document.getElementById('itab-' + name).style.display = 'block';
+  const tabs = ['blogger','facebook','instagram','pinterest','medium'];
+  const idx = tabs.indexOf(name);
+  const btns = document.querySelectorAll('.itab-btn');
+  if (!btns[idx]) return;
+  const c = {
+    blogger:   ['rgba(255,107,0,0.15)','rgba(255,107,0,0.3)','#FF6B00'],
+    facebook:  ['rgba(24,119,242,0.15)','rgba(24,119,242,0.3)','#4A9EF5'],
+    instagram: ['rgba(225,48,108,0.15)','rgba(225,48,108,0.3)','#E1306C'],
+    pinterest: ['rgba(230,0,35,0.15)','rgba(230,0,35,0.3)','#E60023'],
+    medium:    ['rgba(201,168,76,0.15)','rgba(201,168,76,0.3)','var(--gold)']
+  }[name];
+  if (c) { btns[idx].style.background=c[0]; btns[idx].style.borderColor=c[1]; btns[idx].style.color=c[2]; }
+}
+
+function copyImgBrief(platform) {
+  const b = imgBriefs[platform];
+  if (!b) { showToast('Generate briefs first!'); return; }
+  navigator.clipboard.writeText(b).then(() => showToast('Brief copied! 📋'));
+}
+
+function copyGeminiPrompt(platform) {
+  const p = geminiPrompts[platform];
+  if (!p) { showToast('Generate briefs first!'); return; }
+  navigator.clipboard.writeText(p).then(() => {
+    showToast('Gemini prompt copied! Opening Gemini...');
+    setTimeout(() => window.open('https://gemini.google.com/', '_blank'), 800);
+  });
 }
 
 // NOTES

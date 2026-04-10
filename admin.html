@@ -575,7 +575,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <button onclick="openSite('https://analytics.google.com')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📊 Google Analytics</button>
         <button onclick="openSite('https://mysmartcents.github.io')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">🌐 View Site</button>
         <button onclick="openSite('https://search.google.com/search-console')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">🔍 Search Console</button>
-        <button onclick="openSite('https://web.facebook.com/profile.php?id=61577493070318')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📘 Facebook Page</button>
+        <button onclick="openSite('https://web.facebook.com/profile.php?id=1105657479290118')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📘 Facebook Page</button>
         <button onclick="openSite('https://www.instagram.com/mysmartcents/')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📸 Instagram</button>
         <button onclick="openSite('https://www.pinterest.com/mysmartcents/')" style="background:var(--dark2); border:1px solid var(--dark4); color:var(--text); padding:12px; border-radius:12px; font-family:'Syne',sans-serif; font-size:0.8rem; cursor:pointer;">📌 Pinterest</button>
       </div>
@@ -737,7 +737,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <textarea id="result-facebook" oninput="saveContent('facebook',this.value)" placeholder="Paste Claude's Facebook post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
           <button onclick="copyContent('facebook')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📋 Copy</button>
-          <button onclick="copyAndOpen('facebook','https://www.facebook.com/profile.php?id=61577493070318')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📘 FB Page</button>
+          <button onclick="copyAndOpen('facebook','https://www.facebook.com/profile.php?id=1105657479290118')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📘 FB Page</button>
           <button onclick="copyAndOpen('facebook','https://www.facebook.com/groups/feed/')" style="background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.2);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">👥 Groups</button>
         </div>
         <button onclick="postToFacebookPage()" id="fbPostBtn" style="width:100%;background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.4);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;margin-top:8px;">📘 Auto-Post to Facebook Page</button>
@@ -1068,7 +1068,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     <!-- BLOGGER OAUTH TOKEN -->
     <div class="sec-header"><div class="sec-title">🟠 Blogger Auto-Post</div></div>
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:16px;">
-      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;line-height:1.6;">Requires OAuth Access Token — NOT an API key.<br>1. Open OAuth Playground below<br>2. Step 1: select Blogger API v3 scope<br>3. Step 2: Authorize<br>4. Step 3: Exchange code → copy Access Token</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;line-height:1.6;">✅ Auto-refresh enabled — token refreshes automatically.<br>No action needed unless auto-refresh fails.<br>Optionally paste a fresh token below to override.</div>
       <button onclick="openSite('https://developers.google.com/oauthplayground')" style="width:100%;background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:10px;">🔑 Open OAuth Playground →</button>
       <input id="blogger-token-input" type="password" placeholder="Paste OAuth access token here..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.82rem;outline:none;margin-bottom:10px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
@@ -1085,7 +1085,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;line-height:1.6;">Requires a Facebook Page Access Token.<br>1. Open Graph API Explorer below<br>2. Select your SmartCents App → your Page<br>3. Add permission: pages_manage_posts<br>4. Generate Token → copy it</div>
       <button onclick="openSite('https://developers.facebook.com/tools/explorer/')" style="width:100%;background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;margin-bottom:10px;">🔑 Open Graph API Explorer →</button>
       <input id="fb-token-input" type="password" placeholder="Paste Facebook Page Access Token..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.82rem;outline:none;margin-bottom:8px;">
-      <input id="fb-page-id-input" type="text" placeholder="Page ID" value="61577493070318" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.82rem;outline:none;margin-bottom:10px;">
+      <input id="fb-page-id-input" type="text" placeholder="Page ID" value="1105657479290118" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.82rem;outline:none;margin-bottom:10px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
         <button onclick="saveFBToken()" style="background:var(--gold);color:#080808;border:none;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">💾 Save Token</button>
         <button onclick="clearFBToken()" style="background:rgba(224,90,90,0.15);border:1px solid rgba(224,90,90,0.2);color:var(--red);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">🗑️ Clear</button>
@@ -1767,7 +1767,7 @@ function buildPrompts(topic) {
   const aff = topicAffiliates[topic];
   const name = topicNames[topic];
   const site = 'https://mysmartcents.github.io';
-  const fb = 'https://web.facebook.com/profile.php?id=61577493070318';
+  const fb = 'https://web.facebook.com/profile.php?id=1105657479290118';
   const ig = 'https://www.instagram.com/mysmartcents/';
   const pin = 'https://www.pinterest.com/mysmartcents/';
 
@@ -1948,7 +1948,7 @@ function sharePlatform(platform, type) {
   navigator.clipboard.writeText(post).then(() => {
     if (platform === 'facebook' && type === 'page') {
       showToast('Copied! Opening Facebook Page...');
-      setTimeout(() => window.open('https://www.facebook.com/profile.php?id=61577493070318', '_blank'), 800);
+      setTimeout(() => window.open('https://www.facebook.com/profile.php?id=1105657479290118', '_blank'), 800);
     } else if (platform === 'facebook' && type === 'groups') {
       showToast('Copied! Opening Facebook Groups...');
       setTimeout(() => window.open('https://www.facebook.com/groups/feed/', '_blank'), 800);
@@ -1966,8 +1966,8 @@ function sharePlatform(platform, type) {
 async function postToBloggerFromStudio() {
   const post = document.getElementById('result-blogger').value;
   if (!post) { showToast('Paste Claude reply first!'); return; }
-  const token = getBloggerToken();
-  if (!token) { showToast('Add Blogger OAuth token in Settings tab!'); return; }
+  let token = await getBloggerToken();
+  if (!token) { showToast('Auto-refresh failed — paste token in Settings!'); return; }
   const title = topicNames[currentTopic] || 'SmartCents Finance Tips';
   const btn = document.getElementById('bloggerBtn');
   const status = document.getElementById('blogger-status');
@@ -1976,7 +1976,7 @@ async function postToBloggerFromStudio() {
   status.style.display = 'block';
   status.style.color = 'var(--muted)';
   status.textContent = 'Connecting to Blogger...';
-  const content = `<div style="font-family:Georgia,serif;max-width:800px;margin:0 auto;line-height:1.8;">${post.replace(/\n/g,'<br>')}<hr style="margin:30px 0;border:none;border-top:1px solid #eee;"><p style="background:#f9f9f9;padding:20px;border-radius:8px;border-left:4px solid #C9A84C;"><strong>Free Finance Tools:</strong> Visit <a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents</a> — free loan calculator, budget planner & savings tracker. No signup needed!</p><p style="font-size:0.85em;color:#888;">Follow us: <a href="https://web.facebook.com/profile.php?id=61577493070318">Facebook</a> · <a href="https://www.instagram.com/mysmartcents/">Instagram</a> · <a href="https://www.pinterest.com/mysmartcents/">Pinterest</a></p></div>`;
+  const content = `<div style="font-family:Georgia,serif;max-width:800px;margin:0 auto;line-height:1.8;">${post.replace(/\n/g,'<br>')}<hr style="margin:30px 0;border:none;border-top:1px solid #eee;"><p style="background:#f9f9f9;padding:20px;border-radius:8px;border-left:4px solid #C9A84C;"><strong>Free Finance Tools:</strong> Visit <a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents</a> — free loan calculator, budget planner & savings tracker. No signup needed!</p><p style="font-size:0.85em;color:#888;">Follow us: <a href="https://web.facebook.com/profile.php?id=1105657479290118">Facebook</a> · <a href="https://www.instagram.com/mysmartcents/">Instagram</a> · <a href="https://www.pinterest.com/mysmartcents/">Pinterest</a></p></div>`;
   try {
     const res = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts`, {
       method: 'POST',
@@ -1990,10 +1990,34 @@ async function postToBloggerFromStudio() {
       btn.textContent = '✅ Posted to Blogger!';
       showToast('Posted to Blogger! 🟠');
     } else if (data.error?.code === 401) {
-      status.style.color = 'var(--red)';
-      status.textContent = '❌ Token expired — get a new OAuth token from Settings';
-      btn.textContent = '🟠 Auto-Post to Blogger';
-      btn.style.opacity = '1';
+      status.style.color = 'var(--muted)';
+      status.textContent = '🔄 Token expired — auto-refreshing...';
+      const freshToken = await refreshBloggerToken();
+      if (freshToken) {
+        status.textContent = '🔄 Retrying with fresh token...';
+        const res2 = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${freshToken}` },
+          body: JSON.stringify({ title, content, labels: ['Personal Finance','SmartCents','Money Tips','Finance'] })
+        });
+        const data2 = await res2.json();
+        if (data2.url) {
+          status.style.color = 'var(--green)';
+          status.innerHTML = `✅ Posted! <a href="${data2.url}" target="_blank" style="color:var(--gold);">View on Blogger →</a>`;
+          btn.textContent = '✅ Posted to Blogger!';
+          showToast('Posted to Blogger! 🟠');
+        } else {
+          status.style.color = 'var(--red)';
+          status.textContent = '❌ Retry failed: ' + (data2.error?.message || 'Unknown error');
+          btn.textContent = '🟠 Auto-Post to Blogger';
+          btn.style.opacity = '1';
+        }
+      } else {
+        status.style.color = 'var(--red)';
+        status.textContent = '❌ Auto-refresh failed — paste new token in Settings';
+        btn.textContent = '🟠 Auto-Post to Blogger';
+        btn.style.opacity = '1';
+      }
     } else {
       status.style.color = 'var(--red)';
       status.textContent = '❌ ' + (data.error?.message || 'Unknown error');
@@ -2008,27 +2032,89 @@ async function postToBloggerFromStudio() {
   }
 }
 
-// ── BLOGGER TOKEN ─────────────────────────────────────────────
-function getBloggerToken() { return localStorage.getItem('sc_blogger_token') || ''; }
+// ── BLOGGER TOKEN — AUTO-REFRESH SYSTEM ──────────────────────
+const BLOGGER_REFRESH_TOKEN = '1//04983b9sCEqvxCgYIARAAGAQSNwF-L9IrKdlyZ_OQBDwQenobxYFCHDWxEMwuOja7sYUMSIo_JT-rTX0p4eZUqHKDjMWvOunHxIs';
+const BLOGGER_CLIENT_ID     = '407408718192.apps.googleusercontent.com';
+const BLOGGER_CLIENT_SECRET = 'd-FL95Q19q7MQmFpd7hHD0Ty'; // OAuth Playground default
+
+async function refreshBloggerToken() {
+  try {
+    const res = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: BLOGGER_CLIENT_ID,
+        client_secret: BLOGGER_CLIENT_SECRET,
+        refresh_token: BLOGGER_REFRESH_TOKEN,
+        grant_type: 'refresh_token'
+      })
+    });
+    const data = await res.json();
+    if (data.access_token) {
+      localStorage.setItem('sc_blogger_token', data.access_token);
+      localStorage.setItem('sc_blogger_token_time', Date.now());
+      return data.access_token;
+    }
+  } catch(e) {}
+  return null;
+}
+
+async function getBloggerToken() {
+  const saved = localStorage.getItem('sc_blogger_token');
+  const savedTime = parseInt(localStorage.getItem('sc_blogger_token_time') || '0');
+  const age = Date.now() - savedTime;
+  // Auto-refresh if token is older than 50 minutes (3000000ms)
+  if (!saved || age > 3000000) {
+    const fresh = await refreshBloggerToken();
+    return fresh || saved || '';
+  }
+  return saved;
+}
+
 function saveBloggerToken() {
   const t = document.getElementById('blogger-token-input').value.trim();
-  if (!t) { showToast('Paste your OAuth token first!'); return; }
+  if (!t) {
+    // No manual token — try auto-refresh
+    refreshBloggerToken().then(tok => {
+      const s = document.getElementById('blogger-token-status');
+      if (tok) {
+        s.style.color = 'var(--green)';
+        s.textContent = '✅ Token auto-refreshed — ready to post';
+        showToast('Blogger token refreshed! 🟠');
+      } else {
+        s.style.color = 'var(--red)';
+        s.textContent = '⚠️ Auto-refresh failed — paste token manually';
+      }
+    });
+    return;
+  }
   localStorage.setItem('sc_blogger_token', t);
+  localStorage.setItem('sc_blogger_token_time', Date.now());
   document.getElementById('blogger-token-input').value = '';
   const s = document.getElementById('blogger-token-status');
   s.style.color = 'var(--green)'; s.textContent = '✅ Token saved — ready to post';
   showToast('Blogger token saved! 🟠');
 }
+
 function clearBloggerToken() {
   localStorage.removeItem('sc_blogger_token');
+  localStorage.removeItem('sc_blogger_token_time');
   const s = document.getElementById('blogger-token-status');
   s.style.color = 'var(--red)'; s.textContent = '⚠️ Token cleared';
   showToast('Token cleared');
 }
 
+// Auto-refresh token on page load silently
+refreshBloggerToken().then(tok => {
+  if (tok) {
+    const s = document.getElementById('blogger-token-status');
+    if (s) { s.style.color = 'var(--green)'; s.textContent = '✅ Token ready (auto-refreshed)'; }
+  }
+});
+
 // ── FACEBOOK PAGE TOKEN ───────────────────────────────────────
-function getFBToken() { return localStorage.getItem('sc_fb_token') || ''; }
-function getFBPageId() { return localStorage.getItem('sc_fb_page_id') || '61577493070318'; }
+function getFBToken() { return localStorage.getItem('sc_fb_token') || 'EAAUggZCCmkAcBRAR0uY8kEsNClcb78en0cinC6ZCjdfnkvRuloWSPyY4ZC2FKPUowg0TypKt3BlVPvQKuDuIyetzerTX9jfyYav8Y85YWGtqsBaYunZAKGJ3KPn5y85bTeABm1SsCY21ZBc6OQXs3BrZAsX5yzq9UL4ZBXFr79ch6m2T2vZAPoantfMVVr8TGgZDZD'; }
+function getFBPageId() { return localStorage.getItem('sc_fb_page_id') || '1105657479290118'; }
 function saveFBToken() {
   const t = document.getElementById('fb-token-input').value.trim();
   const p = document.getElementById('fb-page-id-input').value.trim();
@@ -2385,7 +2471,7 @@ async function postToBlogger() {
         <strong>Free Finance Tools:</strong> Visit <a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents</a> for our free loan calculator, budget planner and savings tracker — no signup needed!
       </p>
       <p style="font-size:0.85em;color:#888;">Follow us: 
-        <a href="https://web.facebook.com/profile.php?id=61577493070318">Facebook</a> · 
+        <a href="https://web.facebook.com/profile.php?id=1105657479290118">Facebook</a> · 
         <a href="https://www.instagram.com/mysmartcents/">Instagram</a> · 
         <a href="https://www.pinterest.com/mysmartcents/">Pinterest</a>
       </p>
@@ -2430,7 +2516,7 @@ async function postToBlogger() {
 // SOCIAL GROUPS
 let socialGroups = JSON.parse(localStorage.getItem('sc_social_groups') || '[]');
 
-const FB_PAGE = 'https://web.facebook.com/profile.php?id=61577493070318';
+const FB_PAGE = 'https://web.facebook.com/profile.php?id=1105657479290118';
 
 const articlePosts = {
   loan: `💡 Do you know how much interest you're really paying on your loan?\n\nMost people never calculate it — and end up paying thousands extra.\n\nI built a FREE Loan Calculator that shows you:\n✅ Monthly payment\n✅ Total interest paid\n✅ Full loan breakdown\n\nTry it free → https://mysmartcents.github.io\n\n📘 Follow SmartCents for more free finance tools → ${FB_PAGE}\n\n#PersonalFinance #LoanCalculator #MoneyTips #Finance #SaveMoney`,
@@ -2716,7 +2802,7 @@ function copyPost() {
   navigator.clipboard.writeText(post).then(() => showToast('Post copied!')).catch(() => showToast('Select and copy manually'));
 }
 
-const SC_FB_PAGE = 'https://www.facebook.com/profile.php?id=61577493070318';
+const SC_FB_PAGE = 'https://www.facebook.com/profile.php?id=1105657479290118';
 const SC_INSTAGRAM = 'https://www.instagram.com/mysmartcents/';
 const SC_PINTEREST = 'https://www.pinterest.com/mysmartcents/';
 

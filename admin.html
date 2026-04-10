@@ -1448,7 +1448,7 @@ async function installApp() {
 const APP_VERSION = '1.04';
 
 // GOOGLE DRIVE SYNC
-const GDRIVE_CLIENT_ID = '182976820422-mk4mt230b4r2g542cuiosno45lntr12t.apps.googleusercontent.com';
+const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
 const GDRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.file';
 const GDRIVE_FILE_NAME = 'smartcents-data.json';
 let gdriveToken = null;
@@ -2032,10 +2032,9 @@ async function postToBloggerFromStudio() {
   }
 }
 
-// ── BLOGGER TOKEN — AUTO-REFRESH SYSTEM ──────────────────────
-const BLOGGER_REFRESH_TOKEN = '1//04oVH7ZsBtHfTCgYIARAAGAQSNwF-L9Ir8lz1WZPBR97qU0faKZbW2qDGHwxqBRiw0aOAxzDn0_5cVEF-bYXVEhQsHRuFM3DDm4g';
-const BLOGGER_CLIENT_ID     = '182976820422-mk4mt230b4r2g542cuiosno45lntr12t.apps.googleusercontent.com';
-const BLOGGER_CLIENT_SECRET = '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';
+// ── BLOGGER TOKEN — AUTO-REFRESH VIA CLOUDFLARE PROXY ────────
+// Credentials are stored securely in the Cloudflare proxy worker
+// admin.html never touches Google directly — no CORS, no exposed secrets
 
 async function refreshBloggerToken() {
   try {

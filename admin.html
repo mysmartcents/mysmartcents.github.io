@@ -886,7 +886,15 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     </div>
 
     <!-- GENERATE BUTTON -->
-    <button onclick="startBulkGeneration()" id="bulk-gen-btn" style="width:100%;background:var(--gold);color:#080808;border:none;padding:16px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;cursor:pointer;margin-bottom:14px;">⚡ Generate All Content</button>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;">🎨 Image Generation</div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:0.82rem;cursor:pointer;margin-bottom:6px;">
+        <input type="checkbox" id="bulk-gen-images" checked style="accent-color:var(--gold);width:16px;height:16px;">
+        Auto-generate images with Pollinations.ai (free, no key needed)
+      </label>
+      <div style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;">Creates landscape image for Blogger/Facebook + square for Instagram + vertical for Pinterest</div>
+    </div>
+    <button onclick="startBulkGeneration()" id="bulk-gen-btn" style="width:100%;background:var(--gold);color:#080808;border:none;padding:16px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;cursor:pointer;margin-bottom:14px;">⚡ Generate Images + Content + Post</button>
 
     <!-- PROGRESS -->
     <div id="bulk-progress" style="display:none;background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
@@ -1729,7 +1737,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.11';
+const APP_VERSION = '1.12';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2569,7 +2577,125 @@ async function callClaude(prompt) {
   return data.candidates?.[0]?.content?.parts?.[0]?.text || 'No content generated';
 }
 
-function buildBulkPrompt(topic, platform) {
+function getPollinationsImageURL(topic, style) {
+  const d = imgTopicData[topic] || { title: topic, keywords: topic };
+  const basePrompt = `Professional finance blog image about ${d.title}. Dark background #0D0D0D, gold accent #C9A84C. SmartCents branding. Clean minimal design. ${d.keywords}. High quality, sharp.`;
+
+  const styles = {
+    landscape: `${basePrompt} Landscape banner 1200x628. Blog header style.`,
+    square:    `${basePrompt} Square format 1080x1080. Bold text overlay. Instagram style. Eye-catching.`,
+    vertical:  `${basePrompt} Tall vertical infographic 1000x1500. Pinterest pin style. Include numbered tips layout.`
+  };
+
+  const prompt = encodeURIComponent(styles[style] || styles.landscape);
+  const seeds = { landscape: 42, square: 99, vertical: 77 };
+  return `https://image.pollinations.ai/prompt/${prompt}?width=${style==='landscape'?1200:style==='square'?1080:1000}&height=${style==='landscape'?628:style==='square'?1080:1500}&seed=${seeds[style]}&nologo=true&enhance=true`;
+}
+
+async function startBulkGeneration() {
+  const key = getClaudeKey();
+  if (!key) {
+    showToast('Add Gemini API key first!');
+    document.getElementById('claude-api-key').focus();
+    return;
+  }
+
+  const genImages = document.getElementById('bulk-gen-images')?.checked;
+  const selectedTopics = Array.from(document.querySelectorAll('#bulk-topic-checks input:checked')).map(c => c.value);
+  if (selectedTopics.length === 0) { showToast('Select at least one article!'); return; }
+
+  const selectedPlatforms = ['blogger','facebook','instagram','pinterest','medium'].filter(p =>
+    document.getElementById('bulk-plat-' + p)?.checked
+  );
+  if (selectedPlatforms.length === 0) { showToast('Select at least one platform!'); return; }
+
+  const imageSteps = genImages ? selectedTopics.length * 3 : 0;
+  const contentSteps = selectedTopics.length * selectedPlatforms.length;
+  const total = imageSteps + contentSteps;
+  let done = 0;
+
+  const btn = document.getElementById('bulk-gen-btn');
+  btn.textContent = '⏳ Working...';
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+
+  document.getElementById('bulk-progress').style.display = 'block';
+  document.getElementById('bulk-progress-count').textContent = `0/${total}`;
+  const log = document.getElementById('bulk-log');
+  log.innerHTML = '';
+
+  function logStep(msg, color) {
+    const div = document.createElement('div');
+    div.style.color = color || 'var(--muted)';
+    div.textContent = msg;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function updateProgress(label) {
+    done++;
+    const pct = Math.round((done / total) * 100);
+    document.getElementById('bulk-progress-bar').style.width = pct + '%';
+    document.getElementById('bulk-progress-count').textContent = `${done}/${total}`;
+    document.getElementById('bulk-progress-label').textContent = label;
+  }
+
+  // PHASE 1: Generate images
+  if (genImages) {
+    logStep('🎨 Phase 1: Generating images with Pollinations.ai...', 'var(--gold)');
+    for (const topic of selectedTopics) {
+      if (!bulkResults[topic]) bulkResults[topic] = {};
+      const topicName = topicNames[topic] || topic;
+
+      // Generate 3 image URLs (instant — no API call needed, URLs are pre-built)
+      bulkResults[topic]._imgLandscape = getPollinationsImageURL(topic, 'landscape');
+      bulkResults[topic]._imgSquare    = getPollinationsImageURL(topic, 'square');
+      bulkResults[topic]._imgVertical  = getPollinationsImageURL(topic, 'vertical');
+
+      logStep(`🖼 ${topicName} — 3 image URLs generated`, 'var(--green)');
+      updateProgress(`Images: ${topicName}`);
+      done += 2; // Count all 3 as done
+      document.getElementById('bulk-progress-bar').style.width = Math.round((done/total)*100) + '%';
+      document.getElementById('bulk-progress-count').textContent = `${done}/${total}`;
+
+      await new Promise(r => setTimeout(r, 100));
+    }
+    logStep('✅ All image URLs ready!', 'var(--green)');
+  }
+
+  // PHASE 2: Generate content
+  logStep('📝 Phase 2: Generating content with Gemini...', 'var(--gold)');
+  for (const topic of selectedTopics) {
+    const topicName = topicNames[topic] || topic;
+    if (!bulkResults[topic]) bulkResults[topic] = {};
+
+    for (const platform of selectedPlatforms) {
+      document.getElementById('bulk-progress-label').textContent = `Content: ${topicName} → ${platform}`;
+      logStep(`⏳ ${topicName} / ${platform}...`);
+      try {
+        const prompt = buildBulkPrompt(topic, platform);
+        const content = await callClaude(prompt);
+        bulkResults[topic][platform] = content;
+        updateProgress(`✅ ${topicName} / ${platform}`);
+        logStep(`✅ ${topicName} / ${platform}`, 'var(--green)');
+      } catch(e) {
+        logStep(`❌ ${topicName} / ${platform}: ${e.message}`, 'var(--red)');
+        updateProgress(`❌ ${topicName} / ${platform}`);
+      }
+      await new Promise(r => setTimeout(r, 600));
+    }
+  }
+
+  localStorage.setItem('sc_bulk_results', JSON.stringify(bulkResults));
+  document.getElementById('bulk-progress-label').textContent = `✅ Complete! ${done}/${total} done`;
+
+  btn.textContent = '⚡ Generate Images + Content + Post';
+  btn.disabled = false;
+  btn.style.opacity = '1';
+
+  renderBulkResults();
+  showToast(`✅ All done! Images + content ready. Now post!`);
+}
   const aff = topicAffiliates[topic];
   const name = topicNames[topic];
   const articleURL = topicArticleURLs[topic] || 'https://mysmartcents.github.io';
@@ -2636,80 +2762,7 @@ Requirements:
   return prompts[platform] || '';
 }
 
-async function startBulkGeneration() {
-  const key = getClaudeKey();
-  if (!key) {
-    showToast('Add Gemini API key first!');
-    document.getElementById('claude-api-key').focus();
-    return;
-  }
 
-  const selectedTopics = Array.from(document.querySelectorAll('#bulk-topic-checks input:checked')).map(c => c.value);
-  if (selectedTopics.length === 0) { showToast('Select at least one article!'); return; }
-
-  const selectedPlatforms = ['blogger','facebook','instagram','pinterest','medium'].filter(p =>
-    document.getElementById('bulk-plat-' + p)?.checked
-  );
-  if (selectedPlatforms.length === 0) { showToast('Select at least one platform!'); return; }
-
-  const total = selectedTopics.length * selectedPlatforms.length;
-  let done = 0;
-
-  const btn = document.getElementById('bulk-gen-btn');
-  btn.textContent = '⏳ Generating...';
-  btn.disabled = true;
-  btn.style.opacity = '0.7';
-
-  document.getElementById('bulk-progress').style.display = 'block';
-  document.getElementById('bulk-progress-count').textContent = `0/${total}`;
-  const log = document.getElementById('bulk-log');
-  log.innerHTML = '';
-
-  function logStep(msg, color) {
-    const div = document.createElement('div');
-    div.style.color = color || 'var(--muted)';
-    div.textContent = msg;
-    log.appendChild(div);
-    log.scrollTop = log.scrollHeight;
-  }
-
-  for (const topic of selectedTopics) {
-    const topicName = topicNames[topic] || topic;
-    if (!bulkResults[topic]) bulkResults[topic] = {};
-
-    for (const platform of selectedPlatforms) {
-      document.getElementById('bulk-progress-label').textContent = `Generating: ${topicName} → ${platform}`;
-      logStep(`⏳ ${topicName} / ${platform}...`);
-
-      try {
-        const prompt = buildBulkPrompt(topic, platform);
-        const content = await callClaude(prompt);
-        bulkResults[topic][platform] = content;
-        done++;
-        const pct = Math.round((done / total) * 100);
-        document.getElementById('bulk-progress-bar').style.width = pct + '%';
-        document.getElementById('bulk-progress-count').textContent = `${done}/${total}`;
-        logStep(`✅ ${topicName} / ${platform} done`, 'var(--green)');
-      } catch(e) {
-        logStep(`❌ ${topicName} / ${platform}: ${e.message}`, 'var(--red)');
-        done++;
-      }
-
-      // Small delay to avoid rate limiting
-      await new Promise(r => setTimeout(r, 500));
-    }
-  }
-
-  localStorage.setItem('sc_bulk_results', JSON.stringify(bulkResults));
-  document.getElementById('bulk-progress-label').textContent = `✅ Complete! ${done}/${total} generated`;
-
-  btn.textContent = '⚡ Generate All Content';
-  btn.disabled = false;
-  btn.style.opacity = '1';
-
-  renderBulkResults();
-  showToast(`Generated ${done}/${total} pieces of content! ⚡`);
-}
 
 function renderBulkResults() {
   const container = document.getElementById('bulk-results-list');
@@ -2739,6 +2792,24 @@ function renderBulkResults() {
     return `
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
       <div style="font-size:0.9rem;font-weight:700;color:var(--gold);margin-bottom:10px;">📄 ${name}</div>
+      ${bulkResults[topic]?._imgLandscape ? `
+      <div style="background:var(--dark3);border:1px solid var(--dark5);border-radius:10px;padding:10px;margin-bottom:8px;">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--muted);margin-bottom:8px;">🖼 Generated Images</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;">
+          <div style="text-align:center;">
+            <img src="${bulkResults[topic]._imgLandscape}" style="width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;" loading="lazy" onerror="this.style.display='none'">
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:3px;">Blogger/FB</div>
+          </div>
+          <div style="text-align:center;">
+            <img src="${bulkResults[topic]._imgSquare}" style="width:100%;border-radius:6px;aspect-ratio:1/1;object-fit:cover;" loading="lazy" onerror="this.style.display='none'">
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:3px;">Instagram</div>
+          </div>
+          <div style="text-align:center;">
+            <img src="${bulkResults[topic]._imgVertical}" style="width:100%;border-radius:6px;aspect-ratio:2/3;object-fit:cover;" loading="lazy" onerror="this.style.display='none'">
+            <div style="font-size:0.65rem;color:var(--muted);margin-top:3px;">Pinterest</div>
+          </div>
+        </div>
+      </div>` : ''}
       ${Object.entries(platforms).map(([plat, content]) => `
         <div style="background:var(--dark3);border:1px solid var(--dark5);border-radius:10px;padding:10px;margin-bottom:8px;">
           <div style="font-size:0.78rem;font-weight:700;color:${platColors[plat] || 'var(--text)'};margin-bottom:8px;">${platIcons[plat] || ''} ${plat.toUpperCase()}</div>
@@ -2856,21 +2927,33 @@ async function postBulkToBlogger(topic) {
 
   const titleMatch = content.match(/TITLE:\s*(.+)/);
   const title = titleMatch ? titleMatch[1].trim() : (topicNames[topic] || topic);
-  const htmlContent = `<div style="font-family:Georgia,serif;max-width:800px;margin:0 auto;line-height:1.8;">${content.replace(/\n/g,'<br>')}<hr><p><a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents — Free Finance Tools</a></p></div>`;
+  const imgURL = bulkResults[topic]?._imgLandscape || '';
+
+  const imgHTML = imgURL ? `<div style="text-align:center;margin-bottom:24px;"><img src="${imgURL}" alt="${title}" style="max-width:100%;border-radius:8px;"></div>` : '';
+  const htmlContent = `<div style="font-family:Georgia,serif;max-width:800px;margin:0 auto;line-height:1.8;">${imgHTML}${content.replace(/\n/g,'<br>')}<hr style="margin:30px 0;border:none;border-top:1px solid #eee;"><p style="background:#f9f9f9;padding:16px;border-radius:8px;border-left:4px solid #C9A84C;"><strong>Free Finance Tools:</strong> <a href="https://mysmartcents.github.io" style="color:#C9A84C;">SmartCents</a> — Loan Calculator, Budget Planner & Savings Tracker. No signup needed!</p></div>`;
 
   showToast('Posting to Blogger...');
   try {
-    const res = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts?key=${apiKey}`, {
+    const freshToken = await refreshBloggerToken();
+    const authToken = freshToken || apiKey;
+    const res = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts`, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ title, content: htmlContent, labels: ['Personal Finance','SmartCents'] })
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify({ title, content: htmlContent, labels: ['Personal Finance','SmartCents','Money Tips'] })
     });
     const data = await res.json();
     if (data.url) {
-      showToast('✅ Posted to Blogger!');
-      renderBulkResults();
+      showToast('✅ Posted to Blogger with image!');
     } else {
-      showToast('❌ Blogger error: ' + (data.error?.message || 'Unknown'));
+      // fallback to API key
+      const res2 = await fetch(`https://www.googleapis.com/blogger/v3/blogs/${BLOGGER_BLOG_ID}/posts?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content: htmlContent, labels: ['Personal Finance','SmartCents'] })
+      });
+      const data2 = await res2.json();
+      if (data2.url) { showToast('✅ Posted to Blogger!'); }
+      else { showToast('❌ Blogger: ' + (data2.error?.message || 'Error')); }
     }
   } catch(e) { showToast('❌ Failed: ' + e.message); }
 }
@@ -2880,18 +2963,39 @@ async function postBulkToFacebook(topic) {
   if (!content) { showToast('No Facebook content for this topic!'); return; }
   const token = getFBToken();
   const pageId = getFBPageId();
+  const imgURL = bulkResults[topic]?._imgLandscape || '';
+
   showToast('Posting to Facebook...');
   try {
-    const res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ message: content, access_token: token })
-    });
-    const data = await res.json();
-    if (data.id) {
-      showToast('✅ Posted to Facebook! Instagram + Pinterest will follow.');
+    let res, data;
+    if (imgURL) {
+      // Post with image
+      res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/photos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: imgURL, caption: content, access_token: token })
+      });
     } else {
-      showToast('❌ Facebook error: ' + (data.error?.message || 'Unknown'));
+      // Post text only
+      res = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: content, access_token: token })
+      });
+    }
+    data = await res.json();
+    if (data.id || data.post_id) {
+      showToast('✅ Posted to Facebook with image! Instagram + Pinterest will follow.');
+    } else {
+      // Fallback to text only
+      const res2 = await fetch(`https://graph.facebook.com/v19.0/${pageId}/feed`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: content, access_token: token })
+      });
+      const data2 = await res2.json();
+      if (data2.id) { showToast('✅ Posted to Facebook!'); }
+      else { showToast('❌ Facebook: ' + (data2.error?.message || 'Error')); }
     }
   } catch(e) { showToast('❌ Failed: ' + e.message); }
 }

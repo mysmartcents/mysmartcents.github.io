@@ -1737,7 +1737,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.12';
+const APP_VERSION = '1.13';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2696,6 +2696,8 @@ async function startBulkGeneration() {
   renderBulkResults();
   showToast(`✅ All done! Images + content ready. Now post!`);
 }
+
+function buildBulkPrompt(topic, platform) {
   const aff = topicAffiliates[topic];
   const name = topicNames[topic];
   const articleURL = topicArticleURLs[topic] || 'https://mysmartcents.github.io';

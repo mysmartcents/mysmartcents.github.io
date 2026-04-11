@@ -1995,7 +1995,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.26';
+const APP_VERSION = '1.27';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2542,6 +2542,26 @@ RECOMMENDED STRATEGY:
 ${strategy.substring(0, 800)}
 ==================`;
 
+  const slug = getSlug();
+  const filename = {
+    github:    `smartcents-${slug}.html`,
+    blogger:   `blogger-${slug}.html`,
+    facebook:  `facebook-${slug}.txt`,
+    instagram: `instagram-${slug}.txt`,
+    pinterest: `pinterest-${slug}.txt`,
+    medium:    `medium-${slug}.txt`,
+  };
+
+  const fileInstructions = {
+    github:    `IMPORTANT: Output your response as a downloadable file artifact. Create a file named "${slug}.html" containing only the complete HTML. Do not add any explanation outside the file.`,
+    blogger:   `IMPORTANT: Output your response as a downloadable file artifact. Create a file named "blogger-${slug}.html" containing only the post HTML. Do not add any explanation outside the file.`,
+    facebook:  `IMPORTANT: Output your response as a downloadable file artifact. Create a file named "facebook-${slug}.txt" containing only the post text. Do not add any explanation outside the file.`,
+    instagram: `IMPORTANT: Output your response as a downloadable file artifact. Create a file named "instagram-${slug}.txt" containing only the caption and hashtags. Do not add any explanation outside the file.`,
+    pinterest: `IMPORTANT: Output your response as a downloadable file artifact. Create a file named "pinterest-${slug}.txt" containing only the pin content. Do not add any explanation outside the file.`,
+    medium:    `IMPORTANT: Output your response as a downloadable file artifact. Create a file named "medium-${slug}.txt" containing only the article in Markdown. Do not add any explanation outside the file.`,
+    all:       `IMPORTANT: Generate ALL 6 platform files as SEPARATE downloadable file artifacts one after another. Each must be its own file:\n1. ${slug}.html (SmartCents article)\n2. blogger-${slug}.html (Blogger post)\n3. facebook-${slug}.txt (Facebook post)\n4. instagram-${slug}.txt (Instagram caption)\n5. pinterest-${slug}.txt (Pinterest pin)\n6. medium-${slug}.txt (Medium article)\nCreate each as a separate downloadable artifact. Do not combine them.`,
+  };
+
   const prompts = {
     github: `You are an expert SEO content writer for SmartCents (${site}) — a free personal finance tools website with loan calculator, budget planner and savings tracker.
 
@@ -2552,22 +2572,17 @@ Write a COMPLETE, publication-ready SmartCents article about "${kw}" targeting $
 STRICT REQUIREMENTS:
 - Length: 1,500-2,000 words
 - Use the recommended title from SEO strategy above
-- Include meta description (155 chars max)
-- Include URL slug suggestion
+- Include meta description (155 chars max) as HTML meta tag
+- Include canonical URL: ${site}/articles/${slug}.html
 - H1 → 6-8 H2 sections → H3 subsections where needed
 - FAQ section with 5 questions (use the PAA questions from research)
 - ${affLinks}
-- Internal links: ${site}/articles/ for related articles
+- Internal links to: ${site}/articles/ for related articles
 - End CTA: "Try free SmartCents tools at ${site}"
-- Backlinks: link to medium.com/@smartcents and smartcents-finance.blogspot.com
+- Cross-links: medium.com/@smartcents and smartcents-finance.blogspot.com
+- Match SmartCents dark theme: background #0D0D0D, gold #C9A84C, include full CSS
 
-FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
-TITLE: [SEO title]
-META: [meta description]
-SLUG: [url-slug]
----ARTICLE START---
-[Full HTML article with proper heading tags, affiliate boxes, CTA boxes]
----ARTICLE END---`,
+${fileInstructions.github}`,
 
     blogger: `You are an expert SEO blogger writing for SmartCents blog (smartcents-finance.blogspot.com).
 
@@ -2578,19 +2593,22 @@ Write a COMPLETE Blogger post about "${kw}" targeting ${country.toUpperCase()} a
 REQUIREMENTS:
 - Length: 800-1,000 words
 - SEO-optimized title (include keyword)
+- Meta description: 155 chars
+- Labels: 5 relevant comma-separated tags
 - 4-5 H2 sections
 - ${affLinks}
-- Link to SmartCents article: ${site}/articles/
+- Link to SmartCents article: ${site}/articles/${slug}.html
 - Link to Medium: medium.com/@smartcents
 - End with SmartCents tools CTA
 
-FORMAT:
+Start the file with:
 TITLE: [title]
-META: [155 char description]
-LABELS: [5 comma-separated labels]
----POST START---
-[Full post content in HTML-friendly format]
----POST END---`,
+META: [meta]
+LABELS: [labels]
+
+Then the full HTML post content.
+
+${fileInstructions.blogger}`,
 
     facebook: `You are a social media expert writing for SmartCents Facebook page.
 
@@ -2599,19 +2617,15 @@ ${seoContext}
 Write a COMPLETE Facebook post about "${kw}" for ${country.toUpperCase()} audience.
 
 REQUIREMENTS:
-- 120-150 words
-- Strong opening hook (first line must stop the scroll)
-- 3-4 key points with emojis
-- Include most relevant affiliate link from: ${affLinks}
-- Article link: ${site}
-- 8-10 hashtags at end
-- CTA to SmartCents free tools
+- 120-150 words total
+- First line: scroll-stopping hook (no "Introducing" or "Are you")
+- 3-4 key value points with emojis
+- Most relevant affiliate link from: ${affLinks}
+- Article link: ${site}/articles/${slug}.html
+- 8-10 hashtags on final line
+- CTA: "🔗 Free tools → ${site}"
 
-FORMAT:
----POST START---
-[Full Facebook post text]
----POST END---
-HASHTAGS: [list]`,
+${fileInstructions.facebook}`,
 
     instagram: `You are a social media expert writing for @mysmartcents on Instagram.
 
@@ -2620,47 +2634,32 @@ ${seoContext}
 Write a COMPLETE Instagram caption about "${kw}" for ${country.toUpperCase()} audience.
 
 REQUIREMENTS:
-- 80-120 words
-- First line must be a scroll-stopping hook
-- Line breaks after each point (Instagram format)
-- Emojis throughout
+- First line: bold scroll-stopping hook (under 10 words)
+- Line breaks between each point (Instagram paragraph style)
+- Emojis on every line
 - "🔗 Link in bio → ${site}"
-- 20-25 hashtags at end labeled HASHTAGS:
+- 25 hashtags on the last line after a blank line
 
-FORMAT:
----CAPTION START---
-[Full Instagram caption]
----CAPTION END---
-HASHTAGS: [all hashtags on one line]`,
+${fileInstructions.instagram}`,
 
-    pinterest: `You are a Pinterest SEO expert writing for SmartCents.
+    pinterest: `You are a Pinterest SEO expert writing for SmartCents (@mysmartcents).
 
 ${seoContext}
 
-Write a COMPLETE Pinterest pin package about "${kw}".
+Write a COMPLETE Pinterest pin about "${kw}".
 
 REQUIREMENTS:
-- Title: keyword-rich, 80-100 chars
-- Description: 200-300 words, keyword-rich
-- 5-7 value points
-- Include article link: ${site}
-- Include most relevant affiliate link
-- Suggest best board to pin to
-- Suggest 5 pin image concepts
+- PIN TITLE: keyword-rich, max 100 chars
+- PIN DESCRIPTION: 250-300 words, keyword-rich, include article link
+- 5-7 value points in description
+- Article link: ${site}/articles/${slug}.html
+- Most relevant affiliate link
+- BOARD: suggest which board (Personal Finance Tips / Money Saving Tips)
+- IMAGE BRIEF: describe the ideal pin image (tall 2:3 ratio, dark background, gold text)
 
-FORMAT:
-PIN TITLE: [title]
-PIN DESCRIPTION:
----DESC START---
-[Full description]
----DESC END---
-BOARD: [board name]
-IMAGE IDEAS:
-1. [concept]
-2. [concept]
-3. [concept]`,
+${fileInstructions.pinterest}`,
 
-    medium: `You are an expert Medium writer for @smartcents publication.
+    medium: `You are an expert Medium writer for @smartcents.
 
 ${seoContext}
 
@@ -2669,79 +2668,54 @@ Write a COMPLETE Medium article about "${kw}" for global English audience.
 REQUIREMENTS:
 - Length: 900-1,200 words
 - Compelling title with keyword
-- Hook introduction (first 3 sentences must grab attention)
-- 4-5 sections with ## headings
+- Subtitle: one punchy sentence
+- 5 Medium tags
+- Hook intro (first 3 sentences grab attention)
+- 4-5 sections with ## headings (Markdown)
 - ${affLinks}
 - CTA: "Free tools at ${site}"
-- FAQ section (3-5 questions)
-- Link back to: ${site}/articles/
+- FAQ section (3 questions)
+- Link: ${site}/articles/${slug}.html
 
-FORMAT:
-TITLE: [Medium title]
-SUBTITLE: [subtitle]
-TAGS: [5 Medium tags]
----ARTICLE START---
-[Full article in Markdown]
----ARTICLE END---`,
+${fileInstructions.medium}`,
 
     all: `You are an expert SEO content creator for SmartCents (${site}).
 
 ${seoContext}
 
-Generate COMPLETE, publication-ready content for ALL platforms about "${kw}" targeting ${country.toUpperCase()} audience.
-
 ${affLinks}
 
-Use EXACTLY these section headers (they must appear verbatim):
+CRITICAL INSTRUCTION: Wrap EVERY platform section with these exact delimiters. Do not skip or modify them.
 
-═══════════════════════════════
-SMARTCENTS ARTICLE
-═══════════════════════════════
-Write a 1,500 word SEO-optimized HTML article.
-TITLE: [SEO title with keyword]
-META: [155 char meta description]
-SLUG: [url-slug]
-[Full article HTML with h2 headings, affiliate boxes, FAQ section, CTAs]
-Link back to: medium.com/@smartcents and smartcents-finance.blogspot.com
+>>>>>>>>>>SC_FILE_1_START<<<<<<<<<<
+FILENAME: 01-smartcents-${slug}.html
+Write a COMPLETE 1500-word SEO HTML article for SmartCents website about "${kw}" targeting ${country.toUpperCase()} readers. Include: full HTML page structure with dark theme (bg #0D0D0D, gold #C9A84C), <title> tag, meta description, canonical URL, H1 headline, 6 H2 sections, FAQ section with 5 questions, affiliate link boxes, internal links to ${site}/articles/, backlinks to medium.com/@smartcents and smartcents-finance.blogspot.com, end CTA to ${site}.
+>>>>>>>>>>SC_FILE_1_END<<<<<<<<<<
 
-═══════════════════════════════
-BLOGGER POST
-═══════════════════════════════
-Write an 800 word Blogger post.
-TITLE: [title]
-META: [meta description]
-LABELS: [5 labels separated by commas]
-[Full post content — link to SmartCents article and Medium]
+>>>>>>>>>>SC_FILE_2_START<<<<<<<<<<
+FILENAME: 02-blogger-${slug}.html
+Write a COMPLETE 800-word Blogger post about "${kw}". Start with exactly: TITLE: [title] / META: [description] / LABELS: [5 labels] — then full HTML post content. Link to SmartCents article and Medium profile.
+>>>>>>>>>>SC_FILE_2_END<<<<<<<<<<
 
-═══════════════════════════════
-FACEBOOK POST
-═══════════════════════════════
-Write a 150 word Facebook post.
-[Hook opening, 3-4 points with emojis, affiliate link, article URL, 8 hashtags]
+>>>>>>>>>>SC_FILE_3_START<<<<<<<<<<
+FILENAME: 03-facebook-${slug}.txt
+Write a COMPLETE Facebook post (150 words) about "${kw}". Format: hook first line → 3-4 key points with emojis → most relevant affiliate link → ${site} → 8-10 hashtags at end.
+>>>>>>>>>>SC_FILE_3_END<<<<<<<<<<
 
-═══════════════════════════════
-INSTAGRAM CAPTION
-═══════════════════════════════
-Write a 100 word Instagram caption.
-[Hook first line, emojis, "🔗 Link in bio → ${site}"]
-HASHTAGS: [20 hashtags on one line]
+>>>>>>>>>>SC_FILE_4_START<<<<<<<<<<
+FILENAME: 04-instagram-${slug}.txt
+Write a COMPLETE Instagram caption (100 words) about "${kw}". Format: scroll-stopping hook → points with emojis → line breaks → "🔗 Link in bio → ${site}" → then on a new line: HASHTAGS: [25 hashtags]
+>>>>>>>>>>SC_FILE_4_END<<<<<<<<<<
 
-═══════════════════════════════
-PINTEREST PIN
-═══════════════════════════════
-PIN TITLE: [100 char title]
-PIN DESCRIPTION: [200 word description with affiliate link and article URL]
-BOARD: [board name]
-IMAGE BRIEF: [describe the pin image]
+>>>>>>>>>>SC_FILE_5_START<<<<<<<<<<
+FILENAME: 05-pinterest-${slug}.txt
+Write a COMPLETE Pinterest pin about "${kw}". Format: PIN TITLE: [under 100 chars] / PIN DESCRIPTION: [250 words with affiliate link and ${site}] / BOARD: [board name] / IMAGE BRIEF: [what the image should show]
+>>>>>>>>>>SC_FILE_5_END<<<<<<<<<<
 
-═══════════════════════════════
-MEDIUM ARTICLE
-═══════════════════════════════
-Write a 1,000 word Medium article in Markdown.
-TITLE: [title]
-SUBTITLE: [subtitle]
-TAGS: [5 tags]
-[Full article with ## headings, affiliate links, CTA to ${site}]`
+>>>>>>>>>>SC_FILE_6_START<<<<<<<<<<
+FILENAME: 06-medium-${slug}.txt
+Write a COMPLETE 1000-word Medium article about "${kw}" in Markdown. Format: TITLE: [title] / SUBTITLE: [subtitle] / TAGS: [5 tags] — then full article with ## headings, affiliate links, and CTA to ${site}.
+>>>>>>>>>>SC_FILE_6_END<<<<<<<<<<`
   };
 
   return prompts[platform] || prompts.all;
@@ -2807,92 +2781,93 @@ function splitContent(raw) {
   const slug = getSlug();
   const kw = currentKeyword || 'article';
 
-  // Define section markers — multiple fallbacks for each platform
-  const sections = [
-    {
-      key: 'github',
-      file: `01-smartcents-${slug}.html`,
-      type: 'text/html',
-      icon: '🔵',
-      label: 'SmartCents Article',
-      markers: ['SMARTCENTS ARTICLE', '1. SMARTCENTS', 'GITHUB ARTICLE', 'SMARTCENTS HTML', 'ARTICLE START', '═══\n1.', '1. SMART']
-    },
-    {
-      key: 'blogger',
-      file: `02-blogger-${slug}.html`,
-      type: 'text/html',
-      icon: '🟠',
-      label: 'Blogger Post',
-      markers: ['BLOGGER POST', '2. BLOGGER', 'BLOGGER HTML', 'BLOGGER START', '═══\n2.', '2. BLOG']
-    },
-    {
-      key: 'facebook',
-      file: `03-facebook-${slug}.txt`,
-      type: 'text/plain',
-      icon: '📘',
-      label: 'Facebook Post',
-      markers: ['FACEBOOK POST', '3. FACEBOOK', 'FACEBOOK START', '═══\n3.', '3. FACE']
-    },
-    {
-      key: 'instagram',
-      file: `04-instagram-${slug}.txt`,
-      type: 'text/plain',
-      icon: '📸',
-      label: 'Instagram Caption',
-      markers: ['INSTAGRAM CAPTION', '4. INSTAGRAM', 'INSTAGRAM START', '═══\n4.', '4. INST']
-    },
-    {
-      key: 'pinterest',
-      file: `05-pinterest-${slug}.txt`,
-      type: 'text/plain',
-      icon: '📌',
-      label: 'Pinterest Pin',
-      markers: ['PINTEREST PIN', '5. PINTEREST', 'PINTEREST START', '═══\n5.', '5. PINT']
-    },
-    {
-      key: 'medium',
-      file: `06-medium-${slug}.txt`,
-      type: 'text/plain',
-      icon: '📝',
-      label: 'Medium Article',
-      markers: ['MEDIUM ARTICLE', '6. MEDIUM', 'MEDIUM START', '═══\n6.', '6. MEDI']
-    }
+  const fileMap = [
+    { num:1, file:`01-smartcents-${slug}.html`,  type:'text/html',  icon:'🔵', label:'SmartCents Article' },
+    { num:2, file:`02-blogger-${slug}.html`,     type:'text/html',  icon:'🟠', label:'Blogger Post' },
+    { num:3, file:`03-facebook-${slug}.txt`,     type:'text/plain', icon:'📘', label:'Facebook Post' },
+    { num:4, file:`04-instagram-${slug}.txt`,    type:'text/plain', icon:'📸', label:'Instagram Caption' },
+    { num:5, file:`05-pinterest-${slug}.txt`,    type:'text/plain', icon:'📌', label:'Pinterest Pin' },
+    { num:6, file:`06-medium-${slug}.txt`,       type:'text/plain', icon:'📝', label:'Medium Article' },
   ];
-
-  // Find start positions
-  const positions = sections.map(sec => ({
-    ...sec,
-    start: extractSection(raw, sec.markers)
-  })).filter(s => s.start !== -1).sort((a,b) => a.start - b.start);
 
   const result = [];
 
-  if (positions.length >= 2) {
-    // Extract each section between markers
-    positions.forEach((sec, i) => {
-      const end = i < positions.length - 1 ? positions[i+1].start : raw.length;
-      result.push({ ...sec, content: raw.substring(sec.start, end).trim() });
-    });
-  } else {
-    // Fallback: Claude didn't use expected markers
-    // Try splitting by numbered headings or === dividers
-    const parts = raw.split(/(?:={3,}|#{3,}|\d+\.\s+(?:SMARTCENTS|BLOGGER|FACEBOOK|INSTAGRAM|PINTEREST|MEDIUM))/i);
-    if (parts.length >= 2) {
-      const platKeys = ['github','blogger','facebook','instagram','pinterest','medium'];
-      parts.slice(1).forEach((part, i) => {
-        if (i < sections.length) {
-          result.push({ ...sections[platKeys.indexOf(sections[i].key) !== -1 ? i : i], content: part.trim() });
-        }
+  // PRIMARY: split by >>>>>>>>>>SC_FILE_N_START<<<<<<<<<< markers
+  let splitSuccessful = false;
+  fileMap.forEach(f => {
+    const startTag = `>>>>>>>>>>SC_FILE_${f.num}_START<<<<<<<<<<`;
+    const endTag   = `>>>>>>>>>>SC_FILE_${f.num}_END<<<<<<<<<<`;
+    const start = raw.indexOf(startTag);
+    const end   = raw.indexOf(endTag);
+    if (start !== -1 && end !== -1 && end > start) {
+      let chunk = raw.substring(start + startTag.length, end).trim();
+      // Remove FILENAME: line if present
+      chunk = chunk.replace(/^FILENAME:.*\n/, '').trim();
+      result.push({ ...f, content: chunk });
+      splitSuccessful = true;
+    }
+  });
+
+  // FALLBACK 1: common heading patterns Claude uses
+  if (!splitSuccessful || result.length < 2) {
+    result.length = 0;
+    const patterns = [
+      // Pattern: --- PLATFORM --- or === PLATFORM ===
+      { regex: /[-=]{3,}\s*(SMARTCENTS ARTICLE|FILE 1|GITHUB ARTICLE)\s*[-=]{3,}/i, idx:0 },
+      { regex: /[-=]{3,}\s*(BLOGGER POST|FILE 2)\s*[-=]{3,}/i,      idx:1 },
+      { regex: /[-=]{3,}\s*(FACEBOOK POST|FILE 3)\s*[-=]{3,}/i,     idx:2 },
+      { regex: /[-=]{3,}\s*(INSTAGRAM CAPTION|FILE 4)\s*[-=]{3,}/i, idx:3 },
+      { regex: /[-=]{3,}\s*(PINTEREST PIN|FILE 5)\s*[-=]{3,}/i,     idx:4 },
+      { regex: /[-=]{3,}\s*(MEDIUM ARTICLE|FILE 6)\s*[-=]{3,}/i,    idx:5 },
+    ];
+
+    const positions = patterns.map(p => {
+      const m = raw.match(p.regex);
+      return m ? { idx: p.idx, pos: raw.indexOf(m[0]), len: m[0].length } : null;
+    }).filter(Boolean).sort((a,b) => a.pos - b.pos);
+
+    if (positions.length >= 2) {
+      positions.forEach((p, i) => {
+        const contentStart = p.pos + p.len;
+        const contentEnd = i < positions.length - 1 ? positions[i+1].pos : raw.length;
+        result.push({ ...fileMap[p.idx], content: raw.substring(contentStart, contentEnd).trim() });
       });
-    } else {
-      // Last resort: put everything in one file
-      result.push({ key:'all', file:`all-platforms-${slug}.txt`, type:'text/plain', icon:'⚡', label:'All Platforms (unsplit)', content: raw });
+      splitSuccessful = result.length >= 2;
     }
   }
 
-  // Always generate image prompts file
+  // FALLBACK 2: numbered sections  "1." "2." etc
+  if (!splitSuccessful || result.length < 2) {
+    result.length = 0;
+    const numPattern = /\n(?:#{1,3}\s*)?(\d+)\.\s+(?:SMARTCENTS|BLOGGER|FACEBOOK|INSTAGRAM|PINTEREST|MEDIUM)/gi;
+    const matches = [...raw.matchAll(numPattern)];
+    if (matches.length >= 2) {
+      matches.forEach((m, i) => {
+        const num = parseInt(m[1]) - 1;
+        if (num >= 0 && num < fileMap.length) {
+          const start = m.index;
+          const end = i < matches.length - 1 ? matches[i+1].index : raw.length;
+          result.push({ ...fileMap[num], content: raw.substring(start, end).trim() });
+        }
+      });
+      splitSuccessful = result.length >= 2;
+    }
+  }
+
+  // LAST RESORT: everything in one file
+  if (!splitSuccessful || result.length < 2) {
+    result.length = 0;
+    result.push({
+      file: `all-platforms-${slug}.txt`,
+      type: 'text/plain',
+      icon: '⚠️',
+      label: 'All Platforms (not split — re-run with exact delimiters)',
+      content: raw
+    });
+  }
+
+  // Always add image prompts
   result.push({
-    key: 'images',
     file: `07-image-prompts-${slug}.txt`,
     type: 'text/plain',
     icon: '🎨',

@@ -1266,20 +1266,19 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 
         <!-- PASTE RESULT + DOWNLOAD -->
         <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;">
-          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;">📥 Paste Claude's Reply → Download File</div>
-          <select id="gen-platform-select" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;outline:none;margin-bottom:8px;">
-            <option value="github">🔵 SmartCents Article (.html)</option>
-            <option value="blogger">🟠 Blogger Post (.html)</option>
-            <option value="facebook">📘 Facebook Post (.txt)</option>
-            <option value="instagram">📸 Instagram Caption (.txt)</option>
-            <option value="pinterest">📌 Pinterest Pin (.txt)</option>
-            <option value="medium">📝 Medium Article (.txt)</option>
-            <option value="all">⚡ All Platforms (.txt)</option>
-          </select>
-          <textarea id="gen-paste-area" placeholder="Paste Claude's response here..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.75rem;line-height:1.6;min-height:120px;outline:none;resize:vertical;margin-bottom:8px;"></textarea>
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:4px;">📥 Paste Claude's Reply → Get 7 Separate Files</div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Paste the full Claude response — app splits it into 7 separate files automatically</div>
+          <textarea id="gen-paste-area" placeholder="Paste Claude's full response here (all platforms)..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.75rem;line-height:1.6;min-height:150px;outline:none;resize:vertical;margin-bottom:10px;"></textarea>
+
+          <!-- FILE PREVIEW LIST -->
+          <div id="gen-files-preview" style="display:none;margin-bottom:10px;">
+            <div style="font-size:0.72rem;font-weight:700;color:var(--gold);margin-bottom:8px;">📁 Files to Download:</div>
+            <div id="gen-files-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+          </div>
+
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <button onclick="downloadGenFile()" style="background:var(--gold);color:#080808;border:none;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">⬇️ Download File</button>
-            <button onclick="downloadAllGenFiles()" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">📦 Download All</button>
+            <button onclick="splitAndPreview()" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔍 Preview Files</button>
+            <button onclick="downloadAllSeparate()" style="background:var(--gold);color:#080808;border:none;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">📦 Download All 7 Files</button>
           </div>
           <div id="gen-download-status" style="font-size:0.72rem;color:var(--muted);margin-top:8px;font-family:'DM Mono',monospace;text-align:center;"></div>
         </div>
@@ -1996,7 +1995,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.25';
+const APP_VERSION = '1.26';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2693,37 +2692,56 @@ Generate COMPLETE, publication-ready content for ALL platforms about "${kw}" tar
 
 ${affLinks}
 
-Generate ALL of the following in sequence:
+Use EXACTLY these section headers (they must appear verbatim):
 
 ═══════════════════════════════
-1. SMARTCENTS ARTICLE (HTML)
+SMARTCENTS ARTICLE
 ═══════════════════════════════
-[1,500 word SEO article with title, meta, slug, full HTML content, FAQ section, affiliate boxes, CTAs]
+Write a 1,500 word SEO-optimized HTML article.
+TITLE: [SEO title with keyword]
+META: [155 char meta description]
+SLUG: [url-slug]
+[Full article HTML with h2 headings, affiliate boxes, FAQ section, CTAs]
+Link back to: medium.com/@smartcents and smartcents-finance.blogspot.com
 
 ═══════════════════════════════
-2. BLOGGER POST (HTML)
+BLOGGER POST
 ═══════════════════════════════
-[800 word blogger post with title, meta, labels, full content]
+Write an 800 word Blogger post.
+TITLE: [title]
+META: [meta description]
+LABELS: [5 labels separated by commas]
+[Full post content — link to SmartCents article and Medium]
 
 ═══════════════════════════════
-3. FACEBOOK POST
+FACEBOOK POST
 ═══════════════════════════════
-[150 word post with hook, key points, affiliate link, hashtags]
+Write a 150 word Facebook post.
+[Hook opening, 3-4 points with emojis, affiliate link, article URL, 8 hashtags]
 
 ═══════════════════════════════
-4. INSTAGRAM CAPTION
+INSTAGRAM CAPTION
 ═══════════════════════════════
-[100 word caption with hook, emojis, hashtags]
+Write a 100 word Instagram caption.
+[Hook first line, emojis, "🔗 Link in bio → ${site}"]
+HASHTAGS: [20 hashtags on one line]
 
 ═══════════════════════════════
-5. PINTEREST PIN
+PINTEREST PIN
 ═══════════════════════════════
-[Pin title, 250 word description, board suggestion]
+PIN TITLE: [100 char title]
+PIN DESCRIPTION: [200 word description with affiliate link and article URL]
+BOARD: [board name]
+IMAGE BRIEF: [describe the pin image]
 
 ═══════════════════════════════
-6. MEDIUM ARTICLE
+MEDIUM ARTICLE
 ═══════════════════════════════
-[1,000 word Medium article in Markdown with title, tags, full content]`
+Write a 1,000 word Medium article in Markdown.
+TITLE: [title]
+SUBTITLE: [subtitle]
+TAGS: [5 tags]
+[Full article with ## headings, affiliate links, CTA to ${site}]`
   };
 
   return prompts[platform] || prompts.all;
@@ -2764,83 +2782,284 @@ function openClaudeAllPlatforms() {
   });
 }
 
-function downloadGenFile() {
-  const content = document.getElementById('gen-paste-area').value.trim();
-  if (!content) { showToast('Paste Claude\'s response first!'); return; }
+function getSlug() {
+  return (currentKeyword || 'article').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
 
-  const platform = document.getElementById('gen-platform-select').value;
-  const kw = (currentKeyword || 'article').replace(/[^a-z0-9]/gi, '-').toLowerCase();
-  const date = new Date().toISOString().split('T')[0];
-
-  const fileConfig = {
-    github:    { name: `smartcents-${kw}-${date}.html`,    type: 'text/html' },
-    blogger:   { name: `blogger-${kw}-${date}.html`,       type: 'text/html' },
-    facebook:  { name: `facebook-${kw}-${date}.txt`,       type: 'text/plain' },
-    instagram: { name: `instagram-${kw}-${date}.txt`,      type: 'text/plain' },
-    pinterest: { name: `pinterest-${kw}-${date}.txt`,      type: 'text/plain' },
-    medium:    { name: `medium-${kw}-${date}.txt`,         type: 'text/plain' },
-    all:       { name: `all-platforms-${kw}-${date}.txt`,  type: 'text/plain' }
-  };
-
-  const cfg = fileConfig[platform] || fileConfig.all;
-  const blob = new Blob([content], { type: cfg.type });
+function downloadFile(filename, content, type) {
+  const blob = new Blob([content], { type: type || 'text/plain;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = cfg.name; a.click();
+  a.href = url; a.download = filename; a.click();
   URL.revokeObjectURL(url);
-
-  document.getElementById('gen-download-status').textContent = `✅ Downloaded: ${cfg.name}`;
-  document.getElementById('gen-download-status').style.color = 'var(--green)';
-  showToast(`✅ Downloaded ${cfg.name}!`);
 }
 
-function downloadAllGenFiles() {
-  const content = document.getElementById('gen-paste-area').value.trim();
-  if (!content) { showToast('Paste Claude\'s response first!'); return; }
+function extractSection(content, markers) {
+  // Try each marker until one is found
+  for (const marker of markers) {
+    const idx = content.indexOf(marker);
+    if (idx !== -1) return idx;
+  }
+  return -1;
+}
 
-  const kw = (currentKeyword || 'article').replace(/[^a-z0-9]/gi, '-').toLowerCase();
-  const date = new Date().toISOString().split('T')[0];
+function splitContent(raw) {
+  const slug = getSlug();
+  const kw = currentKeyword || 'article';
 
-  // Split by platform markers
+  // Define section markers — multiple fallbacks for each platform
   const sections = [
-    { marker: 'SMARTCENTS ARTICLE', file: `smartcents-${kw}.html`, type: 'text/html' },
-    { marker: 'BLOGGER POST',       file: `blogger-${kw}.html`,    type: 'text/html' },
-    { marker: 'FACEBOOK POST',      file: `facebook-${kw}.txt`,    type: 'text/plain' },
-    { marker: 'INSTAGRAM CAPTION',  file: `instagram-${kw}.txt`,   type: 'text/plain' },
-    { marker: 'PINTEREST PIN',      file: `pinterest-${kw}.txt`,   type: 'text/plain' },
-    { marker: 'MEDIUM ARTICLE',     file: `medium-${kw}.txt`,      type: 'text/plain' }
+    {
+      key: 'github',
+      file: `01-smartcents-${slug}.html`,
+      type: 'text/html',
+      icon: '🔵',
+      label: 'SmartCents Article',
+      markers: ['SMARTCENTS ARTICLE', '1. SMARTCENTS', 'GITHUB ARTICLE', 'SMARTCENTS HTML', 'ARTICLE START', '═══\n1.', '1. SMART']
+    },
+    {
+      key: 'blogger',
+      file: `02-blogger-${slug}.html`,
+      type: 'text/html',
+      icon: '🟠',
+      label: 'Blogger Post',
+      markers: ['BLOGGER POST', '2. BLOGGER', 'BLOGGER HTML', 'BLOGGER START', '═══\n2.', '2. BLOG']
+    },
+    {
+      key: 'facebook',
+      file: `03-facebook-${slug}.txt`,
+      type: 'text/plain',
+      icon: '📘',
+      label: 'Facebook Post',
+      markers: ['FACEBOOK POST', '3. FACEBOOK', 'FACEBOOK START', '═══\n3.', '3. FACE']
+    },
+    {
+      key: 'instagram',
+      file: `04-instagram-${slug}.txt`,
+      type: 'text/plain',
+      icon: '📸',
+      label: 'Instagram Caption',
+      markers: ['INSTAGRAM CAPTION', '4. INSTAGRAM', 'INSTAGRAM START', '═══\n4.', '4. INST']
+    },
+    {
+      key: 'pinterest',
+      file: `05-pinterest-${slug}.txt`,
+      type: 'text/plain',
+      icon: '📌',
+      label: 'Pinterest Pin',
+      markers: ['PINTEREST PIN', '5. PINTEREST', 'PINTEREST START', '═══\n5.', '5. PINT']
+    },
+    {
+      key: 'medium',
+      file: `06-medium-${slug}.txt`,
+      type: 'text/plain',
+      icon: '📝',
+      label: 'Medium Article',
+      markers: ['MEDIUM ARTICLE', '6. MEDIUM', 'MEDIUM START', '═══\n6.', '6. MEDI']
+    }
   ];
 
-  let downloaded = 0;
-  sections.forEach((sec, i) => {
-    const start = content.indexOf(sec.marker);
-    if (start === -1) return;
-    const nextMarker = sections[i + 1] ? content.indexOf(sections[i + 1].marker) : content.length;
-    const chunk = content.substring(start, nextMarker > start ? nextMarker : content.length).trim();
-    if (!chunk) return;
+  // Find start positions
+  const positions = sections.map(sec => ({
+    ...sec,
+    start: extractSection(raw, sec.markers)
+  })).filter(s => s.start !== -1).sort((a,b) => a.start - b.start);
 
-    setTimeout(() => {
-      const blob = new Blob([chunk], { type: sec.type });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = sec.file; a.click();
-      URL.revokeObjectURL(url);
-      downloaded++;
-    }, i * 400);
-  });
+  const result = [];
 
-  // If no sections found, download as single file
-  if (!sections.some(s => content.includes(s.marker))) {
-    downloadGenFile();
-    return;
+  if (positions.length >= 2) {
+    // Extract each section between markers
+    positions.forEach((sec, i) => {
+      const end = i < positions.length - 1 ? positions[i+1].start : raw.length;
+      result.push({ ...sec, content: raw.substring(sec.start, end).trim() });
+    });
+  } else {
+    // Fallback: Claude didn't use expected markers
+    // Try splitting by numbered headings or === dividers
+    const parts = raw.split(/(?:={3,}|#{3,}|\d+\.\s+(?:SMARTCENTS|BLOGGER|FACEBOOK|INSTAGRAM|PINTEREST|MEDIUM))/i);
+    if (parts.length >= 2) {
+      const platKeys = ['github','blogger','facebook','instagram','pinterest','medium'];
+      parts.slice(1).forEach((part, i) => {
+        if (i < sections.length) {
+          result.push({ ...sections[platKeys.indexOf(sections[i].key) !== -1 ? i : i], content: part.trim() });
+        }
+      });
+    } else {
+      // Last resort: put everything in one file
+      result.push({ key:'all', file:`all-platforms-${slug}.txt`, type:'text/plain', icon:'⚡', label:'All Platforms (unsplit)', content: raw });
+    }
   }
 
-  setTimeout(() => {
-    document.getElementById('gen-download-status').textContent = `✅ Downloaded ${downloaded} files!`;
-    document.getElementById('gen-download-status').style.color = 'var(--green)';
-    showToast(`✅ ${downloaded} files downloaded!`);
-  }, sections.length * 400 + 500);
+  // Always generate image prompts file
+  result.push({
+    key: 'images',
+    file: `07-image-prompts-${slug}.txt`,
+    type: 'text/plain',
+    icon: '🎨',
+    label: 'Image Generation Prompts',
+    content: buildImagePromptsFile(kw)
+  });
+
+  return result;
 }
+
+function buildImagePromptsFile(kw) {
+  const slug = getSlug();
+  const site = 'mysmartcents.github.io';
+  return `IMAGE GENERATION PROMPTS
+========================
+Keyword: ${kw}
+Site: ${site}
+Brand Colors: #C9A84C (gold), #0D0D0D (dark), #E8E8E0 (light)
+
+========================
+1. BLOGGER / FACEBOOK IMAGE (1200x628px — Landscape)
+========================
+CANVA SIZE: 1200 × 628 pixels
+
+GEMINI PROMPT:
+Professional finance blog banner about "${kw}". Dark background #0D0D0D with gold (#C9A84C) typography. Large bold title "${kw}" in gold. Subtitle "SmartCents | ${site}". Relevant financial icons (charts, money, graphs). Clean minimal professional design. 1200x628 landscape format.
+
+CANVA BRIEF:
+- Background: #0D0D0D dark
+- Main headline (large bold gold): "${kw}"
+- Subheadline: "SmartCents | Free Finance Tools"
+- Visual: Relevant finance icon or chart on right side
+- Bottom bar: "${site}"
+- Style: Professional, minimal, dark gold theme
+
+Open Canva: https://www.canva.com/create/blog-banners/
+
+========================
+2. INSTAGRAM IMAGE (1080x1080px — Square)
+========================
+CANVA SIZE: 1080 × 1080 pixels
+
+GEMINI PROMPT:
+Bold square Instagram post about "${kw}". Dark background (#0D0D0D), gold (#C9A84C) accents. Large centered hook text. 3 key bullet points. "@mysmartcents" branding at bottom. Eye-catching, scroll-stopping design for mobile. 1080x1080 square format.
+
+CANVA BRIEF:
+- Background: #0D0D0D dark
+- Hook text (large, centered): Key stat or question about ${kw}
+- 3 bullet points with gold dots
+- Bottom: "@mysmartcents | Free Finance Tools"
+- Style: Bold, mobile-first, eye-catching
+
+Open Canva: https://www.canva.com/create/instagram-posts/
+
+========================
+3. PINTEREST IMAGE (1000x1500px — Vertical Tall)
+========================
+CANVA SIZE: 1000 × 1500 pixels
+
+GEMINI PROMPT:
+Tall Pinterest infographic about "${kw}". Dark background (#0D0D0D), gold (#C9A84C) accents. Bold title at top. 5-7 numbered tips in middle section. "${site}" URL at bottom. Save-worthy infographic style. 1000x1500 vertical format.
+
+CANVA BRIEF:
+TOP SECTION (30%): Bold title "${kw}" on dark gold background
+MIDDLE SECTION (50%): 5-7 numbered tips/steps (infographic style)
+BOTTOM SECTION (20%): SmartCents logo + ${site}
+
+- Colors: #C9A84C gold + #0D0D0D dark + #E8E8E0 text
+- Style: Infographic, very readable, save-worthy
+- TIP: Pinterest users SAVE infographics — make it valuable!
+
+Open Canva: https://www.canva.com/create/pinterest-graphics/
+
+========================
+4. MEDIUM COVER IMAGE (1500x750px — Wide Landscape)
+========================
+CANVA SIZE: 1500 × 750 pixels
+
+GEMINI PROMPT:
+Wide Medium article cover image about "${kw}". Dark (#0D0D0D) background, gold (#C9A84C) accent. Article title in large bold text. Clean professional finance aesthetic. 1500x750 wide landscape format.
+
+CANVA BRIEF:
+- Same design as Blogger/Facebook but wider
+- Resize Blogger image in Canva: click Resize → type 1500 × 750
+- Or create fresh: wide landscape, title text centered
+
+Open Canva: https://www.canva.com/create/blog-banners/
+
+========================
+BRAND COLORS (copy into Canva)
+========================
+Gold:  #C9A84C
+Dark:  #0D0D0D
+Light: #E8E8E0
+
+TIP: Use the same landscape image for both Blogger and Facebook (same dimensions).
+TIP: Resize Blogger image in Canva to create Medium cover — saves design time.
+
+========================
+AI IMAGE TOOLS
+========================
+- Gemini: https://gemini.google.com (paste prompts above)
+- Microsoft Designer: https://designer.microsoft.com (free, high quality)
+- Canva AI: https://canva.com (AI image generation inside Canva)
+- Adobe Firefly: https://firefly.adobe.com (free tier available)
+`;
+}
+
+function splitAndPreview() {
+  const raw = document.getElementById('gen-paste-area').value.trim();
+  if (!raw) { showToast('Paste Claude\'s response first!'); return; }
+
+  const files = splitContent(raw);
+  const listEl = document.getElementById('gen-files-list');
+  const previewEl = document.getElementById('gen-files-preview');
+
+  listEl.innerHTML = files.map((f, i) => `
+    <div style="display:flex;align-items:center;justify-content:space-between;background:var(--dark3);border:1px solid var(--dark5);border-radius:8px;padding:8px 12px;">
+      <div>
+        <span style="font-size:0.82rem;">${f.icon} ${f.label}</span>
+        <div style="font-size:0.68rem;color:var(--muted);font-family:'DM Mono',monospace;">${f.file} · ${f.content.length} chars</div>
+      </div>
+      <button onclick="downloadSingleFile(${i})" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:5px 10px;border-radius:6px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">⬇️</button>
+    </div>`).join('');
+
+  previewEl.style.display = 'block';
+  window._genFiles = files;
+  showToast(`✅ ${files.length} files ready to download!`);
+  document.getElementById('gen-download-status').textContent = `${files.length} files ready — click ⬇️ for individual or 📦 for all`;
+  document.getElementById('gen-download-status').style.color = 'var(--green)';
+}
+
+function downloadSingleFile(index) {
+  const files = window._genFiles;
+  if (!files || !files[index]) { showToast('Preview files first!'); return; }
+  const f = files[index];
+  downloadFile(f.file, f.content, f.type);
+  showToast(`✅ Downloaded: ${f.file}`);
+}
+
+function downloadAllSeparate() {
+  const raw = document.getElementById('gen-paste-area').value.trim();
+  if (!raw) { showToast('Paste Claude\'s response first!'); return; }
+
+  const files = splitContent(raw);
+  window._genFiles = files;
+
+  if (files.length === 0) { showToast('Could not split content!'); return; }
+
+  files.forEach((f, i) => {
+    setTimeout(() => {
+      downloadFile(f.file, f.content, f.type);
+    }, i * 500);
+  });
+
+  // Update preview list
+  splitAndPreview();
+
+  setTimeout(() => {
+    document.getElementById('gen-download-status').textContent = `✅ ${files.length} files downloaded!`;
+    document.getElementById('gen-download-status').style.color = 'var(--green)';
+    showToast(`✅ ${files.length} separate files downloaded!`);
+  }, files.length * 500 + 300);
+}
+
+function downloadGenFile() { downloadAllSeparate(); }
+function downloadAllGenFiles() { downloadAllSeparate(); }
 
 function copyResGenContent() {
   const content = document.getElementById('gen-paste-area')?.value || '';

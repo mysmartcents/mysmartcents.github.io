@@ -1124,9 +1124,163 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <!-- RESEARCH TAB -->
 <div class="tab-content" id="tab-research">
   <div style="padding:16px 16px 0">
-    <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">🔬 SEO Research</div>
-    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:16px;">Research keywords, competitors & trends — US/UK perspective</div>
+    <div style="font-size:1.4rem;font-weight:800;margin-bottom:4px;">🔬 SEO Research Pipeline</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:16px;">Research → Analyze competitors → Generate optimized content for all platforms</div>
   </div>
+
+  <div class="section">
+
+    <!-- STEP 1: KEYWORD + TARGET -->
+    <div class="sec-header"><div class="sec-title">Step 1 — Enter Keyword & Target Market</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <input id="research-keyword" type="text" placeholder="e.g. best travel insurance for international trips" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <select id="research-country" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
+          <option value="us">🇺🇸 United States</option>
+          <option value="gb">🇬🇧 United Kingdom</option>
+          <option value="au">🇦🇺 Australia</option>
+          <option value="ca">🇨🇦 Canada</option>
+          <option value="in">🇮🇳 India</option>
+          <option value="pk">🇵🇰 Pakistan</option>
+          <option value="ae">🇦🇪 UAE</option>
+          <option value="global">🌍 Global</option>
+        </select>
+        <select id="research-intent" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
+          <option value="informational">Informational (How/What/Why)</option>
+          <option value="commercial">Commercial (Best/Top/Review)</option>
+          <option value="transactional">Transactional (Buy/Get/Apply)</option>
+          <option value="navigational">Navigational (Brand/Tool)</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;" id="quick-keywords">
+        <button onclick="setKeyword('best travel insurance 2026')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">✈️ travel insurance</button>
+        <button onclick="setKeyword('free home loan calculator')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">🏠 loan calculator</button>
+        <button onclick="setKeyword('how to send money internationally cheap')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">💸 money transfer</button>
+        <button onclick="setKeyword('passive income ideas that work')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">💰 passive income</button>
+        <button onclick="setKeyword('how to build emergency fund fast')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">🚨 emergency fund</button>
+        <button onclick="setKeyword('best budgeting methods save money')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">📊 budgeting</button>
+        <button onclick="setKeyword('prop trading funded account guide')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">📈 prop trading</button>
+        <button onclick="setKeyword('create legal documents online free')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">⚖️ legal docs</button>
+      </div>
+      <button onclick="runSEOPipeline()" id="pipeline-btn" style="width:100%;background:var(--gold);color:#080808;border:none;padding:14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;">🚀 Run Full SEO Research Pipeline</button>
+    </div>
+
+    <!-- PIPELINE PROGRESS -->
+    <div id="pipeline-progress" style="display:none;background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <div id="pipeline-status" style="font-size:0.82rem;font-weight:700;color:var(--gold);">Initializing...</div>
+        <div id="pipeline-step" style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;"></div>
+      </div>
+      <div style="background:var(--dark4);border-radius:100px;height:6px;overflow:hidden;margin-bottom:10px;">
+        <div id="pipeline-bar" style="height:100%;background:var(--gold);border-radius:100px;width:0%;transition:width 0.4s;"></div>
+      </div>
+      <div id="pipeline-log" style="font-size:0.72rem;font-family:'DM Mono',monospace;color:var(--muted);max-height:100px;overflow-y:auto;"></div>
+    </div>
+
+    <!-- RESULTS TABS -->
+    <div id="research-results" style="display:none;">
+
+      <!-- RESULT NAV -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;" id="res-tab-btns">
+        <button onclick="showResTab('keywords')" class="res-tab-btn active-res" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">🔑 Keywords</button>
+        <button onclick="showResTab('competitors')" class="res-tab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">🏆 Competitors</button>
+        <button onclick="showResTab('questions')" class="res-tab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">❓ Questions</button>
+        <button onclick="showResTab('strategy')" class="res-tab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">🎯 Strategy</button>
+        <button onclick="showResTab('generate')" class="res-tab-btn" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--muted);padding:6px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;">⚡ Generate</button>
+      </div>
+
+      <!-- KEYWORDS TAB -->
+      <div id="res-tab-keywords" class="res-tab-content">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:10px;">🔑 Keyword Analysis</div>
+          <div id="res-keywords-content" style="font-size:0.78rem;line-height:1.8;color:var(--text);font-family:'DM Mono',monospace;white-space:pre-wrap;"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button onclick="openGoogleSearch()" style="background:rgba(66,133,244,0.1);border:1px solid rgba(66,133,244,0.3);color:#4285F4;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔍 Google Search</button>
+          <button onclick="openGoogleSuggest()" style="background:rgba(234,67,53,0.1);border:1px solid rgba(234,67,53,0.3);color:#EA4335;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📊 Google Trends</button>
+          <button onclick="openRedditKeyword()" style="background:rgba(255,69,0,0.1);border:1px solid rgba(255,69,0,0.2);color:#FF4500;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔴 Reddit Search</button>
+          <button onclick="openQuoraKeyword()" style="background:rgba(185,43,39,0.1);border:1px solid rgba(185,43,39,0.2);color:#B92B27;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🟠 Quora Search</button>
+          <button onclick="openPinterestKeyword()" style="background:rgba(230,0,35,0.1);border:1px solid rgba(230,0,35,0.2);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📌 Pinterest Search</button>
+          <button onclick="openYouTubeKeyword()" style="background:rgba(255,0,0,0.1);border:1px solid rgba(255,0,0,0.2);color:#FF0000;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">▶️ YouTube Search</button>
+        </div>
+      </div>
+
+      <!-- COMPETITORS TAB -->
+      <div id="res-tab-competitors" class="res-tab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:10px;">🏆 Competitor Analysis — Page 1 Results</div>
+          <div id="res-competitors-content" style="font-size:0.78rem;line-height:1.8;color:var(--text);font-family:'DM Mono',monospace;white-space:pre-wrap;"></div>
+        </div>
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;">🔗 Check Competitors Live</div>
+          <div id="res-competitor-links" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+      </div>
+
+      <!-- QUESTIONS TAB -->
+      <div id="res-tab-questions" class="res-tab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:10px;">❓ People Also Ask + Long-tail Questions</div>
+          <div id="res-questions-content" style="font-size:0.78rem;line-height:1.8;color:var(--text);font-family:'DM Mono',monospace;white-space:pre-wrap;"></div>
+        </div>
+      </div>
+
+      <!-- STRATEGY TAB -->
+      <div id="res-tab-strategy" class="res-tab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:10px;">🎯 SEO Strategy to Outrank Page 1</div>
+          <div id="res-strategy-content" style="font-size:0.78rem;line-height:1.8;color:var(--text);font-family:'DM Mono',monospace;white-space:pre-wrap;"></div>
+        </div>
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:10px;">🔗 Backlink Opportunities</div>
+          <div id="res-backlinks-content" style="font-size:0.78rem;line-height:1.8;color:var(--text);font-family:'DM Mono',monospace;white-space:pre-wrap;"></div>
+        </div>
+      </div>
+
+      <!-- GENERATE TAB -->
+      <div id="res-tab-generate" class="res-tab-content" style="display:none;">
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;">⚡ Generate SEO-Optimized Content</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Based on competitor research — content designed to outrank page 1</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+            <button onclick="generateFromResearch('github')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔵 SmartCents Article</button>
+            <button onclick="generateFromResearch('blogger')" style="background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🟠 Blogger Post</button>
+            <button onclick="generateFromResearch('facebook')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📘 Facebook Post</button>
+            <button onclick="generateFromResearch('instagram')" style="background:rgba(225,48,108,0.15);border:1px solid rgba(225,48,108,0.3);color:#E1306C;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📸 Instagram Caption</button>
+            <button onclick="generateFromResearch('pinterest')" style="background:rgba(230,0,35,0.15);border:1px solid rgba(230,0,35,0.3);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📌 Pinterest Pin</button>
+            <button onclick="generateFromResearch('medium')" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📝 Medium Article</button>
+          </div>
+          <button onclick="generateFromResearch('all')" style="width:100%;background:var(--gold);color:#080808;border:none;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">⚡ Generate ALL Platforms at Once</button>
+        </div>
+        <div id="res-generated-output" style="display:none;background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;" id="res-gen-title">Generated Content</div>
+          <div id="res-gen-content" style="font-size:0.75rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.6;white-space:pre-wrap;max-height:300px;overflow-y:auto;margin-bottom:10px;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button onclick="copyResGenContent()" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📋 Copy</button>
+            <button onclick="saveResGenToNotes()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📓 Save to Notes</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end research-results -->
+
+    <!-- QUICK ACCESS TOOLS -->
+    <div class="sec-header" style="margin-top:14px;"><div class="sec-title">Quick Research Tools</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <button onclick="openGoogleSearch()" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">🔍 Google Search</button>
+      <button onclick="openGoogleSuggest()" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">📊 Google Trends</button>
+      <button onclick="openRedditKeyword()" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">🔴 Reddit Finance</button>
+      <button onclick="openQuoraKeyword()" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">🟠 Quora Finance</button>
+      <button onclick="openPinterestKeyword()" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">📌 Pinterest Trends</button>
+      <button onclick="openYouTubeKeyword()" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">▶️ YouTube Search</button>
+      <button onclick="window.open('https://answerthepublic.com','_blank')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">💬 AnswerThePublic</button>
+      <button onclick="window.open('https://trends.google.com/trending?geo=US','_blank')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">🔥 Trending Now</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- SEO TOOLS TAB -->
 
   <div class="section">
 
@@ -1436,6 +1590,8 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <button onclick="openSite('https://www.blogger.com/blog/posts/4286828910142477267')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">📝 Blogger Posts</button>
       <button onclick="openSite('https://analytics.google.com')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">📊 Analytics</button>
       <button onclick="openSite('https://search.google.com/search-console')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">🔍 Search Console</button>
+      <button onclick="openSite('https://www.bing.com/webmasters')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;">🔵 Bing Webmaster</button>
+      <button onclick="submitIndexNow()" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">⚡ IndexNow (Instant)</button>
     </div>
   </div>
 </div>
@@ -1817,7 +1973,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.22';
+const APP_VERSION = '1.24';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -1989,127 +2145,530 @@ async function gdriveLoad() {
 // RESEARCH FUNCTIONS
 const countryParams = { us:'gl=us&hl=en', gb:'gl=gb&hl=en', au:'gl=au&hl=en', ca:'gl=ca&hl=en', pk:'gl=pk&hl=en' };
 
-function doResearch() {
+// SEO RESEARCH PIPELINE
+let researchData = {};
+let currentKeyword = '';
+
+function setKeyword(kw) {
+  document.getElementById('research-keyword').value = kw;
+  showToast('Keyword set: ' + kw);
+}
+
+function getCountryParams() {
+  const country = document.getElementById('research-country').value;
+  const map = { us:'gl=us&hl=en', gb:'gl=gb&hl=en', au:'gl=au&hl=en', ca:'gl=ca&hl=en', in:'gl=in&hl=en', pk:'gl=pk&hl=en', ae:'gl=ae&hl=en', global:'hl=en' };
+  return map[country] || 'gl=us&hl=en';
+}
+
+function pipelineLog(msg, color) {
+  const log = document.getElementById('pipeline-log');
+  if (!log) return;
+  const d = document.createElement('div');
+  d.style.color = color || 'var(--muted)';
+  d.textContent = msg;
+  log.appendChild(d);
+  log.scrollTop = log.scrollHeight;
+}
+
+function setPipelineProgress(pct, status, step) {
+  document.getElementById('pipeline-bar').style.width = pct + '%';
+  document.getElementById('pipeline-status').textContent = status;
+  document.getElementById('pipeline-step').textContent = step;
+}
+
+async function runSEOPipeline() {
   const kw = document.getElementById('research-keyword').value.trim();
   if (!kw) { showToast('Enter a keyword first!'); return; }
+  if (!getClaudeKey()) { showToast('Add Gemini API key in ⚡ Bulk tab first!'); return; }
+
+  currentKeyword = kw;
   const country = document.getElementById('research-country').value;
-  const type = document.getElementById('research-type').value;
-  const params = countryParams[country] || 'gl=us&hl=en';
-  const encoded = encodeURIComponent(kw);
+  const intent = document.getElementById('research-intent').value;
 
-  const urls = {
-    search: `https://www.google.com/search?q=${encoded}&${params}&num=10`,
-    trends: `https://trends.google.com/trends/explore?q=${encoded}&geo=${country.toUpperCase()}&cat=7`,
-    questions: `https://www.google.com/search?q=${encoded}+site:quora.com+OR+site:reddit.com&${params}`,
-    reddit: `https://www.reddit.com/search/?q=${encoded}&sort=top&t=month`,
-    quora: `https://www.quora.com/search?q=${encoded}`,
-    youtube: `https://www.youtube.com/results?search_query=${encoded}`
-  };
+  const btn = document.getElementById('pipeline-btn');
+  btn.disabled = true; btn.textContent = '⏳ Researching...'; btn.style.opacity = '0.7';
 
-  window.open(urls[type] || urls.search, '_blank');
-  showToast('Opening research... 🔬');
+  document.getElementById('pipeline-progress').style.display = 'block';
+  document.getElementById('pipeline-log').innerHTML = '';
+  document.getElementById('research-results').style.display = 'none';
+
+  // PHASE 1: Keyword Analysis
+  setPipelineProgress(15, '🔑 Analyzing keywords...', 'Step 1/4');
+  pipelineLog('🔑 Generating keyword variations and long-tail suggestions...');
+  const keywordPrompt = `You are an SEO expert. Analyze the keyword "${kw}" for a personal finance website (SmartCents - free loan calculator, budget planner, savings tracker) targeting ${country.toUpperCase()} audience with ${intent} intent.
+
+Generate EXACTLY this format:
+
+PRIMARY KEYWORD: ${kw}
+SEARCH INTENT: ${intent}
+TARGET COUNTRY: ${country.toUpperCase()}
+
+KEYWORD DIFFICULTY: [Easy/Medium/Hard/Very Hard]
+ESTIMATED MONTHLY SEARCHES: [range]
+RANKING TIMELINE: [how long to rank]
+
+LONG-TAIL KEYWORDS (10 variations, easier to rank):
+1. [keyword] - [difficulty] - [why it works]
+2. [keyword] - [difficulty] - [why it works]
+3. [keyword] - [difficulty] - [why it works]
+4. [keyword] - [difficulty] - [why it works]
+5. [keyword] - [difficulty] - [why it works]
+6. [keyword] - [difficulty] - [why it works]
+7. [keyword] - [difficulty] - [why it works]
+8. [keyword] - [difficulty] - [why it works]
+9. [keyword] - [difficulty] - [why it works]
+10. [keyword] - [difficulty] - [why it works]
+
+LSI KEYWORDS (related terms to include in content):
+[List 10 LSI keywords separated by commas]
+
+GOOGLE AUTOCOMPLETE SUGGESTIONS (what people type after this keyword):
+[List 8 common autocomplete completions]
+
+BEST TARGET KEYWORD FOR SMARTCENTS:
+[The single best keyword to target from this list with reason]`;
+
+  try {
+    researchData.keywords = await callClaude(keywordPrompt);
+    pipelineLog('✅ Keyword analysis complete', 'var(--green)');
+  } catch(e) {
+    researchData.keywords = 'Keyword analysis failed: ' + e.message;
+    pipelineLog('❌ Keywords: ' + e.message, 'var(--red)');
+  }
+
+  // PHASE 2: Competitor Analysis
+  setPipelineProgress(40, '🏆 Analyzing competitors...', 'Step 2/4');
+  pipelineLog('🏆 Researching Google Page 1 competitors...');
+  const competitorPrompt = `You are an SEO expert analyzing Google Page 1 results for "${kw}" in ${country.toUpperCase()}.
+
+Based on your knowledge of what typically ranks for personal finance keywords, provide EXACTLY this format:
+
+KEYWORD: ${kw}
+COUNTRY: ${country.toUpperCase()}
+
+PAGE 1 COMPETITORS (typical sites that dominate this keyword):
+1. Site: [typical site] | Title pattern: [title format] | Why they rank: [reason]
+2. Site: [typical site] | Title pattern: [title format] | Why they rank: [reason]
+3. Site: [typical site] | Title pattern: [title format] | Why they rank: [reason]
+4. Site: [typical site] | Title pattern: [title format] | Why they rank: [reason]
+5. Site: [typical site] | Title pattern: [title format] | Why they rank: [reason]
+
+CONTENT GAPS (what top results are missing that SmartCents can cover):
+1. [gap/opportunity]
+2. [gap/opportunity]
+3. [gap/opportunity]
+4. [gap/opportunity]
+5. [gap/opportunity]
+
+AVERAGE CONTENT LENGTH on page 1: [word count range]
+COMMON HEADINGS USED: [H2 patterns competitors use]
+FEATURED SNIPPET OPPORTUNITY: [Yes/No and format]
+
+SMARTCENTS UNIQUE ANGLE to outrank them:
+[Specific angle and approach that gives SmartCents an edge]`;
+
+  try {
+    researchData.competitors = await callClaude(competitorPrompt);
+    pipelineLog('✅ Competitor analysis complete', 'var(--green)');
+  } catch(e) {
+    researchData.competitors = 'Competitor analysis failed: ' + e.message;
+    pipelineLog('❌ Competitors: ' + e.message, 'var(--red)');
+  }
+
+  // PHASE 3: Questions & PAA
+  setPipelineProgress(65, '❓ Finding audience questions...', 'Step 3/4');
+  pipelineLog('❓ Researching People Also Ask and audience questions...');
+  const questionsPrompt = `You are an SEO expert. For the keyword "${kw}" targeting ${country.toUpperCase()} audience, generate EXACTLY this format:
+
+PEOPLE ALSO ASK (Google PAA boxes for this keyword):
+1. [question people ask Google]
+2. [question people ask Google]
+3. [question people ask Google]
+4. [question people ask Google]
+5. [question people ask Google]
+
+REDDIT QUESTIONS (what r/personalfinance users ask about this):
+1. [reddit-style question]
+2. [reddit-style question]
+3. [reddit-style question]
+4. [reddit-style question]
+5. [reddit-style question]
+
+QUORA QUESTIONS (popular Quora questions on this topic):
+1. [quora question]
+2. [quora question]
+3. [quora question]
+
+PINTEREST SEARCH QUERIES (how people search this on Pinterest):
+1. [pinterest search term]
+2. [pinterest search term]
+3. [pinterest search term]
+4. [pinterest search term]
+
+INSTAGRAM HASHTAGS (relevant hashtags for this topic):
+[List 20 hashtags starting with #]
+
+FAQ SECTION for article (5 questions with short answers):
+Q1: [question]
+A1: [2-3 sentence answer]
+
+Q2: [question]
+A2: [2-3 sentence answer]
+
+Q3: [question]
+A3: [2-3 sentence answer]
+
+Q4: [question]
+A4: [2-3 sentence answer]
+
+Q5: [question]
+A5: [2-3 sentence answer]`;
+
+  try {
+    researchData.questions = await callClaude(questionsPrompt);
+    pipelineLog('✅ Questions research complete', 'var(--green)');
+  } catch(e) {
+    researchData.questions = 'Questions failed: ' + e.message;
+    pipelineLog('❌ Questions: ' + e.message, 'var(--red)');
+  }
+
+  // PHASE 4: Strategy
+  setPipelineProgress(85, '🎯 Building SEO strategy...', 'Step 4/4');
+  pipelineLog('🎯 Building outranking strategy...');
+  const strategyPrompt = `You are an SEO strategist for SmartCents (mysmartcents.github.io) — a free personal finance tools site with loan calculator, budget planner, savings tracker, and 10 articles. The site also has a Blogger blog (smartcents-finance.blogspot.com) and Medium account (@smartcents).
+
+Create a complete strategy to rank for "${kw}" in ${country.toUpperCase()}. Format EXACTLY like this:
+
+RANKING STRATEGY FOR: ${kw}
+
+RECOMMENDED TITLE TAG (60 chars max, include keyword):
+[title]
+
+RECOMMENDED META DESCRIPTION (155 chars max, power words + keyword):
+[description]
+
+RECOMMENDED URL SLUG:
+/articles/[slug]
+
+CONTENT STRUCTURE to outrank page 1:
+- Word count target: [number]
+- H1: [exact headline]
+- H2 sections (in order): [list 6-8 H2s]
+- Must include: [specific content elements]
+- Unique angle: [what makes SmartCents article better]
+
+INTERNAL LINKING OPPORTUNITIES from this article:
+- Link to: [SmartCents page] with anchor: [anchor text]
+- Link to: [SmartCents page] with anchor: [anchor text]
+- Link to: [SmartCents page] with anchor: [anchor text]
+
+BACKLINK STRATEGY using Medium + Blogger:
+1. Medium article: [title] → links to SmartCents article
+2. Blogger post: [title] → links to SmartCents article  
+3. Reddit post: [where to post + angle]
+4. Quora answer: [question to answer + how to include link]
+5. Facebook group posts: [which groups + what angle]
+
+AFFILIATE LINKS to include naturally:
+[List relevant affiliate links from SmartCents partners]
+
+FEATURED SNIPPET OPTIMIZATION:
+[How to structure content to win the featured snippet]
+
+TIME TO RANK ESTIMATE:
+[Realistic timeline with explanation]`;
+
+  try {
+    researchData.strategy = await callClaude(strategyPrompt);
+    pipelineLog('✅ Strategy complete', 'var(--green)');
+  } catch(e) {
+    researchData.strategy = 'Strategy failed: ' + e.message;
+    pipelineLog('❌ Strategy: ' + e.message, 'var(--red)');
+  }
+
+  // Done
+  setPipelineProgress(100, '✅ Research complete!', 'All steps done');
+  pipelineLog('🎉 Pipeline complete! Check tabs for results.', 'var(--green)');
+
+  // Populate results
+  document.getElementById('res-keywords-content').textContent = researchData.keywords || '';
+  document.getElementById('res-competitors-content').textContent = researchData.competitors || '';
+  document.getElementById('res-questions-content').textContent = researchData.questions || '';
+  document.getElementById('res-strategy-content').textContent = researchData.strategy || '';
+  document.getElementById('res-backlinks-content').textContent = buildBacklinkList();
+
+  // Build competitor links
+  buildCompetitorLinks();
+
+  document.getElementById('research-results').style.display = 'block';
+  showResTab('keywords');
+
+  btn.disabled = false; btn.textContent = '🚀 Run Full SEO Research Pipeline'; btn.style.opacity = '1';
+  showToast('Research complete! Check the tabs 🎯');
+  document.getElementById('research-results').scrollIntoView({behavior:'smooth'});
 }
 
-function quickSearch(kw) {
-  document.getElementById('research-keyword').value = kw;
-  document.getElementById('research-type').value = 'search';
-  document.getElementById('research-country').value = 'us';
-  doResearch();
+function buildBacklinkList() {
+  const kw = currentKeyword;
+  return `BACKLINK OPPORTUNITIES for "${kw}"
+
+YOUR OWNED PLATFORMS (free backlinks):
+✅ Medium → Link to SmartCents article
+   medium.com/@smartcents — Write article on this topic, link back
+
+✅ Blogger → Link to SmartCents article  
+   smartcents-finance.blogspot.com — Post on topic, link back
+
+✅ Pinterest → Pin linking to article
+   pinterest.com/mysmartcents — Create pin with article URL
+
+✅ Facebook → Post with article link
+   Post in SmartCents page + relevant groups
+
+EXTERNAL BACKLINK TARGETS:
+• Reddit r/personalfinance — Answer question, mention SmartCents
+• Reddit r/financialindependence — Share insight + link
+• Quora — Answer related questions, add SmartCents link
+• Facebook Groups — Finance groups, share helpful content
+• Medium Partner publications — Submit article to finance publications
+
+BACKLINK ANCHOR TEXT to use:
+• "free loan calculator" → mysmartcents.github.io/#tools
+• "budget planner" → mysmartcents.github.io/#tools
+• "savings tracker" → mysmartcents.github.io/#tools
+• Exact keyword → your article URL`;
 }
 
-function checkRank() {
-  const kw = document.getElementById('rank-keyword').value.trim();
-  if (!kw) { showToast('Enter a keyword to check!'); return; }
-  const encoded = encodeURIComponent(kw + ' site:mysmartcents.github.io');
-  window.open(`https://www.google.com/search?q=${encoded}&gl=us&hl=en`, '_blank');
-  showToast('Checking SmartCents rank...');
+function buildCompetitorLinks() {
+  const kw = currentKeyword;
+  const country = document.getElementById('research-country').value;
+  const params = getCountryParams();
+  const enc = encodeURIComponent(kw);
+  const container = document.getElementById('res-competitor-links');
+  if (!container) return;
+  const links = [
+    { label: '🔍 Google Page 1 Results', url: `https://www.google.com/search?q=${enc}&${params}&num=10` },
+    { label: '📊 Google Trends', url: `https://trends.google.com/trends/explore?q=${enc}&geo=${country.toUpperCase()}&cat=7` },
+    { label: '🔴 Reddit Discussions', url: `https://www.reddit.com/search/?q=${enc}+personal+finance&sort=top` },
+    { label: '🟠 Quora Questions', url: `https://www.quora.com/search?q=${enc}` },
+    { label: '📌 Pinterest Results', url: `https://www.pinterest.com/search/pins/?q=${enc}` },
+    { label: '▶️ YouTube Videos', url: `https://www.youtube.com/results?search_query=${enc}` },
+    { label: '🔍 Bing Page 1', url: `https://www.bing.com/search?q=${enc}` },
+  ];
+  container.innerHTML = links.map(l => `
+    <a href="${l.url}" target="_blank" style="display:flex;align-items:center;gap:8px;background:var(--dark3);border:1px solid var(--dark5);border-radius:8px;padding:8px 12px;text-decoration:none;color:var(--text);font-size:0.75rem;font-family:'Syne',sans-serif;">
+      ${l.label} <span style="color:var(--muted);margin-left:auto;">→</span>
+    </a>`).join('');
 }
 
-function checkCompetitors() {
-  const kw = document.getElementById('rank-keyword').value.trim();
-  if (!kw) { showToast('Enter a keyword first!'); return; }
-  const encoded = encodeURIComponent(kw);
-  window.open(`https://www.google.com/search?q=${encoded}&gl=us&hl=en&num=10`, '_blank');
-  showToast('Opening US page 1 results...');
+function showResTab(name) {
+  document.querySelectorAll('.res-tab-content').forEach(t => t.style.display = 'none');
+  document.querySelectorAll('.res-tab-btn').forEach(b => {
+    b.style.background = 'var(--dark2)'; b.style.borderColor = 'var(--dark4)'; b.style.color = 'var(--muted)';
+  });
+  const el = document.getElementById('res-tab-' + name);
+  if (el) el.style.display = 'block';
+  const btns = document.querySelectorAll('.res-tab-btn');
+  const idx = ['keywords','competitors','questions','strategy','generate'].indexOf(name);
+  if (btns[idx]) {
+    btns[idx].style.background = 'rgba(201,168,76,0.15)';
+    btns[idx].style.borderColor = 'rgba(201,168,76,0.3)';
+    btns[idx].style.color = 'var(--gold)';
+  }
 }
 
-function openTrends(kw) {
-  const encoded = encodeURIComponent(kw);
-  window.open(`https://trends.google.com/trends/explore?q=${encoded}&geo=US&cat=7`, '_blank');
-}
+async function generateFromResearch(platform) {
+  if (!currentKeyword) { showToast('Run the research pipeline first!'); return; }
+  if (!getClaudeKey()) { showToast('Add Gemini API key in ⚡ Bulk tab!'); return; }
 
-function openRedditFinance() {
-  window.open('https://www.reddit.com/r/personalfinance/top/?t=week', '_blank');
-}
+  const kw = currentKeyword;
+  const country = document.getElementById('research-country').value;
+  const strategy = researchData.strategy || '';
+  const questions = researchData.questions || '';
+  const keywords = researchData.keywords || '';
 
-function openQuoraFinance() {
-  window.open('https://www.quora.com/topic/Personal-Finance', '_blank');
-}
+  const affLinks = `Affiliate links to include naturally:
+- LawDepot legal docs: https://www.dpbolvw.net/click-101713917-16944777
+- Zacks Trade: https://www.jdoqocy.com/click-101713917-17112428
+- Instant Funding: https://www.jdoqocy.com/click-101713917-17144677
+- Western Union: https://kdbov.com/g/kryb7glvg72ae376f35fa82f40b179/
+- EKTA Travel Insurance: https://ogsib.com/g/92qb79zvwn2ae376f35f239505df72/
+- Rich Dad Poor Dad: https://amzn.to/47AkNmw
+- Free tools: https://mysmartcents.github.io`;
 
-function openAnswerThePublic() {
-  window.open('https://answerthepublic.com/', '_blank');
-}
+  const platforms = platform === 'all'
+    ? ['github','blogger','facebook','instagram','pinterest','medium']
+    : [platform];
 
-function openKeywordSurfer() {
-  window.open('https://keywordsurfer.com/', '_blank');
-}
+  const outputEl = document.getElementById('res-generated-output');
+  const titleEl = document.getElementById('res-gen-title');
+  const contentEl = document.getElementById('res-gen-content');
+  outputEl.style.display = 'block';
+  titleEl.textContent = '⏳ Generating...';
+  contentEl.textContent = '';
 
-function generateArticleBrief() {
-  const kw = document.getElementById('article-keyword').value.trim();
-  if (!kw) { showToast('Enter a target keyword!'); return; }
-  const competitors = document.getElementById('article-competitors').value.trim();
+  showResTab('generate');
+  let allContent = '';
 
-  const brief = `SEO ARTICLE BRIEF — SmartCents
-========================
-TARGET KEYWORD: ${kw}
-TARGET AUDIENCE: US/UK English speakers (global)
-TARGET WORD COUNT: 1200-1500 words
-WEBSITE: mysmartcents.github.io
-========================
+  for (const plat of platforms) {
+    const prompts = {
+      github: `Write a complete SEO-optimized article for SmartCents website about "${kw}" targeting ${country.toUpperCase()} audience.
 
-Write a comprehensive, SEO-optimized article targeting the keyword "${kw}".
+SEO RESEARCH DATA:
+${strategy.substring(0,800)}
+
+QUESTIONS TO ANSWER:
+${questions.substring(0,400)}
 
 REQUIREMENTS:
-1. Title must include "${kw}" naturally
-2. Write a compelling meta description (150-160 chars)
-3. Use these heading structure:
-   - H1: Main title with keyword
-   - H2: 4-6 main sections
-   - H3: Subsections where needed
-4. Include these elements:
-   - Introduction with hook (first 100 words must grab attention)
-   - Practical tips with numbered lists
-   - Real examples and data
-   - FAQ section at the end (3-5 questions)
-   - Strong call to action
-5. Naturally include related keywords throughout
-6. Link to SmartCents tools: mysmartcents.github.io
-7. Include relevant affiliate links where natural:
-   - Travel insurance: EKTA (ogsib.com/g/92qb79zvwn2ae376f35f239505df72/)
-   - Money transfer: Western Union (kdbov.com/g/kryb7glvg72ae376f35fa82f40b179/)
-   - Books: Amazon affiliate links
-8. End with: "Use SmartCents free finance tools at mysmartcents.github.io"
-${competitors ? `\nCOMPETITOR URLS TO OUTRANK:\n${competitors}` : ''}
+- 1500-2000 words
+- Title must target the best long-tail version of "${kw}"
+- Include meta description (155 chars)
+- 6-8 H2 sections covering all aspects
+- FAQ section with 5 questions from the research
+- ${affLinks}
+- Link to: mysmartcents.github.io/articles/ for related articles
+- Canonical: https://mysmartcents.github.io/articles/[slug].html
+- End CTA: "Use free SmartCents tools at mysmartcents.github.io"
 
-TONE: Professional but friendly, helpful, actionable
-AVOID: Fluff, padding, generic advice
-FORMAT: Use markdown headings, bullet points, bold for key terms`;
+FORMAT: TITLE: / META: / SLUG: / CONTENT: (full article)`,
 
-  document.getElementById('article-brief-output').textContent = brief;
-  document.getElementById('article-brief-output').style.display = 'block';
-  document.getElementById('article-brief-actions').style.display = 'grid';
-  showToast('Article brief generated! 📝');
+      blogger: `Write a complete Blogger post about "${kw}" for SmartCents blog targeting ${country.toUpperCase()} audience.
+
+REQUIREMENTS:
+- 800-1000 words
+- SEO-optimized title
+- 4-5 sections with clear H2 headings
+- ${affLinks}
+- Link to SmartCents article: mysmartcents.github.io/articles/
+- Link to Medium: medium.com/@smartcents
+- Labels: Personal Finance, SmartCents, Money Tips, ${kw}
+- End CTA to SmartCents tools
+
+FORMAT: TITLE: / META: / LABELS: / CONTENT:`,
+
+      facebook: `Write a Facebook post about "${kw}" for SmartCents page targeting ${country.toUpperCase()} audience.
+
+REQUIREMENTS:
+- 100-150 words
+- Strong hook opening
+- 3-4 key points with emojis
+- ${affLinks}
+- Article link: mysmartcents.github.io
+- 8-10 relevant hashtags
+- CTA to SmartCents tools`,
+
+      instagram: `Write an Instagram caption about "${kw}" for @mysmartcents targeting ${country.toUpperCase()} audience.
+
+REQUIREMENTS:
+- 80-120 words
+- Strong first line (hook)
+- Line breaks for readability
+- Emojis throughout
+- "🔗 Link in bio → mysmartcents.github.io"
+- 20 hashtags labeled HASHTAGS: at end`,
+
+      pinterest: `Write a Pinterest pin description about "${kw}" for SmartCents.
+
+REQUIREMENTS:
+- 200-300 words
+- Keyword-rich opening
+- 5-7 value points
+- Include article URL: mysmartcents.github.io
+- ${affLinks}
+- Clear CTA
+- FORMAT: TITLE: / DESCRIPTION: / BOARD:`,
+
+      medium: `Write a Medium article about "${kw}" for @smartcents targeting global English audience.
+
+REQUIREMENTS:
+- 900-1200 words
+- Compelling title with keyword
+- Hook introduction
+- 4-5 sections with ## headings
+- ${affLinks}
+- CTA: "Free tools at mysmartcents.github.io"
+- FAQ section at end
+- FORMAT: TITLE: / TAGS: / ARTICLE:`
+    };
+
+    try {
+      titleEl.textContent = `⏳ Generating ${plat}...`;
+      const content = await callClaude(prompts[plat] || prompts.github);
+      allContent += `\n\n${'='.repeat(50)}\n${plat.toUpperCase()} CONTENT\n${'='.repeat(50)}\n${content}`;
+      contentEl.textContent = allContent;
+      showToast(`✅ ${plat} generated!`);
+    } catch(e) {
+      allContent += `\n\n❌ ${plat} failed: ${e.message}`;
+      contentEl.textContent = allContent;
+    }
+    await new Promise(r => setTimeout(r, 500));
+  }
+
+  titleEl.textContent = `✅ Generated — ${platforms.join(', ')}`;
+  showToast('Content generated! 🎯');
 }
 
-function copyArticleBrief() {
-  const brief = document.getElementById('article-brief-output').textContent;
-  navigator.clipboard.writeText(brief).then(() => showToast('Brief copied! 📋'));
+function copyResGenContent() {
+  const content = document.getElementById('res-gen-content').textContent;
+  if (!content) { showToast('Nothing to copy!'); return; }
+  navigator.clipboard.writeText(content).then(() => showToast('Copied! 📋'));
 }
 
-function openClaudeWithBrief() {
-  const brief = document.getElementById('article-brief-output').textContent;
-  window.open('https://claude.ai/new?q=' + encodeURIComponent(brief), '_blank');
+function saveResGenToNotes() {
+  const content = document.getElementById('res-gen-content').textContent;
+  if (!content) { showToast('Nothing to save!'); return; }
+  const note = { id: Date.now(), text: `SEO Research: ${currentKeyword}\n\n${content.substring(0,500)}...`, date: new Date().toLocaleDateString() };
+  notes.push(note);
+  localStorage.setItem('sc_notes', JSON.stringify(notes));
+  renderNotes();
+  showToast('Saved to Notes! 📓');
 }
+
+// Quick access functions
+function openGoogleSearch() {
+  const kw = document.getElementById('research-keyword').value.trim() || 'personal finance';
+  const params = getCountryParams();
+  window.open(`https://www.google.com/search?q=${encodeURIComponent(kw)}&${params}&num=10`, '_blank');
+}
+function openGoogleSuggest() {
+  const kw = document.getElementById('research-keyword').value.trim() || 'personal finance';
+  const country = document.getElementById('research-country').value;
+  window.open(`https://trends.google.com/trends/explore?q=${encodeURIComponent(kw)}&geo=${country.toUpperCase()}&cat=7`, '_blank');
+}
+function openRedditKeyword() {
+  const kw = document.getElementById('research-keyword').value.trim() || 'personal finance';
+  window.open(`https://www.reddit.com/search/?q=${encodeURIComponent(kw)}&sort=top&t=month`, '_blank');
+}
+function openQuoraKeyword() {
+  const kw = document.getElementById('research-keyword').value.trim() || 'personal finance';
+  window.open(`https://www.quora.com/search?q=${encodeURIComponent(kw)}`, '_blank');
+}
+function openPinterestKeyword() {
+  const kw = document.getElementById('research-keyword').value.trim() || 'personal finance';
+  window.open(`https://www.pinterest.com/search/pins/?q=${encodeURIComponent(kw)}`, '_blank');
+}
+function openYouTubeKeyword() {
+  const kw = document.getElementById('research-keyword').value.trim() || 'personal finance';
+  window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(kw)}`, '_blank');
+}
+function doResearch() { runSEOPipeline(); }
+function quickSearch(kw) { setKeyword(kw); }
+function checkRank() {
+  const kw = document.getElementById('research-keyword').value.trim();
+  if (!kw) { showToast('Enter a keyword first!'); return; }
+  window.open(`https://www.google.com/search?q=${encodeURIComponent(kw + ' site:mysmartcents.github.io')}&gl=us&hl=en`, '_blank');
+}
+function openTrends(kw) { window.open(`https://trends.google.com/trends/explore?q=${encodeURIComponent(kw)}&geo=US&cat=7`, '_blank'); }
+function openRedditFinance() { window.open('https://www.reddit.com/r/personalfinance/top/?t=week', '_blank'); }
+function openQuoraFinance() { window.open('https://www.quora.com/topic/Personal-Finance', '_blank'); }
+function openAnswerThePublic() { window.open('https://answerthepublic.com/', '_blank'); }
+function openKeywordSurfer() { window.open('https://keywordsurfer.com/', '_blank'); }
+function generateArticleBrief() { runSEOPipeline(); }
+function copyArticleBrief() { copyResGenContent(); }
+function openClaudeWithBrief() { window.open('https://claude.ai', '_blank'); }
+function saveBriefToNotes() { saveResGenToNotes(); }
+function checkCompetitors() { openGoogleSearch(); }
 
 // AFFILIATE LINKS BY TOPIC
 const topicAffiliates = {
@@ -3145,6 +3704,45 @@ function addPostLog(msg, color, done, total) {
   if (done !== undefined && total) {
     countEl.textContent = `${done}/${total}`;
     barEl.style.width = Math.round((done/total)*100) + '%';
+  }
+}
+
+async function submitIndexNow() {
+  showToast('Submitting to IndexNow (Bing instant indexing)...');
+  const urls = [
+    'https://mysmartcents.github.io/',
+    'https://mysmartcents.github.io/articles/home-loan-calculator-guide.html',
+    'https://mysmartcents.github.io/articles/best-travel-insurance-2026.html',
+    'https://mysmartcents.github.io/articles/how-to-send-money-internationally.html',
+    'https://mysmartcents.github.io/articles/best-budgeting-methods.html',
+    'https://mysmartcents.github.io/articles/emergency-fund-guide.html',
+    'https://mysmartcents.github.io/articles/passive-income-guide.html',
+    'https://mysmartcents.github.io/articles/passive-income-ideas-2026.html',
+    'https://mysmartcents.github.io/articles/legal-documents-online.html',
+    'https://mysmartcents.github.io/articles/prop-trading-guide.html',
+    'https://mysmartcents.github.io/articles/corporate-guarantee-guide.html'
+  ];
+  try {
+    const res = await fetch('https://api.indexnow.org/indexnow', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({
+        host: 'mysmartcents.github.io',
+        key: 'smartcents-indexnow-key',
+        keyLocation: 'https://mysmartcents.github.io/smartcents-indexnow-key.txt',
+        urlList: urls
+      })
+    });
+    if (res.ok || res.status === 200 || res.status === 202) {
+      showToast('✅ IndexNow submitted! Bing will crawl these pages soon.');
+    } else {
+      // Fallback — open IndexNow submission page
+      window.open('https://www.bing.com/indexnow', '_blank');
+      showToast('Opening Bing IndexNow — paste your URLs there');
+    }
+  } catch(e) {
+    window.open('https://www.bing.com/indexnow', '_blank');
+    showToast('Opening Bing IndexNow manually');
   }
 }
 

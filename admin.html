@@ -1643,8 +1643,9 @@ async function runFullSEO() {
   section.style.display = 'block';
   seoErrors = [];
 
-  const siteTasks   = SEO_TASKS.filter(t => t.cat === 'site');
-  const mediumTasks = SEO_TASKS.filter(t => t.cat === 'medium');
+  const siteTasks    = SEO_TASKS.filter(t => t.cat === 'site');
+  const bloggerTasks = SEO_TASKS.filter(t => t.cat === 'blogger');
+  const mediumTasks  = SEO_TASKS.filter(t => t.cat === 'medium');
 
   // --- SmartCents ---
   logStep('── SmartCents Site ──────────────────', 'pending', '');
@@ -1653,6 +1654,15 @@ async function runFullSEO() {
     await new Promise(r => setTimeout(r, 350));
     const ok = await pingUrlSEO(task);
     if (ok) sitePassed++;
+  }
+
+  // --- Blogger ---
+  logStep('── Blogger Posts ────────────────────', 'pending', '');
+  let bloggerPassed = 0;
+  for (const task of bloggerTasks) {
+    await new Promise(r => setTimeout(r, 350));
+    const ok = await pingUrlSEO(task);
+    if (ok) bloggerPassed++;
   }
 
   // --- Medium (published only) ---
@@ -1669,30 +1679,36 @@ async function runFullSEO() {
     unpublished.forEach(t => logStep(t.label, 'pending', 'Skipped — not published yet'));
   }
 
-  const totalPassed = sitePassed + mediumPassed;
-  const totalFailed = (siteTasks.length + publishedMedium.length) - totalPassed;
+  const totalPassed = sitePassed + bloggerPassed + mediumPassed;
+  const totalFailed = (siteTasks.length + bloggerTasks.length + publishedMedium.length) - totalPassed;
 
   // Build summary HTML
   summary.style.display = 'block';
-  const scColor  = sitePassed   === siteTasks.length     ? '#4caf7d' : '#ff6b6b';
-  const medColor = mediumPassed === publishedMedium.length ? '#4caf7d' : '#ff6b6b';
-  const overallOk = totalFailed === 0;
+  const scColor      = sitePassed    === siteTasks.length      ? '#4caf7d' : '#ff6b6b';
+  const blogColor    = bloggerPassed === bloggerTasks.length   ? '#4caf7d' : '#ff6b6b';
+  const medColor     = mediumPassed  === publishedMedium.length ? '#4caf7d' : '#ff6b6b';
+  const overallOk    = totalFailed === 0;
 
   summary.style.background = overallOk ? 'rgba(76,175,125,0.1)' : 'rgba(255,107,107,0.1)';
   summary.style.border      = overallOk ? '1px solid #4caf7d44' : '1px solid #ff6b6b44';
   summary.style.color       = 'var(--text)';
   summary.innerHTML = `
     <div style="margin-bottom:8px;font-size:0.85rem;">${overallOk ? '✅ All submissions completed!' : '⚠️ Some submissions failed'}</div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;">
-      <div style="background:var(--dark3);border-radius:10px;padding:8px 12px;flex:1;min-width:120px;">
-        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">SmartCents Site</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div style="background:var(--dark3);border-radius:10px;padding:8px 12px;flex:1;min-width:100px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">SmartCents</div>
         <div style="color:${scColor};font-size:0.9rem;font-weight:800;">${sitePassed}/${siteTasks.length} ✓</div>
-        <div style="font-size:0.68rem;color:var(--muted);">${SC_ARTICLES} articles on site</div>
+        <div style="font-size:0.68rem;color:var(--muted);">${SC_ARTICLES} articles</div>
       </div>
-      <div style="background:var(--dark3);border-radius:10px;padding:8px 12px;flex:1;min-width:120px;">
-        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">Medium Articles</div>
+      <div style="background:var(--dark3);border-radius:10px;padding:8px 12px;flex:1;min-width:100px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">Blogger</div>
+        <div style="color:${blogColor};font-size:0.9rem;font-weight:800;">${bloggerPassed}/${bloggerTasks.length} ✓</div>
+        <div style="font-size:0.68rem;color:var(--muted);">${BLOGGER_PUBLISHED} posts</div>
+      </div>
+      <div style="background:var(--dark3);border-radius:10px;padding:8px 12px;flex:1;min-width:100px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">Medium</div>
         <div style="color:${medColor};font-size:0.9rem;font-weight:800;">${mediumPassed}/${publishedMedium.length} ✓</div>
-        <div style="font-size:0.68rem;color:var(--muted);">${MEDIUM_PUBLISHED} published · ${unpublished.length} pending</div>
+        <div style="font-size:0.68rem;color:var(--muted);">${MEDIUM_PUBLISHED} published</div>
       </div>
     </div>
   `;
@@ -1801,7 +1817,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.21';
+const APP_VERSION = '1.22';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');

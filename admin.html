@@ -1240,25 +1240,48 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <!-- GENERATE TAB -->
       <div id="res-tab-generate" class="res-tab-content" style="display:none;">
         <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:10px;">
-          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;">⚡ Generate SEO-Optimized Content</div>
-          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Based on competitor research — content designed to outrank page 1</div>
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:4px;">⚡ Generate SEO-Optimized Content</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:12px;font-family:'DM Mono',monospace;">Copies full SEO prompt → Opens Claude.ai → Paste & generate → Download file</div>
+
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-            <button onclick="generateFromResearch('github')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔵 SmartCents Article</button>
-            <button onclick="generateFromResearch('blogger')" style="background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🟠 Blogger Post</button>
-            <button onclick="generateFromResearch('facebook')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📘 Facebook Post</button>
-            <button onclick="generateFromResearch('instagram')" style="background:rgba(225,48,108,0.15);border:1px solid rgba(225,48,108,0.3);color:#E1306C;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📸 Instagram Caption</button>
-            <button onclick="generateFromResearch('pinterest')" style="background:rgba(230,0,35,0.15);border:1px solid rgba(230,0,35,0.3);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📌 Pinterest Pin</button>
-            <button onclick="generateFromResearch('medium')" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📝 Medium Article</button>
+            <button onclick="openClaudeForPlatform('github')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔵 SmartCents Article</button>
+            <button onclick="openClaudeForPlatform('blogger')" style="background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🟠 Blogger Post</button>
+            <button onclick="openClaudeForPlatform('facebook')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📘 Facebook Post</button>
+            <button onclick="openClaudeForPlatform('instagram')" style="background:rgba(225,48,108,0.15);border:1px solid rgba(225,48,108,0.3);color:#E1306C;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📸 Instagram Caption</button>
+            <button onclick="openClaudeForPlatform('pinterest')" style="background:rgba(230,0,35,0.15);border:1px solid rgba(230,0,35,0.3);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📌 Pinterest Pin</button>
+            <button onclick="openClaudeForPlatform('medium')" style="background:rgba(0,171,108,0.15);border:1px solid rgba(0,171,108,0.3);color:#00ab6c;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📝 Medium Article</button>
           </div>
-          <button onclick="generateFromResearch('all')" style="width:100%;background:var(--gold);color:#080808;border:none;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">⚡ Generate ALL Platforms at Once</button>
+
+          <button onclick="openClaudeAllPlatforms()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:13px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;margin-bottom:10px;">🚀 Open Claude for ALL Platforms (1 prompt)</button>
+
+          <div style="background:var(--dark3);border:1px solid var(--dark5);border-radius:10px;padding:10px;font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;line-height:1.6;">
+            HOW IT WORKS:<br>
+            1. Click any button above<br>
+            2. Prompt is copied to clipboard automatically<br>
+            3. Claude.ai opens in new tab<br>
+            4. Paste (Ctrl+V) → Send → Copy Claude's reply<br>
+            5. Come back → Paste below → Download as file
+          </div>
         </div>
-        <div id="res-generated-output" style="display:none;background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;">
-          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;" id="res-gen-title">Generated Content</div>
-          <div id="res-gen-content" style="font-size:0.75rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.6;white-space:pre-wrap;max-height:300px;overflow-y:auto;margin-bottom:10px;"></div>
+
+        <!-- PASTE RESULT + DOWNLOAD -->
+        <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;">
+          <div style="font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:8px;">📥 Paste Claude's Reply → Download File</div>
+          <select id="gen-platform-select" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;outline:none;margin-bottom:8px;">
+            <option value="github">🔵 SmartCents Article (.html)</option>
+            <option value="blogger">🟠 Blogger Post (.html)</option>
+            <option value="facebook">📘 Facebook Post (.txt)</option>
+            <option value="instagram">📸 Instagram Caption (.txt)</option>
+            <option value="pinterest">📌 Pinterest Pin (.txt)</option>
+            <option value="medium">📝 Medium Article (.txt)</option>
+            <option value="all">⚡ All Platforms (.txt)</option>
+          </select>
+          <textarea id="gen-paste-area" placeholder="Paste Claude's response here..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'DM Mono',monospace;font-size:0.75rem;line-height:1.6;min-height:120px;outline:none;resize:vertical;margin-bottom:8px;"></textarea>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <button onclick="copyResGenContent()" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📋 Copy</button>
-            <button onclick="saveResGenToNotes()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📓 Save to Notes</button>
+            <button onclick="downloadGenFile()" style="background:var(--gold);color:#080808;border:none;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">⬇️ Download File</button>
+            <button onclick="downloadAllGenFiles()" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">📦 Download All</button>
           </div>
+          <div id="gen-download-status" style="font-size:0.72rem;color:var(--muted);margin-top:8px;font-family:'DM Mono',monospace;text-align:center;"></div>
         </div>
       </div>
 
@@ -1973,7 +1996,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.24';
+const APP_VERSION = '1.25';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2477,136 +2500,366 @@ function showResTab(name) {
   }
 }
 
-async function generateFromResearch(platform) {
-  if (!currentKeyword) { showToast('Run the research pipeline first!'); return; }
-  if (!getClaudeKey()) { showToast('Add Gemini API key in ⚡ Bulk tab!'); return; }
-
-  const kw = currentKeyword;
-  const country = document.getElementById('research-country').value;
+// GENERATE FROM RESEARCH — Opens Claude with pre-built prompt
+function buildClaudePrompt(platform) {
+  const kw = currentKeyword || document.getElementById('research-keyword').value.trim() || 'personal finance';
+  const country = document.getElementById('research-country')?.value || 'us';
   const strategy = researchData.strategy || '';
   const questions = researchData.questions || '';
   const keywords = researchData.keywords || '';
+  const competitors = researchData.competitors || '';
 
-  const affLinks = `Affiliate links to include naturally:
-- LawDepot legal docs: https://www.dpbolvw.net/click-101713917-16944777
-- Zacks Trade: https://www.jdoqocy.com/click-101713917-17112428
-- Instant Funding: https://www.jdoqocy.com/click-101713917-17144677
+  const site = 'https://mysmartcents.github.io';
+  const affLinks = `AFFILIATE LINKS (include naturally where relevant):
+- Zacks Trade ($259 EPC): https://www.jdoqocy.com/click-101713917-17112428
+- Instant Funding ($126 EPC): https://www.jdoqocy.com/click-101713917-17144677
+- LawDepot Corporate Guarantee ($343 EPC): https://www.jdoqocy.com/click-101713917-16995824
+- LawDepot General: https://www.dpbolvw.net/click-101713917-16944777
 - Western Union: https://kdbov.com/g/kryb7glvg72ae376f35fa82f40b179/
 - EKTA Travel Insurance: https://ogsib.com/g/92qb79zvwn2ae376f35f239505df72/
+- AURAS Travel Insurance: https://ogsib.com/g/g86qhgosre2ae376f35f102b8feede/
+- Acko Car Insurance IN: https://tjzuh.com/g/yapee0pvwc2ae376f35fd745de94b6/
+- SBI Credit Card IN: https://tjzuh.com/g/hxn4dcyutj2ae376f35f8bc555c0f8/
+- MaxLife Insurance IN: https://tjzuh.com/g/sbim6rqhhn2ae376f35f33bd52e9ca/
 - Rich Dad Poor Dad: https://amzn.to/47AkNmw
-- Free tools: https://mysmartcents.github.io`;
+- SmartCents Tools: ${site}/#tools`;
 
-  const platforms = platform === 'all'
-    ? ['github','blogger','facebook','instagram','pinterest','medium']
-    : [platform];
-
-  const outputEl = document.getElementById('res-generated-output');
-  const titleEl = document.getElementById('res-gen-title');
-  const contentEl = document.getElementById('res-gen-content');
-  outputEl.style.display = 'block';
-  titleEl.textContent = '⏳ Generating...';
-  contentEl.textContent = '';
-
-  showResTab('generate');
-  let allContent = '';
-
-  for (const plat of platforms) {
-    const prompts = {
-      github: `Write a complete SEO-optimized article for SmartCents website about "${kw}" targeting ${country.toUpperCase()} audience.
-
+  const seoContext = `
 SEO RESEARCH DATA:
-${strategy.substring(0,800)}
+==================
+KEYWORD: ${kw}
+COUNTRY: ${country.toUpperCase()}
 
-QUESTIONS TO ANSWER:
-${questions.substring(0,400)}
+KEYWORD ANALYSIS:
+${keywords.substring(0, 600)}
+
+COMPETITOR GAPS (what to cover that competitors miss):
+${competitors.substring(0, 500)}
+
+QUESTIONS TO ANSWER (from People Also Ask + Reddit + Quora):
+${questions.substring(0, 500)}
+
+RECOMMENDED STRATEGY:
+${strategy.substring(0, 800)}
+==================`;
+
+  const prompts = {
+    github: `You are an expert SEO content writer for SmartCents (${site}) — a free personal finance tools website with loan calculator, budget planner and savings tracker.
+
+${seoContext}
+
+Write a COMPLETE, publication-ready SmartCents article about "${kw}" targeting ${country.toUpperCase()} audience.
+
+STRICT REQUIREMENTS:
+- Length: 1,500-2,000 words
+- Use the recommended title from SEO strategy above
+- Include meta description (155 chars max)
+- Include URL slug suggestion
+- H1 → 6-8 H2 sections → H3 subsections where needed
+- FAQ section with 5 questions (use the PAA questions from research)
+- ${affLinks}
+- Internal links: ${site}/articles/ for related articles
+- End CTA: "Try free SmartCents tools at ${site}"
+- Backlinks: link to medium.com/@smartcents and smartcents-finance.blogspot.com
+
+FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
+TITLE: [SEO title]
+META: [meta description]
+SLUG: [url-slug]
+---ARTICLE START---
+[Full HTML article with proper heading tags, affiliate boxes, CTA boxes]
+---ARTICLE END---`,
+
+    blogger: `You are an expert SEO blogger writing for SmartCents blog (smartcents-finance.blogspot.com).
+
+${seoContext}
+
+Write a COMPLETE Blogger post about "${kw}" targeting ${country.toUpperCase()} audience.
 
 REQUIREMENTS:
-- 1500-2000 words
-- Title must target the best long-tail version of "${kw}"
-- Include meta description (155 chars)
-- 6-8 H2 sections covering all aspects
-- FAQ section with 5 questions from the research
+- Length: 800-1,000 words
+- SEO-optimized title (include keyword)
+- 4-5 H2 sections
 - ${affLinks}
-- Link to: mysmartcents.github.io/articles/ for related articles
-- Canonical: https://mysmartcents.github.io/articles/[slug].html
-- End CTA: "Use free SmartCents tools at mysmartcents.github.io"
-
-FORMAT: TITLE: / META: / SLUG: / CONTENT: (full article)`,
-
-      blogger: `Write a complete Blogger post about "${kw}" for SmartCents blog targeting ${country.toUpperCase()} audience.
-
-REQUIREMENTS:
-- 800-1000 words
-- SEO-optimized title
-- 4-5 sections with clear H2 headings
-- ${affLinks}
-- Link to SmartCents article: mysmartcents.github.io/articles/
+- Link to SmartCents article: ${site}/articles/
 - Link to Medium: medium.com/@smartcents
-- Labels: Personal Finance, SmartCents, Money Tips, ${kw}
-- End CTA to SmartCents tools
+- End with SmartCents tools CTA
 
-FORMAT: TITLE: / META: / LABELS: / CONTENT:`,
+FORMAT:
+TITLE: [title]
+META: [155 char description]
+LABELS: [5 comma-separated labels]
+---POST START---
+[Full post content in HTML-friendly format]
+---POST END---`,
 
-      facebook: `Write a Facebook post about "${kw}" for SmartCents page targeting ${country.toUpperCase()} audience.
+    facebook: `You are a social media expert writing for SmartCents Facebook page.
+
+${seoContext}
+
+Write a COMPLETE Facebook post about "${kw}" for ${country.toUpperCase()} audience.
 
 REQUIREMENTS:
-- 100-150 words
-- Strong hook opening
+- 120-150 words
+- Strong opening hook (first line must stop the scroll)
 - 3-4 key points with emojis
-- ${affLinks}
-- Article link: mysmartcents.github.io
-- 8-10 relevant hashtags
-- CTA to SmartCents tools`,
+- Include most relevant affiliate link from: ${affLinks}
+- Article link: ${site}
+- 8-10 hashtags at end
+- CTA to SmartCents free tools
 
-      instagram: `Write an Instagram caption about "${kw}" for @mysmartcents targeting ${country.toUpperCase()} audience.
+FORMAT:
+---POST START---
+[Full Facebook post text]
+---POST END---
+HASHTAGS: [list]`,
+
+    instagram: `You are a social media expert writing for @mysmartcents on Instagram.
+
+${seoContext}
+
+Write a COMPLETE Instagram caption about "${kw}" for ${country.toUpperCase()} audience.
 
 REQUIREMENTS:
 - 80-120 words
-- Strong first line (hook)
-- Line breaks for readability
+- First line must be a scroll-stopping hook
+- Line breaks after each point (Instagram format)
 - Emojis throughout
-- "🔗 Link in bio → mysmartcents.github.io"
-- 20 hashtags labeled HASHTAGS: at end`,
+- "🔗 Link in bio → ${site}"
+- 20-25 hashtags at end labeled HASHTAGS:
 
-      pinterest: `Write a Pinterest pin description about "${kw}" for SmartCents.
+FORMAT:
+---CAPTION START---
+[Full Instagram caption]
+---CAPTION END---
+HASHTAGS: [all hashtags on one line]`,
+
+    pinterest: `You are a Pinterest SEO expert writing for SmartCents.
+
+${seoContext}
+
+Write a COMPLETE Pinterest pin package about "${kw}".
 
 REQUIREMENTS:
-- 200-300 words
-- Keyword-rich opening
+- Title: keyword-rich, 80-100 chars
+- Description: 200-300 words, keyword-rich
 - 5-7 value points
-- Include article URL: mysmartcents.github.io
-- ${affLinks}
-- Clear CTA
-- FORMAT: TITLE: / DESCRIPTION: / BOARD:`,
+- Include article link: ${site}
+- Include most relevant affiliate link
+- Suggest best board to pin to
+- Suggest 5 pin image concepts
 
-      medium: `Write a Medium article about "${kw}" for @smartcents targeting global English audience.
+FORMAT:
+PIN TITLE: [title]
+PIN DESCRIPTION:
+---DESC START---
+[Full description]
+---DESC END---
+BOARD: [board name]
+IMAGE IDEAS:
+1. [concept]
+2. [concept]
+3. [concept]`,
+
+    medium: `You are an expert Medium writer for @smartcents publication.
+
+${seoContext}
+
+Write a COMPLETE Medium article about "${kw}" for global English audience.
 
 REQUIREMENTS:
-- 900-1200 words
+- Length: 900-1,200 words
 - Compelling title with keyword
-- Hook introduction
+- Hook introduction (first 3 sentences must grab attention)
 - 4-5 sections with ## headings
 - ${affLinks}
-- CTA: "Free tools at mysmartcents.github.io"
-- FAQ section at end
-- FORMAT: TITLE: / TAGS: / ARTICLE:`
-    };
+- CTA: "Free tools at ${site}"
+- FAQ section (3-5 questions)
+- Link back to: ${site}/articles/
 
-    try {
-      titleEl.textContent = `⏳ Generating ${plat}...`;
-      const content = await callClaude(prompts[plat] || prompts.github);
-      allContent += `\n\n${'='.repeat(50)}\n${plat.toUpperCase()} CONTENT\n${'='.repeat(50)}\n${content}`;
-      contentEl.textContent = allContent;
-      showToast(`✅ ${plat} generated!`);
-    } catch(e) {
-      allContent += `\n\n❌ ${plat} failed: ${e.message}`;
-      contentEl.textContent = allContent;
-    }
-    await new Promise(r => setTimeout(r, 500));
+FORMAT:
+TITLE: [Medium title]
+SUBTITLE: [subtitle]
+TAGS: [5 Medium tags]
+---ARTICLE START---
+[Full article in Markdown]
+---ARTICLE END---`,
+
+    all: `You are an expert SEO content creator for SmartCents (${site}).
+
+${seoContext}
+
+Generate COMPLETE, publication-ready content for ALL platforms about "${kw}" targeting ${country.toUpperCase()} audience.
+
+${affLinks}
+
+Generate ALL of the following in sequence:
+
+═══════════════════════════════
+1. SMARTCENTS ARTICLE (HTML)
+═══════════════════════════════
+[1,500 word SEO article with title, meta, slug, full HTML content, FAQ section, affiliate boxes, CTAs]
+
+═══════════════════════════════
+2. BLOGGER POST (HTML)
+═══════════════════════════════
+[800 word blogger post with title, meta, labels, full content]
+
+═══════════════════════════════
+3. FACEBOOK POST
+═══════════════════════════════
+[150 word post with hook, key points, affiliate link, hashtags]
+
+═══════════════════════════════
+4. INSTAGRAM CAPTION
+═══════════════════════════════
+[100 word caption with hook, emojis, hashtags]
+
+═══════════════════════════════
+5. PINTEREST PIN
+═══════════════════════════════
+[Pin title, 250 word description, board suggestion]
+
+═══════════════════════════════
+6. MEDIUM ARTICLE
+═══════════════════════════════
+[1,000 word Medium article in Markdown with title, tags, full content]`
+  };
+
+  return prompts[platform] || prompts.all;
+}
+
+function openClaudeForPlatform(platform) {
+  if (!currentKeyword && !document.getElementById('research-keyword').value.trim()) {
+    showToast('Run the SEO Research Pipeline first!');
+    showResTab('keywords');
+    return;
   }
 
-  titleEl.textContent = `✅ Generated — ${platforms.join(', ')}`;
-  showToast('Content generated! 🎯');
+  const prompt = buildClaudePrompt(platform);
+  navigator.clipboard.writeText(prompt).then(() => {
+    const names = {github:'SmartCents Article', blogger:'Blogger Post', facebook:'Facebook Post', instagram:'Instagram Caption', pinterest:'Pinterest Pin', medium:'Medium Article'};
+    showToast(`✅ ${names[platform]} prompt copied! Opening Claude...`);
+
+    // Set the platform selector
+    const sel = document.getElementById('gen-platform-select');
+    if (sel) sel.value = platform;
+
+    setTimeout(() => window.open('https://claude.ai', '_blank'), 800);
+  });
+}
+
+function openClaudeAllPlatforms() {
+  if (!currentKeyword && !document.getElementById('research-keyword').value.trim()) {
+    showToast('Run the SEO Research Pipeline first!');
+    return;
+  }
+
+  const prompt = buildClaudePrompt('all');
+  navigator.clipboard.writeText(prompt).then(() => {
+    showToast('✅ ALL platforms prompt copied! Opening Claude...');
+    const sel = document.getElementById('gen-platform-select');
+    if (sel) sel.value = 'all';
+    setTimeout(() => window.open('https://claude.ai', '_blank'), 800);
+  });
+}
+
+function downloadGenFile() {
+  const content = document.getElementById('gen-paste-area').value.trim();
+  if (!content) { showToast('Paste Claude\'s response first!'); return; }
+
+  const platform = document.getElementById('gen-platform-select').value;
+  const kw = (currentKeyword || 'article').replace(/[^a-z0-9]/gi, '-').toLowerCase();
+  const date = new Date().toISOString().split('T')[0];
+
+  const fileConfig = {
+    github:    { name: `smartcents-${kw}-${date}.html`,    type: 'text/html' },
+    blogger:   { name: `blogger-${kw}-${date}.html`,       type: 'text/html' },
+    facebook:  { name: `facebook-${kw}-${date}.txt`,       type: 'text/plain' },
+    instagram: { name: `instagram-${kw}-${date}.txt`,      type: 'text/plain' },
+    pinterest: { name: `pinterest-${kw}-${date}.txt`,      type: 'text/plain' },
+    medium:    { name: `medium-${kw}-${date}.txt`,         type: 'text/plain' },
+    all:       { name: `all-platforms-${kw}-${date}.txt`,  type: 'text/plain' }
+  };
+
+  const cfg = fileConfig[platform] || fileConfig.all;
+  const blob = new Blob([content], { type: cfg.type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = cfg.name; a.click();
+  URL.revokeObjectURL(url);
+
+  document.getElementById('gen-download-status').textContent = `✅ Downloaded: ${cfg.name}`;
+  document.getElementById('gen-download-status').style.color = 'var(--green)';
+  showToast(`✅ Downloaded ${cfg.name}!`);
+}
+
+function downloadAllGenFiles() {
+  const content = document.getElementById('gen-paste-area').value.trim();
+  if (!content) { showToast('Paste Claude\'s response first!'); return; }
+
+  const kw = (currentKeyword || 'article').replace(/[^a-z0-9]/gi, '-').toLowerCase();
+  const date = new Date().toISOString().split('T')[0];
+
+  // Split by platform markers
+  const sections = [
+    { marker: 'SMARTCENTS ARTICLE', file: `smartcents-${kw}.html`, type: 'text/html' },
+    { marker: 'BLOGGER POST',       file: `blogger-${kw}.html`,    type: 'text/html' },
+    { marker: 'FACEBOOK POST',      file: `facebook-${kw}.txt`,    type: 'text/plain' },
+    { marker: 'INSTAGRAM CAPTION',  file: `instagram-${kw}.txt`,   type: 'text/plain' },
+    { marker: 'PINTEREST PIN',      file: `pinterest-${kw}.txt`,   type: 'text/plain' },
+    { marker: 'MEDIUM ARTICLE',     file: `medium-${kw}.txt`,      type: 'text/plain' }
+  ];
+
+  let downloaded = 0;
+  sections.forEach((sec, i) => {
+    const start = content.indexOf(sec.marker);
+    if (start === -1) return;
+    const nextMarker = sections[i + 1] ? content.indexOf(sections[i + 1].marker) : content.length;
+    const chunk = content.substring(start, nextMarker > start ? nextMarker : content.length).trim();
+    if (!chunk) return;
+
+    setTimeout(() => {
+      const blob = new Blob([chunk], { type: sec.type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = sec.file; a.click();
+      URL.revokeObjectURL(url);
+      downloaded++;
+    }, i * 400);
+  });
+
+  // If no sections found, download as single file
+  if (!sections.some(s => content.includes(s.marker))) {
+    downloadGenFile();
+    return;
+  }
+
+  setTimeout(() => {
+    document.getElementById('gen-download-status').textContent = `✅ Downloaded ${downloaded} files!`;
+    document.getElementById('gen-download-status').style.color = 'var(--green)';
+    showToast(`✅ ${downloaded} files downloaded!`);
+  }, sections.length * 400 + 500);
+}
+
+function copyResGenContent() {
+  const content = document.getElementById('gen-paste-area')?.value || '';
+  if (!content) { showToast('Nothing to copy!'); return; }
+  navigator.clipboard.writeText(content).then(() => showToast('Copied! 📋'));
+}
+
+function saveResGenToNotes() {
+  const content = document.getElementById('gen-paste-area')?.value || '';
+  if (!content) { showToast('Nothing to save!'); return; }
+  const note = { id: Date.now(), text: `SEO Content: ${currentKeyword}\n\n${content.substring(0,500)}...`, date: new Date().toLocaleDateString() };
+  notes.push(note);
+  localStorage.setItem('sc_notes', JSON.stringify(notes));
+  renderNotes();
+  showToast('Saved to Notes! 📓');
+}
+
+async function generateFromResearch(platform) {
+  openClaudeForPlatform(platform);
 }
 
 function copyResGenContent() {

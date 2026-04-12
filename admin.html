@@ -676,7 +676,8 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     </div>
 
     <!-- STEP 2: Generate All -->
-    <button onclick="generateAllPlatforms()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;margin-bottom:16px;">✨ Generate for All Platforms</button>
+    <button onclick="generateAllPlatforms()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;margin-bottom:10px;">✨ Generate for All Platforms</button>
+    <button onclick="downloadAllPlatformFiles()" style="width:100%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:12px;border-radius:12px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;margin-bottom:16px;">📦 Download All Files (after pasting content)</button>
 
     <!-- PLATFORM TABS -->
     <div id="platform-results" style="display:none;">
@@ -701,6 +702,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <textarea id="result-medium" oninput="saveContent('medium',this.value)" placeholder="Paste Claude's Medium article here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button onclick="copyContent('medium')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="downloadPlatformFile('medium','01-medium','txt')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">⬇️ Download File</button>
           <button onclick="openMedium()" style="background:rgba(0,0,0,0.4);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">✍️ Open Medium</button>
         </div>
       </div>
@@ -718,6 +720,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <textarea id="result-blogger" oninput="saveContent('blogger',this.value)" placeholder="Paste Claude's Blogger post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
           <button onclick="copyContent('blogger')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="downloadPlatformFile('blogger','02-blogger','html')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">⬇️ Download File</button>
           <button onclick="openSite('https://www.blogger.com/blog/post/edit/4286828910142477267')" style="background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🟠 Open Blogger</button>
         </div>
         <button onclick="postToBloggerFromStudio()" id="bloggerBtn" style="width:100%;background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.4);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🟠 Auto-Post to Blogger</button>
@@ -737,6 +740,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <textarea id="result-facebook" oninput="saveContent('facebook',this.value)" placeholder="Paste Claude's Facebook post here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
           <button onclick="copyContent('facebook')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📋 Copy</button>
+          <button onclick="downloadPlatformFile('facebook','03-facebook','txt')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">⬇️ Download</button>
           <button onclick="copyAndOpen('facebook','https://www.facebook.com/profile.php?id=1105657479290118')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">📘 FB Page</button>
           <button onclick="copyAndOpen('facebook','https://www.facebook.com/groups/feed/')" style="background:rgba(24,119,242,0.1);border:1px solid rgba(24,119,242,0.2);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;">👥 Groups</button>
         </div>
@@ -757,6 +761,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <textarea id="result-instagram" oninput="saveContent('instagram',this.value)" placeholder="Paste Claude's Instagram caption here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button onclick="copyContent('instagram')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="downloadPlatformFile('instagram','04-instagram','txt')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">⬇️ Download File</button>
           <button onclick="copyAndOpen('instagram','https://www.instagram.com/mysmartcents/')" style="background:rgba(225,48,108,0.1);border:1px solid rgba(225,48,108,0.2);color:#E1306C;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📸 Open Instagram</button>
         </div>
       </div>
@@ -774,6 +779,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
         <textarea id="result-pinterest" oninput="saveContent('pinterest',this.value)" placeholder="Paste Claude's Pinterest description here..." style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'DM Mono',monospace;font-size:0.78rem;line-height:1.6;min-height:140px;outline:none;resize:none;margin-bottom:8px;"></textarea>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
           <button onclick="copyContent('pinterest')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📋 Copy Content</button>
+          <button onclick="downloadPlatformFile('pinterest','05-pinterest','txt')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">⬇️ Download File</button>
           <button onclick="copyAndOpen('pinterest','https://www.pinterest.com/pin/creation-tool/')" style="background:rgba(230,0,35,0.1);border:1px solid rgba(230,0,35,0.2);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📌 Open Pinterest</button>
         </div>
       </div>
@@ -939,49 +945,6 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     </div>
 
     <!-- ARTICLE DETAILS -->
-    <!-- IMAGE UPLOAD -->
-    <div class="sec-header"><div class="sec-title">🖼️ Article Images</div></div>
-    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
-      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Upload images → auto-embedded in article HTML. No external hosting needed.</div>
-
-      <!-- HERO IMAGE -->
-      <div style="margin-bottom:12px;">
-        <div style="font-size:0.72rem;font-weight:700;color:var(--gold);margin-bottom:6px;">HERO IMAGE (article header)</div>
-        <div id="hero-drop" onclick="document.getElementById('hero-upload').click()" style="border:2px dashed #333;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color 0.2s;margin-bottom:6px;">
-          <div id="hero-preview" style="display:none;"><img id="hero-img" style="max-width:100%;max-height:120px;border-radius:6px;object-fit:cover;"></div>
-          <div id="hero-placeholder" style="color:var(--muted);font-size:0.8rem;">📁 Click to upload hero image<br><span style="font-size:0.68rem;font-family:'DM Mono',monospace;">Recommended: 1200×628px JPG/PNG/WebP</span></div>
-        </div>
-        <input id="hero-upload" type="file" accept="image/*" style="display:none" onchange="handleImageUpload('hero', this)">
-        <div id="hero-info" style="font-size:0.68rem;color:var(--muted);font-family:'DM Mono',monospace;"></div>
-      </div>
-
-      <!-- ADDITIONAL IMAGES -->
-      <div style="margin-bottom:12px;">
-        <div style="font-size:0.72rem;font-weight:700;color:var(--gold);margin-bottom:6px;">ADDITIONAL IMAGES (optional — for article body)</div>
-        <div id="extra-imgs-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;"></div>
-        <button onclick="document.getElementById('extra-upload').click()" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">+ Add Image to Article Body</button>
-        <input id="extra-upload" type="file" accept="image/*" multiple style="display:none" onchange="handleExtraImages(this)">
-      </div>
-
-      <!-- IMAGE OPTIONS -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <div>
-          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace;">HERO ALT TEXT</div>
-          <input id="hero-alt" type="text" placeholder="Describe the image..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:8px 10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;outline:none;">
-        </div>
-        <div>
-          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace;">IMAGE QUALITY</div>
-          <select id="img-quality" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;outline:none;">
-            <option value="0.9">High (0.9)</option>
-            <option value="0.8" selected>Medium (0.8)</option>
-            <option value="0.6">Low (0.6) — smaller file</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="img-upload-status" style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;text-align:center;margin-top:4px;"></div>
-    </div>
-
     <div class="sec-header"><div class="sec-title">Step 1 — Article Details</div></div>
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;">
       <div>
@@ -1922,6 +1885,132 @@ function buildPrompts(topic) {
   const pin = 'https://www.pinterest.com/mysmartcents/';
 
   return {
+    medium: `Generate a complete Medium article package about "${name}" for a global English-speaking audience. Format your response EXACTLY like this (keep all section headers):
+
+TITLE:
+[SEO-optimized title with keyword — 60 chars max]
+
+META DESCRIPTION:
+[150-160 character description with keyword for Google]
+
+MEDIUM TAGS:
+[Exactly 5 Medium tags separated by commas — e.g. Personal Finance, Money Tips, Investing, Financial Freedom, Budgeting]
+
+GOOGLE SEO TAGS:
+[10 keyword tags for SEO separated by commas]
+
+ARTICLE:
+[Write 900-1200 words. Use ## for headings. Include:
+- Hook opening paragraph
+- 4-5 sections with ## headings
+- Practical tips with examples
+- Mention ${aff.name} naturally with link: ${aff.url}
+- CTA: "Try SmartCents free finance tools at ${site}"
+- FAQ section with 3 questions at end]
+
+COVER IMAGE PROMPT:
+[Detailed AI image generation prompt. 1500x750px, professional finance blog style, relevant to ${name}, dark background, gold accents]`,
+
+    blogger: `Generate a complete Blogger post package about "${name}" for SmartCents blog. Format EXACTLY like this:
+
+TITLE:
+[SEO-optimized title with keyword — 60 chars max]
+
+META DESCRIPTION:
+[150-160 character meta description with keyword]
+
+BLOGGER LABELS:
+[Exactly 5 Blogger labels/tags separated by commas — e.g. Personal Finance, SmartCents, Money Tips, Savings, Budgeting]
+
+GOOGLE SEO TAGS:
+[10 keyword tags for SEO separated by commas]
+
+POST CONTENT:
+[Write 600-900 words. Include:
+- Strong intro paragraph
+- 3-4 sections with clear headings
+- Bullet points for tips
+- ${aff.name} link: ${aff.url}
+- SmartCents tools: ${site}
+- Final CTA paragraph]
+
+COVER IMAGE PROMPT:
+[AI image prompt for Blogger cover. 1200x628px, professional blog style, relevant to ${name}, dark #0D0D0D background, gold #C9A84C accents]`,
+
+    facebook: `Generate a complete Facebook post package about "${name}" for SmartCents page. Format EXACTLY like this:
+
+POST TITLE:
+[Short punchy title — 40 chars max]
+
+POST CONTENT:
+[Write 100-150 words. Include:
+- Strong opening question or statement
+- 3-4 key points with emojis
+- ${aff.name}: ${aff.url}
+- "Free tools at ${site}"
+- Call to action]
+
+FACEBOOK HASHTAGS:
+[Exactly 10 relevant Facebook hashtags starting with # — e.g. #PersonalFinance #MoneyTips #Budgeting #SaveMoney #FinanceTips]
+
+COVER IMAGE PROMPT:
+[AI image prompt for Facebook post. 1200x630px, eye-catching, finance theme, bold text overlay, relevant to ${name}]`,
+
+    instagram: `Generate a complete Instagram post package about "${name}" for @mysmartcents. Format EXACTLY like this:
+
+HOOK LINE:
+[First line that stops the scroll — max 10 words, no hashtags]
+
+CAPTION:
+[Write 80-120 words. Include:
+- Strong hook first line
+- Line breaks between each point
+- Emojis throughout
+- ${aff.name} mention
+- "🔗 Link in bio → ${site}"
+- Call to action (save this / share with someone)]
+
+INSTAGRAM HASHTAGS:
+[Exactly 25 hashtags on one line starting with # — mix of popular and niche: #PersonalFinance #MoneyTips #FinancialFreedom etc]
+
+PINTEREST HASHTAGS:
+[10 hashtags for Pinterest starting with #]
+
+COVER IMAGE PROMPT:
+[AI prompt for Instagram square post. 1080x1080px, bold visuals, finance theme, minimal text. Relevant to ${name}]
+
+STORY IMAGE PROMPT:
+[AI prompt for Instagram Story. 1080x1920px, vertical format, same topic]`,
+
+    pinterest: `Generate a complete Pinterest pin package about "${name}" for SmartCents. Format EXACTLY like this:
+
+PIN TITLE:
+[SEO-optimized pin title with keywords — 100 chars max]
+
+PIN DESCRIPTION:
+[Write 150-300 words. Include:
+- Keyword-rich opening sentence
+- What the reader will learn
+- Step-by-step value points
+- ${aff.url}
+- ${site}
+- Clear call to action at end]
+
+PINTEREST HASHTAGS:
+[Exactly 10 Pinterest hashtags starting with # — e.g. #PersonalFinance #MoneyTips #FinanceTips #SaveMoney #BudgetingTips]
+
+PINTEREST KEYWORDS:
+[10 keywords for Pinterest SEO separated by commas — no # symbol]
+
+BOARD SUGGESTION:
+[Which board to pin to: Personal Finance Tips / Budgeting & Saving / Home Loan Tips / Travel Insurance / Make Money Online / Savings Goals]
+
+PIN IMAGE PROMPT:
+[AI image prompt for Pinterest vertical pin. 1000x1500px, tall infographic format, bold title at top, SmartCents branding, relevant to ${name}]`
+  };
+}
+
+  return {
     medium: `Generate a complete Medium article package about "${name}" for a global English-speaking audience (US/UK/global). Format your response EXACTLY like this:
 
 TITLE:
@@ -2030,7 +2119,6 @@ BOARD SUGGESTION:
 PIN IMAGE PROMPT:
 [AI image prompt for Pinterest vertical pin. 1000x1500px, tall format, finance infographic style, bold title text at top, SmartCents branding, relevant to ${name}. Clean, professional, shareable]`
   };
-}
 
 let currentTopic = '';
 let platformPrompts = {};
@@ -2043,6 +2131,109 @@ function selectTopic(el, topic) {
   el.style.borderColor = 'var(--gold)';
   el.style.background = 'rgba(201,168,76,0.1)';
   currentTopic = topic;
+}
+
+function downloadPlatformFile(platform, prefix, ext) {
+  const content = document.getElementById('result-' + platform)?.value?.trim();
+  if (!content) { showToast('Paste ' + platform + ' content first!'); return; }
+  const topic = currentTopic || 'article';
+  const slug = (topicNames[topic] || topic).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const filename = prefix + '-' + slug + '.' + ext;
+  const type = ext === 'html' ? 'text/html;charset=utf-8' : 'text/plain;charset=utf-8';
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+  showToast('Downloaded: ' + filename);
+}
+
+function downloadAllPlatformFiles() {
+  const platforms = [
+    { id: 'medium',    prefix: '01-medium',    ext: 'txt'  },
+    { id: 'blogger',   prefix: '02-blogger',   ext: 'html' },
+    { id: 'facebook',  prefix: '03-facebook',  ext: 'txt'  },
+    { id: 'instagram', prefix: '04-instagram', ext: 'txt'  },
+    { id: 'pinterest', prefix: '05-pinterest', ext: 'txt'  },
+  ];
+  const topic = currentTopic || 'article';
+  const slug = (topicNames[topic] || topic).toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  let downloaded = 0;
+
+  platforms.forEach((p, i) => {
+    const content = document.getElementById('result-' + p.id)?.value?.trim();
+    if (!content) return;
+    setTimeout(() => {
+      const filename = p.prefix + '-' + slug + '.' + p.ext;
+      const type = p.ext === 'html' ? 'text/html;charset=utf-8' : 'text/plain;charset=utf-8';
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename; a.click();
+      URL.revokeObjectURL(url);
+      downloaded++;
+    }, i * 500);
+  });
+
+  // Also generate image prompts file
+  const imgContent = buildImagePromptsTxt(topic);
+  setTimeout(() => {
+    const blob = new Blob([imgContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = '06-image-prompts-' + slug + '.txt'; a.click();
+    URL.revokeObjectURL(url);
+  }, platforms.length * 500);
+
+  showToast('Downloading all files + image prompts!');
+}
+
+function buildImagePromptsTxt(topic) {
+  const name = topicNames[topic] || topic;
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const site = 'mysmartcents.github.io';
+  return `IMAGE GENERATION PROMPTS
+================================================
+Article: ${name}
+Site: ${site}
+Brand Colors: Gold #C9A84C | Dark #0D0D0D | Light #E8E8E0
+================================================
+
+IMAGE 1 — SMARTCENTS ARTICLE HEADER (1200x628px)
+FILENAME: img-01-article-${slug}.png
+AI PROMPT: Professional finance blog header about "${name}". Dark #0D0D0D background, gold #C9A84C accents. Bold headline "${name}" on left. Relevant financial icon on right at low opacity. "SmartCents | ${site}" at bottom. 1200x628px landscape.
+CANVA: https://www.canva.com/create/blog-banners/
+
+IMAGE 2 — BLOGGER + FACEBOOK COVER (1200x628px)
+FILENAME: img-02-blogger-facebook-${slug}.png
+AI PROMPT: Finance blog cover for "${name}". Dark #0D0D0D background, gold #C9A84C headline. Professional, minimal. SmartCents branding. 1200x628px landscape.
+CANVA: https://www.canva.com/create/blog-banners/
+
+IMAGE 3 — INSTAGRAM SQUARE (1080x1080px)
+FILENAME: img-03-instagram-${slug}.png
+AI PROMPT: Bold Instagram square post about "${name}". Dark #0D0D0D background, gold #C9A84C accents. Key stat or question centered. 3 bullet points. @mysmartcents at bottom. 1080x1080px square.
+CANVA: https://www.canva.com/create/instagram-posts/
+
+IMAGE 4 — INSTAGRAM STORY (1080x1920px)
+FILENAME: img-04-story-${slug}.png
+AI PROMPT: Vertical Instagram story about "${name}". Dark #0D0D0D, gold accents. Hook at top, tips in middle, "Link in bio → ${site}" at bottom. 1080x1920px.
+CANVA: https://www.canva.com/create/instagram-stories/
+
+IMAGE 5 — PINTEREST PIN (1000x1500px)
+FILENAME: img-05-pinterest-${slug}.png
+AI PROMPT: Tall Pinterest infographic about "${name}". Dark background, gold accents. Bold title at top, 5 numbered tips in middle, ${site} at bottom. 1000x1500px tall.
+CANVA: https://www.canva.com/create/pinterest-graphics/
+
+IMAGE 6 — MEDIUM COVER (1500x750px)
+FILENAME: img-06-medium-${slug}.png
+AI PROMPT: Wide Medium cover for "${name}". Dark #0D0D0D, gold headline. Editorial style. 1500x750px wide.
+CANVA: Resize img-02 in Canva → 1500x750
+
+AI TOOLS:
+- Microsoft Designer (FREE): https://designer.microsoft.com
+- Google Gemini: https://gemini.google.com
+- Canva AI: https://canva.com
+================================================`;
 }
 
 function generateAllPlatforms() {
@@ -2789,158 +2980,6 @@ renderGroups();
 document.getElementById('sc-article-count').textContent = SC_ARTICLES;
 document.getElementById('medium-article-count').textContent = MEDIUM_PUBLISHED;
 document.getElementById('version-label').textContent = 'v' + APP_VERSION;
-
-// ── IMAGE UPLOAD FOR ARTICLES ─────────────────────────────────
-let heroImageData = null;   // { src: base64dataURL, alt: string, name: string }
-let extraImages   = [];     // [{ src, alt, name, position }]
-
-function handleImageUpload(type, input) {
-  const file = input.files[0];
-  if (!file) return;
-  const quality = parseFloat(document.getElementById('img-quality').value);
-  const statusEl = document.getElementById('img-upload-status');
-  statusEl.textContent = 'Processing ' + file.name + '...';
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const img = new Image();
-    img.onload = function() {
-      // Compress via canvas
-      const canvas = document.createElement('canvas');
-      let w = img.width, h = img.height;
-      // Max 1200px wide for hero
-      if (type === 'hero' && w > 1200) { h = Math.round(h * 1200/w); w = 1200; }
-      // Max 800px wide for body images
-      if (type === 'extra' && w > 800) { h = Math.round(h * 800/w); w = 800; }
-      canvas.width = w; canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, w, h);
-      const compressed = canvas.toDataURL('image/jpeg', quality);
-      const sizeKB = Math.round(compressed.length * 0.75 / 1024);
-
-      if (type === 'hero') {
-        heroImageData = { src: compressed, alt: file.name.replace(/\.[^.]+$/,''), name: file.name };
-        // Show preview
-        document.getElementById('hero-img').src = compressed;
-        document.getElementById('hero-preview').style.display = 'block';
-        document.getElementById('hero-placeholder').style.display = 'none';
-        document.getElementById('hero-drop').style.borderColor = 'var(--gold)';
-        document.getElementById('hero-alt').value = heroImageData.alt;
-        document.getElementById('hero-info').textContent = w + 'x' + h + 'px | ' + sizeKB + 'KB compressed';
-        statusEl.textContent = '\u2705 Hero image ready — ' + sizeKB + 'KB';
-        statusEl.style.color = 'var(--green)';
-      }
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function handleExtraImages(input) {
-  const files = Array.from(input.files);
-  const quality = parseFloat(document.getElementById('img-quality').value);
-  const statusEl = document.getElementById('img-upload-status');
-  let processed = 0;
-
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const img = new Image();
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        let w = img.width, h = img.height;
-        if (w > 800) { h = Math.round(h * 800/w); w = 800; }
-        canvas.width = w; canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        const compressed = canvas.toDataURL('image/jpeg', quality);
-        const sizeKB = Math.round(compressed.length * 0.75 / 1024);
-        const imgData = { src: compressed, alt: file.name.replace(/\.[^.]+$/,''), name: file.name, w, h, sizeKB };
-        extraImages.push(imgData);
-        renderExtraImagesList();
-        processed++;
-        statusEl.textContent = '\u2705 ' + processed + '/' + files.length + ' images added';
-        statusEl.style.color = 'var(--green)';
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function renderExtraImagesList() {
-  const list = document.getElementById('extra-imgs-list');
-  list.innerHTML = extraImages.map((img, i) => `
-    <div style="display:flex;align-items:center;gap:8px;background:var(--dark3);border:1px solid var(--dark5);border-radius:8px;padding:8px 10px;">
-      <img src="${img.src}" style="width:48px;height:36px;object-fit:cover;border-radius:4px;flex-shrink:0;">
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:0.72rem;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${img.name}</div>
-        <div style="font-size:0.65rem;color:var(--muted);font-family:'DM Mono',monospace;">${img.w}x${img.h}px | ${img.sizeKB}KB</div>
-        <input type="text" value="${img.alt}" placeholder="Alt text..." onchange="extraImages[${i}].alt=this.value"
-          style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:3px 6px;border-radius:4px;font-size:0.68rem;font-family:'Syne',sans-serif;outline:none;margin-top:3px;">
-      </div>
-      <button onclick="removeExtraImage(${i})" style="background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.3);color:#ff6b6b;padding:4px 8px;border-radius:6px;font-size:0.75rem;cursor:pointer;flex-shrink:0;">✕</button>
-    </div>`).join('');
-}
-
-function removeExtraImage(i) {
-  extraImages.splice(i, 1);
-  renderExtraImagesList();
-}
-
-function injectImagesIntoHTML(html) {
-  // Inject hero image at top of article body
-  if (heroImageData) {
-    const alt = document.getElementById('hero-alt').value || heroImageData.alt;
-    const heroTag = '<figure style="margin:0 0 28px 0;border-radius:10px;overflow:hidden;">' +
-      '<img src="' + heroImageData.src + '" alt="' + alt + '" ' +
-      'style="width:100%;height:auto;display:block;border-radius:10px;" loading="lazy">' +
-      '</figure>';
-    // Insert after <div class="article-meta"> block
-    html = html.replace(/(<div class="article-meta"[\s\S]*?<\/div>\s*<div class="article-body">)/, '$1\n' + heroTag);
-    // Fallback: insert after first <h1>
-    if (!html.includes(heroTag)) {
-      html = html.replace(/(<\/h1>)/, '$1\n' + heroTag);
-    }
-  }
-
-  // Inject extra images after each H2 section
-  if (extraImages.length > 0) {
-    let imgIndex = 0;
-    html = html.replace(/<\/h2>/g, function(match) {
-      if (imgIndex < extraImages.length) {
-        const img = extraImages[imgIndex++];
-        return match + '\n<figure style="margin:16px 0 24px;border-radius:8px;overflow:hidden;">' +
-          '<img src="' + img.src + '" alt="' + img.alt + '" ' +
-          'style="width:100%;height:auto;display:block;border-radius:8px;" loading="lazy">' +
-          '<figcaption style="font-size:0.72rem;color:#888;padding:6px 0;text-align:center;">' + img.alt + '</figcaption>' +
-          '</figure>';
-      }
-      return match;
-    });
-  }
-  return html;
-}
-
-// Override downloadFixedHTML to include images
-const _origDownload = downloadFixedHTML;
-function downloadFixedHTML() {
-  if (!fixedHTMLContent) { showToast('Fix an article first!'); return; }
-  const withImages = injectImagesIntoHTML(fixedHTMLContent);
-  const s = fixedArticleMeta.slug || 'smartcents-article';
-  const blob = new Blob([withImages], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = s + '.html'; a.click();
-  URL.revokeObjectURL(url);
-  const imgCount = (heroImageData ? 1 : 0) + extraImages.length;
-  showToast('Downloaded with ' + imgCount + ' image(s) embedded!');
-}
-
-function copyFixedHTML() {
-  if (!fixedHTMLContent) { showToast('Fix an article first!'); return; }
-  const withImages = injectImagesIntoHTML(fixedHTMLContent);
-  navigator.clipboard.writeText(withImages).then(() => showToast('Copied with images!'));
-}
 
 // ── PUBLISH TAB ──────────────────────────────────────────────
 let fixedHTMLContent = '';

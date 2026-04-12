@@ -246,7 +246,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <div class="status-bar">
   <div class="app-title">Smart<span>Cents</span> <span style="font-size:0.7rem;color:var(--muted);font-weight:400">ADMIN</span></div>
   <div style="display:flex;align-items:center;gap:8px;">
-    <span class="version-badge" id="version-label">v1.33</span>
+    <span class="version-badge" id="version-label">v1.34</span>
     <div class="notif-dot"></div>
   </div>
 </div>
@@ -2103,7 +2103,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.33';
+const APP_VERSION = '1.34';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2771,19 +2771,21 @@ ${fileInstructions.pinterest}`,
 
 ${seoContext}
 
-Write a COMPLETE Medium article about "${kw}" for global English audience.
+Write a COMPLETE Medium article about "${kw}" for global English audience as a full HTML file.
 
 REQUIREMENTS:
 - Length: 900-1,200 words
+- Full HTML file: <!DOCTYPE html><html><head> with title, meta description, canonical (https://medium.com/@smartcents)
+- Clean readable styling: white background, font-family Georgia/serif, max-width:680px, margin:auto, line-height:1.8
+- <h1> for main title, <h2> for sections, <p> for paragraphs
 - Compelling title with keyword
-- Subtitle: one punchy sentence
-- 5 Medium tags
 - Hook intro (first 3 sentences grab attention)
-- 4-5 sections with ## headings (Markdown)
+- 4-5 sections with h2 headings
 - ${affLinks}
 - CTA: "Free tools at ${site}"
-- FAQ section (3 questions)
+- FAQ section (3 questions as details/summary or bold Q&A)
 - Link: ${site}/articles/${slug}.html
+- Add at top as HTML comments: <!-- TITLE: [title] --> <!-- TAGS: [5 tags] --> <!-- SUBTITLE: [subtitle] -->
 
 ${fileInstructions.medium}`,
 
@@ -2821,8 +2823,8 @@ Write a COMPLETE Pinterest pin about "${kw}". Format: PIN TITLE: [under 100 char
 >>>>>>>>>>SC_FILE_5_END<<<<<<<<<<
 
 >>>>>>>>>>SC_FILE_6_START<<<<<<<<<<
-FILENAME: 06-medium-${slug}.txt
-Write a COMPLETE 1000-word Medium article about "${kw}" in Markdown. Format: TITLE: [title] / SUBTITLE: [subtitle] / TAGS: [5 tags] — then full article with ## headings, affiliate links, and CTA to ${site}.
+FILENAME: 06-medium-${slug}.html
+Write a COMPLETE 1000-word Medium article about "${kw}" as a full HTML file. Include: <!DOCTYPE html>, <html>, <head> with title/meta/canonical (canonical URL: https://medium.com/@smartcents), <body>. Style: clean white background, readable font, max-width 680px centered. Use <h1> for title, <h2> for sections, <p> for paragraphs, <strong> for bold. Include affiliate links as <a href="..."> tags. End with CTA to ${site}. Include TITLE: and TAGS: as HTML comments at top.
 >>>>>>>>>>SC_FILE_6_END<<<<<<<<<<`
   };
 
@@ -2895,7 +2897,7 @@ function splitContent(raw) {
     { num:3, file:`03-facebook-${slug}.txt`,     type:'text/plain', icon:'📘', label:'Facebook Post' },
     { num:4, file:`04-instagram-${slug}.txt`,    type:'text/plain', icon:'📸', label:'Instagram Caption' },
     { num:5, file:`05-pinterest-${slug}.txt`,    type:'text/plain', icon:'📌', label:'Pinterest Pin' },
-    { num:6, file:`06-medium-${slug}.txt`,       type:'text/plain', icon:'📝', label:'Medium Article' },
+    { num:6, file:`06-medium-${slug}.html`,      type:'text/html',  icon:'📝', label:'Medium Article' },
   ];
 
   const result = [];
@@ -2989,98 +2991,163 @@ function splitContent(raw) {
 function buildImagePromptsFile(kw) {
   const slug = getSlug();
   const site = 'mysmartcents.github.io';
+  const today = new Date().toISOString().split('T')[0];
   return `IMAGE GENERATION PROMPTS
-========================
-Keyword: ${kw}
+================================================
+Article: ${kw}
+Date: ${today}
 Site: ${site}
-Brand Colors: #C9A84C (gold), #0D0D0D (dark), #E8E8E0 (light)
+File: 07-image-prompts-${slug}.txt
+================================================
+BRAND COLORS: Gold #C9A84C | Dark #0D0D0D | Light #E8E8E0
+BRAND FONTS: Playfair Display (headings) | DM Sans (body)
+================================================
 
-========================
-1. BLOGGER / FACEBOOK IMAGE (1200x628px — Landscape)
-========================
-CANVA SIZE: 1200 × 628 pixels
+QUICK WORKFLOW:
+1. Open Microsoft Designer (free): https://designer.microsoft.com
+2. Paste the AI PROMPT for each image
+3. Download image
+4. Open Canva: https://canva.com
+5. Use CANVA BRIEF to add text overlays
+6. Save with FILENAME below
 
-GEMINI PROMPT:
-Professional finance blog banner about "${kw}". Dark background #0D0D0D with gold (#C9A84C) typography. Large bold title "${kw}" in gold. Subtitle "SmartCents | ${site}". Relevant financial icons (charts, money, graphs). Clean minimal professional design. 1200x628 landscape format.
+================================================
+IMAGE 1 — SMARTCENTS ARTICLE HEADER
+================================================
+FILENAME: img-01-article-${slug}.png
+SIZE: 1200 × 628px (landscape)
+USE FOR: SmartCents article hero image
 
-CANVA BRIEF:
-- Background: #0D0D0D dark
-- Main headline (large bold gold): "${kw}"
-- Subheadline: "SmartCents | Free Finance Tools"
-- Visual: Relevant finance icon or chart on right side
-- Bottom bar: "${site}"
-- Style: Professional, minimal, dark gold theme
-
-Open Canva: https://www.canva.com/create/blog-banners/
-
-========================
-2. INSTAGRAM IMAGE (1080x1080px — Square)
-========================
-CANVA SIZE: 1080 × 1080 pixels
-
-GEMINI PROMPT:
-Bold square Instagram post about "${kw}". Dark background (#0D0D0D), gold (#C9A84C) accents. Large centered hook text. 3 key bullet points. "@mysmartcents" branding at bottom. Eye-catching, scroll-stopping design for mobile. 1080x1080 square format.
+AI PROMPT (paste in Microsoft Designer or Gemini):
+Professional finance blog header image about "${kw}". Very dark background (#0D0D0D). Gold (#C9A84C) accent lines and typography. Abstract financial chart or relevant icon on right side at low opacity. Bold headline "${kw}" in large gold text on left. "SmartCents | mysmartcents.github.io" in small text at bottom. Clean minimal dark professional design. 1200x628px landscape banner format. High quality.
 
 CANVA BRIEF:
-- Background: #0D0D0D dark
-- Hook text (large, centered): Key stat or question about ${kw}
-- 3 bullet points with gold dots
-- Bottom: "@mysmartcents | Free Finance Tools"
-- Style: Bold, mobile-first, eye-catching
+• Background: #0D0D0D
+• Left side: Bold headline text "${kw}" in gold
+• Right side: Relevant finance icon/chart (50% opacity)
+• Bottom bar: "SmartCents | ${site}" in small white text
+• Style: Dark, professional, minimal
 
-Open Canva: https://www.canva.com/create/instagram-posts/
+================================================
+IMAGE 2 — BLOGGER / FACEBOOK COVER
+================================================
+FILENAME: img-02-blogger-facebook-${slug}.png
+SIZE: 1200 × 628px (landscape)
+USE FOR: Blogger post header + Facebook post image (same file)
 
-========================
-3. PINTEREST IMAGE (1000x1500px — Vertical Tall)
-========================
-CANVA SIZE: 1000 × 1500 pixels
-
-GEMINI PROMPT:
-Tall Pinterest infographic about "${kw}". Dark background (#0D0D0D), gold (#C9A84C) accents. Bold title at top. 5-7 numbered tips in middle section. "${site}" URL at bottom. Save-worthy infographic style. 1000x1500 vertical format.
-
-CANVA BRIEF:
-TOP SECTION (30%): Bold title "${kw}" on dark gold background
-MIDDLE SECTION (50%): 5-7 numbered tips/steps (infographic style)
-BOTTOM SECTION (20%): SmartCents logo + ${site}
-
-- Colors: #C9A84C gold + #0D0D0D dark + #E8E8E0 text
-- Style: Infographic, very readable, save-worthy
-- TIP: Pinterest users SAVE infographics — make it valuable!
-
-Open Canva: https://www.canva.com/create/pinterest-graphics/
-
-========================
-4. MEDIUM COVER IMAGE (1500x750px — Wide Landscape)
-========================
-CANVA SIZE: 1500 × 750 pixels
-
-GEMINI PROMPT:
-Wide Medium article cover image about "${kw}". Dark (#0D0D0D) background, gold (#C9A84C) accent. Article title in large bold text. Clean professional finance aesthetic. 1500x750 wide landscape format.
+AI PROMPT:
+Finance blog cover image for "${kw}". Dark (#0D0D0D) background with gold (#C9A84C) gradient accent at top. Large bold white headline about ${kw}. SmartCents branding bottom right. Professional financial imagery — charts, money, or relevant icons in background at 20% opacity. 1200x628 landscape. Sharp, high quality, no text blur.
 
 CANVA BRIEF:
-- Same design as Blogger/Facebook but wider
-- Resize Blogger image in Canva: click Resize → type 1500 × 750
-- Or create fresh: wide landscape, title text centered
+• Background: #0D0D0D with gold bar at top (height: 8px)
+• Headline (center): "${kw}" — Playfair Display, Bold, White, 48px
+• Subheadline: "SmartCents Finance Guide 2026" — DM Sans, Gold, 20px
+• Bottom right: "mysmartcents.github.io" — small, muted
+• Icon: Relevant emoji or icon top-left corner
 
-Open Canva: https://www.canva.com/create/blog-banners/
+================================================
+IMAGE 3 — INSTAGRAM SQUARE
+================================================
+FILENAME: img-03-instagram-${slug}.png
+SIZE: 1080 × 1080px (square)
+USE FOR: Instagram post
 
-========================
-BRAND COLORS (copy into Canva)
-========================
-Gold:  #C9A84C
-Dark:  #0D0D0D
-Light: #E8E8E0
+AI PROMPT:
+Bold Instagram finance post about "${kw}". Dark (#0D0D0D) square background. Gold (#C9A84C) large number or key stat centered. 3 short bullet points below in white text. "@mysmartcents" at bottom in gold. Minimalist, scroll-stopping, mobile-first design. 1080x1080px square. High contrast, very readable on small screen.
 
-TIP: Use the same landscape image for both Blogger and Facebook (same dimensions).
-TIP: Resize Blogger image in Canva to create Medium cover — saves design time.
+CANVA BRIEF:
+• Background: #0D0D0D
+• TOP (20%): Category tag in gold pill — e.g. "FINANCE GUIDE"
+• CENTER (50%): Key hook stat or question about ${kw} — large bold white
+• BOTTOM (30%): 3 bullet points with gold checkmarks + "@mysmartcents"
+• Style: Bold, minimal, very readable on mobile
 
-========================
-AI IMAGE TOOLS
-========================
-- Gemini: https://gemini.google.com (paste prompts above)
-- Microsoft Designer: https://designer.microsoft.com (free, high quality)
-- Canva AI: https://canva.com (AI image generation inside Canva)
-- Adobe Firefly: https://firefly.adobe.com (free tier available)
+================================================
+IMAGE 4 — INSTAGRAM STORY
+================================================
+FILENAME: img-04-instagram-story-${slug}.png
+SIZE: 1080 × 1920px (vertical 9:16)
+USE FOR: Instagram Stories / Facebook Stories
+
+AI PROMPT:
+Vertical Instagram story about "${kw}". Dark (#0D0D0D) background. Gold (#C9A84C) accents. Bold hook question at top third. Key insight or tip in middle. "Swipe up" or "Link in bio" CTA at bottom. @mysmartcents branding. 1080x1920px vertical story format. Eye-catching, modern finance aesthetic.
+
+CANVA BRIEF:
+• Background: #0D0D0D
+• TOP (25%): Hook question about ${kw} — large bold white
+• MIDDLE (50%): 3-5 key points with gold bullet icons
+• BOTTOM (25%): CTA "🔗 Link in bio → ${site}" + "@mysmartcents"
+• Add: Gold decorative line separator between sections
+
+================================================
+IMAGE 5 — PINTEREST PIN (TALL)
+================================================
+FILENAME: img-05-pinterest-${slug}.png
+SIZE: 1000 × 1500px (2:3 ratio)
+USE FOR: Pinterest pin
+
+AI PROMPT:
+Tall Pinterest infographic about "${kw}". Dark (#0D0D0D) background with gold (#C9A84C) accents. Bold title at top in large white text. 5-7 numbered tips or steps in middle — each in a dark card with gold number badge. "mysmartcents.github.io" URL at bottom. Subtle upward trending chart or financial icons in background at 10% opacity. Save-worthy infographic style. 1000x1500px tall format. Very readable, high quality.
+
+CANVA BRIEF:
+• TOP (25%): Gold rectangle background with title "${kw}" in white
+• MIDDLE (55%): 5 numbered cards (#141414 bg, gold left border each):
+  Card 1-5: [Key tip about ${kw}]
+• BOTTOM (20%): SmartCents URL + "Free Finance Tools"
+• Colors: #C9A84C + #0D0D0D + #E8E8E0
+
+================================================
+IMAGE 6 — MEDIUM ARTICLE COVER
+================================================
+FILENAME: img-06-medium-${slug}.png
+SIZE: 1500 × 750px (2:1 ratio)
+USE FOR: Medium article header image
+
+AI PROMPT:
+Wide Medium article cover for "${kw}". Clean dark (#0D0D0D) background. Gold (#C9A84C) accent. Article title in elegant large serif font. Subtle financial visual on right. "SmartCents" branding small at bottom. 1500x750px wide landscape. Sophisticated, editorial, Medium-style aesthetic.
+
+CANVA BRIEF:
+• Resize img-02-blogger-facebook image: Canva → Resize → 1500 × 750
+• OR create fresh: same style as Blogger image but wider ratio
+• Keep same headline and branding
+
+================================================
+QUICK AI TOOLS — PASTE PROMPTS HERE
+================================================
+• Microsoft Designer (FREE, best quality):
+  https://designer.microsoft.com
+
+• Google Gemini (FREE):
+  https://gemini.google.com
+
+• Canva AI Image (inside Canva, FREE tier):
+  https://canva.com → Create → AI Image Generator
+
+• Adobe Firefly (FREE tier):
+  https://firefly.adobe.com
+
+================================================
+CANVA TEMPLATES — OPEN DIRECTLY
+================================================
+• Blog Banner (1200×628):  https://www.canva.com/create/blog-banners/
+• Instagram Post (1080×1080): https://www.canva.com/create/instagram-posts/
+• Instagram Story (1080×1920): https://www.canva.com/create/instagram-stories/
+• Pinterest Pin (1000×1500): https://www.canva.com/create/pinterest-graphics/
+
+================================================
+SAVE CHECKLIST
+================================================
+[ ] img-01-article-${slug}.png       → SmartCents article header
+[ ] img-02-blogger-facebook-${slug}.png → Blogger + Facebook
+[ ] img-03-instagram-${slug}.png     → Instagram post
+[ ] img-04-instagram-story-${slug}.png → Instagram Story
+[ ] img-05-pinterest-${slug}.png     → Pinterest pin
+[ ] img-06-medium-${slug}.png        → Medium article cover
+
+TIP: Create img-02 first — resize it in Canva to make img-01 and img-06.
+TIP: Create img-03 first — resize it to 1080×1920 to make img-04.
+This saves 50% of your design time!
+================================================
 `;
 }
 

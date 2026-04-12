@@ -2085,7 +2085,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.29';
+const APP_VERSION = '1.30';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -4365,7 +4365,7 @@ function openPubPreview() {
   else showToast('Generate publish plan first!');
 }
 
-function submitIndexNow() {
+async function submitIndexNow() {
   showToast('Submitting to IndexNow (Bing instant indexing)...');
   const urls = [
     'https://mysmartcents.github.io/',
@@ -5174,6 +5174,17 @@ renderGroups();
 document.getElementById('sc-article-count').textContent = SC_ARTICLES;
 document.getElementById('medium-article-count').textContent = MEDIUM_PUBLISHED;
 document.getElementById('version-label').textContent = 'v' + APP_VERSION;
+
+// Force clear old service worker cache on version change
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(reg => {
+      reg.active && caches.keys().then(keys => {
+        keys.forEach(k => { if (!k.includes(APP_VERSION)) caches.delete(k); });
+      });
+    });
+  });
+}
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('admin-sw.js', { scope: '/' }).then(reg => {

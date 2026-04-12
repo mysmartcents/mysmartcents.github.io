@@ -228,7 +228,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <div class="status-bar">
   <div class="app-title">Smart<span>Cents</span> <span style="font-size:0.7rem;color:var(--muted);font-weight:400">ADMIN</span></div>
   <div style="display:flex;align-items:center;gap:8px;">
-    <span class="version-badge" id="version-label">v1.38</span>
+    <span class="version-badge" id="version-label">v1.39</span>
     <div class="notif-dot"></div>
   </div>
 </div>
@@ -939,6 +939,49 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
     </div>
 
     <!-- ARTICLE DETAILS -->
+    <!-- IMAGE UPLOAD -->
+    <div class="sec-header"><div class="sec-title">🖼️ Article Images</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Upload images → auto-embedded in article HTML. No external hosting needed.</div>
+
+      <!-- HERO IMAGE -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--gold);margin-bottom:6px;">HERO IMAGE (article header)</div>
+        <div id="hero-drop" onclick="document.getElementById('hero-upload').click()" style="border:2px dashed #333;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color 0.2s;margin-bottom:6px;">
+          <div id="hero-preview" style="display:none;"><img id="hero-img" style="max-width:100%;max-height:120px;border-radius:6px;object-fit:cover;"></div>
+          <div id="hero-placeholder" style="color:var(--muted);font-size:0.8rem;">📁 Click to upload hero image<br><span style="font-size:0.68rem;font-family:'DM Mono',monospace;">Recommended: 1200×628px JPG/PNG/WebP</span></div>
+        </div>
+        <input id="hero-upload" type="file" accept="image/*" style="display:none" onchange="handleImageUpload('hero', this)">
+        <div id="hero-info" style="font-size:0.68rem;color:var(--muted);font-family:'DM Mono',monospace;"></div>
+      </div>
+
+      <!-- ADDITIONAL IMAGES -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--gold);margin-bottom:6px;">ADDITIONAL IMAGES (optional — for article body)</div>
+        <div id="extra-imgs-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;"></div>
+        <button onclick="document.getElementById('extra-upload').click()" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">+ Add Image to Article Body</button>
+        <input id="extra-upload" type="file" accept="image/*" multiple style="display:none" onchange="handleExtraImages(this)">
+      </div>
+
+      <!-- IMAGE OPTIONS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace;">HERO ALT TEXT</div>
+          <input id="hero-alt" type="text" placeholder="Describe the image..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:8px 10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;outline:none;">
+        </div>
+        <div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace;">IMAGE QUALITY</div>
+          <select id="img-quality" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:8px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;outline:none;">
+            <option value="0.9">High (0.9)</option>
+            <option value="0.8" selected>Medium (0.8)</option>
+            <option value="0.6">Low (0.6) — smaller file</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="img-upload-status" style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;text-align:center;margin-top:4px;"></div>
+    </div>
+
     <div class="sec-header"><div class="sec-title">Step 1 — Article Details</div></div>
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;">
       <div>
@@ -1552,7 +1595,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.38';
+const APP_VERSION = '1.39';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -2746,6 +2789,158 @@ renderGroups();
 document.getElementById('sc-article-count').textContent = SC_ARTICLES;
 document.getElementById('medium-article-count').textContent = MEDIUM_PUBLISHED;
 document.getElementById('version-label').textContent = 'v' + APP_VERSION;
+
+// ── IMAGE UPLOAD FOR ARTICLES ─────────────────────────────────
+let heroImageData = null;   // { src: base64dataURL, alt: string, name: string }
+let extraImages   = [];     // [{ src, alt, name, position }]
+
+function handleImageUpload(type, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const quality = parseFloat(document.getElementById('img-quality').value);
+  const statusEl = document.getElementById('img-upload-status');
+  statusEl.textContent = 'Processing ' + file.name + '...';
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      // Compress via canvas
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      // Max 1200px wide for hero
+      if (type === 'hero' && w > 1200) { h = Math.round(h * 1200/w); w = 1200; }
+      // Max 800px wide for body images
+      if (type === 'extra' && w > 800) { h = Math.round(h * 800/w); w = 800; }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const compressed = canvas.toDataURL('image/jpeg', quality);
+      const sizeKB = Math.round(compressed.length * 0.75 / 1024);
+
+      if (type === 'hero') {
+        heroImageData = { src: compressed, alt: file.name.replace(/\.[^.]+$/,''), name: file.name };
+        // Show preview
+        document.getElementById('hero-img').src = compressed;
+        document.getElementById('hero-preview').style.display = 'block';
+        document.getElementById('hero-placeholder').style.display = 'none';
+        document.getElementById('hero-drop').style.borderColor = 'var(--gold)';
+        document.getElementById('hero-alt').value = heroImageData.alt;
+        document.getElementById('hero-info').textContent = w + 'x' + h + 'px | ' + sizeKB + 'KB compressed';
+        statusEl.textContent = '\u2705 Hero image ready — ' + sizeKB + 'KB';
+        statusEl.style.color = 'var(--green)';
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleExtraImages(input) {
+  const files = Array.from(input.files);
+  const quality = parseFloat(document.getElementById('img-quality').value);
+  const statusEl = document.getElementById('img-upload-status');
+  let processed = 0;
+
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height;
+        if (w > 800) { h = Math.round(h * 800/w); w = 800; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const compressed = canvas.toDataURL('image/jpeg', quality);
+        const sizeKB = Math.round(compressed.length * 0.75 / 1024);
+        const imgData = { src: compressed, alt: file.name.replace(/\.[^.]+$/,''), name: file.name, w, h, sizeKB };
+        extraImages.push(imgData);
+        renderExtraImagesList();
+        processed++;
+        statusEl.textContent = '\u2705 ' + processed + '/' + files.length + ' images added';
+        statusEl.style.color = 'var(--green)';
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderExtraImagesList() {
+  const list = document.getElementById('extra-imgs-list');
+  list.innerHTML = extraImages.map((img, i) => `
+    <div style="display:flex;align-items:center;gap:8px;background:var(--dark3);border:1px solid var(--dark5);border-radius:8px;padding:8px 10px;">
+      <img src="${img.src}" style="width:48px;height:36px;object-fit:cover;border-radius:4px;flex-shrink:0;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:0.72rem;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${img.name}</div>
+        <div style="font-size:0.65rem;color:var(--muted);font-family:'DM Mono',monospace;">${img.w}x${img.h}px | ${img.sizeKB}KB</div>
+        <input type="text" value="${img.alt}" placeholder="Alt text..." onchange="extraImages[${i}].alt=this.value"
+          style="width:100%;background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:3px 6px;border-radius:4px;font-size:0.68rem;font-family:'Syne',sans-serif;outline:none;margin-top:3px;">
+      </div>
+      <button onclick="removeExtraImage(${i})" style="background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.3);color:#ff6b6b;padding:4px 8px;border-radius:6px;font-size:0.75rem;cursor:pointer;flex-shrink:0;">✕</button>
+    </div>`).join('');
+}
+
+function removeExtraImage(i) {
+  extraImages.splice(i, 1);
+  renderExtraImagesList();
+}
+
+function injectImagesIntoHTML(html) {
+  // Inject hero image at top of article body
+  if (heroImageData) {
+    const alt = document.getElementById('hero-alt').value || heroImageData.alt;
+    const heroTag = '<figure style="margin:0 0 28px 0;border-radius:10px;overflow:hidden;">' +
+      '<img src="' + heroImageData.src + '" alt="' + alt + '" ' +
+      'style="width:100%;height:auto;display:block;border-radius:10px;" loading="lazy">' +
+      '</figure>';
+    // Insert after <div class="article-meta"> block
+    html = html.replace(/(<div class="article-meta"[\s\S]*?<\/div>\s*<div class="article-body">)/, '$1\n' + heroTag);
+    // Fallback: insert after first <h1>
+    if (!html.includes(heroTag)) {
+      html = html.replace(/(<\/h1>)/, '$1\n' + heroTag);
+    }
+  }
+
+  // Inject extra images after each H2 section
+  if (extraImages.length > 0) {
+    let imgIndex = 0;
+    html = html.replace(/<\/h2>/g, function(match) {
+      if (imgIndex < extraImages.length) {
+        const img = extraImages[imgIndex++];
+        return match + '\n<figure style="margin:16px 0 24px;border-radius:8px;overflow:hidden;">' +
+          '<img src="' + img.src + '" alt="' + img.alt + '" ' +
+          'style="width:100%;height:auto;display:block;border-radius:8px;" loading="lazy">' +
+          '<figcaption style="font-size:0.72rem;color:#888;padding:6px 0;text-align:center;">' + img.alt + '</figcaption>' +
+          '</figure>';
+      }
+      return match;
+    });
+  }
+  return html;
+}
+
+// Override downloadFixedHTML to include images
+const _origDownload = downloadFixedHTML;
+function downloadFixedHTML() {
+  if (!fixedHTMLContent) { showToast('Fix an article first!'); return; }
+  const withImages = injectImagesIntoHTML(fixedHTMLContent);
+  const s = fixedArticleMeta.slug || 'smartcents-article';
+  const blob = new Blob([withImages], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = s + '.html'; a.click();
+  URL.revokeObjectURL(url);
+  const imgCount = (heroImageData ? 1 : 0) + extraImages.length;
+  showToast('Downloaded with ' + imgCount + ' image(s) embedded!');
+}
+
+function copyFixedHTML() {
+  if (!fixedHTMLContent) { showToast('Fix an article first!'); return; }
+  const withImages = injectImagesIntoHTML(fixedHTMLContent);
+  navigator.clipboard.writeText(withImages).then(() => showToast('Copied with images!'));
+}
 
 // ── PUBLISH TAB ──────────────────────────────────────────────
 let fixedHTMLContent = '';

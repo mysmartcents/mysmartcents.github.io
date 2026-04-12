@@ -246,7 +246,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <div class="status-bar">
   <div class="app-title">Smart<span>Cents</span> <span style="font-size:0.7rem;color:var(--muted);font-weight:400">ADMIN</span></div>
   <div style="display:flex;align-items:center;gap:8px;">
-    <span class="version-badge" id="version-label">v1.35</span>
+    <span class="version-badge" id="version-label">v1.36</span>
     <div class="notif-dot"></div>
   </div>
 </div>
@@ -2124,7 +2124,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.35';
+const APP_VERSION = '1.36';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -4365,247 +4365,206 @@ function autoFixArticle() {
   const raw = document.getElementById('fix-html-input').value.trim();
   if (!raw) { showToast('Paste HTML first!'); return; }
 
-  // Parse the HTML
   const parser = new DOMParser();
   const doc = parser.parseFromString(raw, 'text/html');
 
-  // Extract key info from original
-  const origTitle = doc.querySelector('title')?.textContent?.trim() ||
-                    doc.querySelector('h1')?.textContent?.trim() || 'SmartCents Article';
-  const origDesc  = doc.querySelector('meta[name="description"]')?.getAttribute('content') ||
-                    doc.querySelector('p')?.textContent?.slice(0,155) || '';
-  const origCanon = doc.querySelector('link[rel="canonical"]')?.getAttribute('href') || '';
+  // Extract info from original
+  const origTitle = (doc.querySelector('title') && doc.querySelector('title').textContent.trim()) ||
+                    (doc.querySelector('h1') && doc.querySelector('h1').textContent.trim()) || 'SmartCents Article';
+  const origDesc  = (doc.querySelector('meta[name="description"]') && doc.querySelector('meta[name="description"]').getAttribute('content')) ||
+                    (doc.querySelector('p') && doc.querySelector('p').textContent.slice(0,155)) || '';
+  const origCanon = (doc.querySelector('link[rel="canonical"]') && doc.querySelector('link[rel="canonical"]').getAttribute('href')) || '';
 
-  // Extract slug from canonical or generate from title
+  // Generate slug
   let slug = '';
-  if (origCanon) {
-    slug = origCanon.split('/').pop().replace('.html','').replace(/[^a-z0-9-]/gi,'').toLowerCase();
-  }
-  if (!slug) {
-    slug = origTitle.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim().replace(/\s+/g,'-').substring(0,60);
-  }
+  if (origCanon) slug = origCanon.split('/').pop().replace('.html','').replace(/[^a-z0-9-]/gi,'').toLowerCase();
+  if (!slug) slug = origTitle.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim().replace(/\s+/g,'-').substring(0,60);
 
-  // Extract body content — get the main article text
+  // Extract body content
   let bodyContent = '';
-  // Try to find article body — look for main content areas
-  const contentSelectors = ['article', 'main', '.article-body', '.article-wrap', '.post-content', '.entry-content', 'body'];
-  for (const sel of contentSelectors) {
+  const selectors = ['article','main','.article-body','.article-wrap','.post-content','.entry-content','body'];
+  for (const sel of selectors) {
     const el = doc.querySelector(sel);
     if (el) {
-      // Remove nav, footer, script, style tags from content
-      ['nav','footer','script','style','.bottom-nav','.nav-links'].forEach(s => {
-        el.querySelectorAll(s).forEach(n => n.remove());
-      });
+      ['nav','footer','script','style','.bottom-nav'].forEach(s => el.querySelectorAll(s).forEach(n => n.remove()));
       const text = el.innerHTML.trim();
       if (text.length > 200) { bodyContent = text; break; }
     }
   }
-  if (!bodyContent) bodyContent = doc.body?.innerHTML || raw;
+  if (!bodyContent) bodyContent = doc.body ? doc.body.innerHTML : raw;
 
-  // Clean up body — remove existing nav/header/footer HTML
+  // Clean up
   bodyContent = bodyContent
     .replace(/<nav[\s\S]*?<\/nav>/gi, '')
     .replace(/<header[\s\S]*?<\/header>/gi, '')
     .replace(/<footer[\s\S]*?<\/footer>/gi, '')
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[\s\S]*?<\/style>/gi, '')
     .replace(/class="bottom-nav"[\s\S]*$/i, '')
     .trim();
 
-  // Extract H1 from body if exists
   const h1Match = bodyContent.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
   const articleTitle = h1Match ? h1Match[1].replace(/<[^>]+>/g,'').trim() : origTitle;
-
-  // Extract article tag/category
   const tagMatch = bodyContent.match(/class="[^"]*(?:article-tag|blog-tag|tag|category)[^"]*"[^>]*>([^<]+)</i);
   const articleTag = tagMatch ? tagMatch[1].trim() : 'Finance Guide';
 
-  // Build the final SmartCents HTML
-  const canonUrl = `https://mysmartcents.github.io/articles/${slug}.html`;
+  const canonUrl = 'https://mysmartcents.github.io/articles/' + slug + '.html';
   const today = new Date().toISOString().split('T')[0];
+  const monthYear = new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const desc155 = origDesc.substring(0,155);
 
-  const smartCentsHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${articleTitle} | SmartCents</title>
-  <meta name="description" content="${origDesc.substring(0,155)}">
-  <link rel="canonical" href="${canonUrl}">
+  // Build HTML using array join to avoid template literal parser issues
+  const parts = [
+    '<!DOCTYPE html>',
+    '<html lang="en">',
+    '<head>',
+    '<meta charset="UTF-8">',
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    '<title>' + articleTitle + ' | SmartCents</title>',
+    '<meta name="description" content="' + desc155 + '">',
+    '<link rel="canonical" href="' + canonUrl + '">',
+    '<meta property="og:title" content="' + articleTitle + ' | SmartCents">',
+    '<meta property="og:description" content="' + desc155 + '">',
+    '<meta property="og:url" content="' + canonUrl + '">',
+    '<meta property="og:type" content="article">',
+    '<meta property="og:site_name" content="SmartCents">',
+    '<meta name="twitter:card" content="summary_large_image">',
+    '<meta name="twitter:site" content="@mysmartcents">',
+    '<meta name="twitter:title" content="' + articleTitle + ' | SmartCents">',
+    '<meta name="twitter:description" content="' + desc155 + '">',
+    '<script type="application/ld+json">',
+    JSON.stringify({
+      "@context":"https://schema.org",
+      "@graph":[
+        {"@type":"Article","headline":articleTitle,"description":desc155,"url":canonUrl,
+         "datePublished":today,"dateModified":today,
+         "author":{"@type":"Organization","name":"SmartCents"},
+         "publisher":{"@type":"Organization","name":"SmartCents","url":"https://mysmartcents.github.io"}},
+        {"@type":"BreadcrumbList","itemListElement":[
+          {"@type":"ListItem","position":1,"name":"Home","item":"https://mysmartcents.github.io/"},
+          {"@type":"ListItem","position":2,"name":"Finance Guides","item":"https://mysmartcents.github.io/#blog"},
+          {"@type":"ListItem","position":3,"name":articleTitle,"item":canonUrl}
+        ]}
+      ]
+    }, null, 2),
+    '<' + '/script>',
+    '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">',
+    '<style>',
+    '*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }',
+    ':root { --gold: #C9A84C; --dark: #0D0D0D; --dark2: #141414; --text: #E8E8E0; --muted: #888; --green: #4caf7d; }',
+    'body { background: var(--dark); color: var(--text); font-family: \'DM Sans\', sans-serif; line-height: 1.7; font-size: 16px; }',
+    'nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid #1e1e1e; position: sticky; top: 0; background: var(--dark); z-index: 100; }',
+    '.nav-logo { font-family: \'Playfair Display\', serif; font-size: 1.3rem; font-weight: 900; color: var(--text); text-decoration: none; }',
+    '.nav-logo span { color: var(--gold); }',
+    '.nav-links { display: flex; gap: 20px; list-style: none; }',
+    '.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; }',
+    '.nav-links a:hover { color: var(--gold); }',
+    '.nav-cta { background: var(--gold); color: var(--dark); padding: 8px 18px; border-radius: 6px; text-decoration: none; font-size: 0.82rem; font-weight: 700; }',
+    '.article-wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }',
+    '.article-tag { display: inline-block; background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; }',
+    '.article-title { font-family: \'Playfair Display\', serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; line-height: 1.2; color: var(--text); margin-bottom: 16px; }',
+    '.article-meta { display: flex; gap: 16px; color: var(--muted); font-size: 0.82rem; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #1e1e1e; flex-wrap: wrap; }',
+    '.article-body h2 { font-family: \'Playfair Display\', serif; font-size: 1.45rem; font-weight: 700; color: var(--text); margin: 40px 0 14px; padding-left: 14px; border-left: 3px solid var(--gold); }',
+    '.article-body h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 24px 0 10px; }',
+    '.article-body p { color: #c8c8c0; margin-bottom: 16px; line-height: 1.8; }',
+    '.article-body ul, .article-body ol { padding-left: 22px; margin-bottom: 16px; color: #c8c8c0; }',
+    '.article-body li { margin-bottom: 8px; line-height: 1.7; }',
+    '.article-body strong { color: var(--text); }',
+    '.article-body a { color: var(--gold); text-decoration: none; }',
+    '.article-body a:hover { text-decoration: underline; }',
+    '.article-body table { width: 100%; border-collapse: collapse; margin: 20px 0; }',
+    '.article-body th { background: var(--dark2); color: var(--gold); padding: 10px 14px; text-align: left; font-size: 0.82rem; border-bottom: 2px solid var(--gold); }',
+    '.article-body td { padding: 10px 14px; border-bottom: 1px solid #1e1e1e; color: #c8c8c0; font-size: 0.88rem; }',
+    '.highlight-box { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 10px; padding: 20px 24px; margin: 24px 0; }',
+    '.affiliate-box { background: rgba(201,168,76,0.05); border-left: 3px solid var(--gold); padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; }',
+    '.affiliate-box a { color: var(--gold); font-weight: 700; }',
+    '.cta-box { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 28px 24px; margin: 36px 0; text-align: center; }',
+    '.cta-box h3 { font-family: \'Playfair Display\', serif; color: var(--gold); margin-bottom: 8px; font-size: 1.2rem; }',
+    '.cta-box p { color: var(--muted); font-size: 0.88rem; margin-bottom: 16px; }',
+    '.cta-btn { display: inline-block; background: var(--gold); color: var(--dark); padding: 12px 28px; border-radius: 7px; font-weight: 700; text-decoration: none; font-size: 0.95rem; }',
+    'details { margin: 10px 0; border: 1px solid #1e1e1e; border-radius: 8px; overflow: hidden; }',
+    'details summary { padding: 14px 18px; cursor: pointer; font-weight: 600; color: var(--text); list-style: none; display: flex; justify-content: space-between; align-items: center; }',
+    'details summary::after { content: "+"; color: var(--gold); font-size: 1.2rem; }',
+    'details[open] summary::after { content: "\u2212"; }',
+    'details p { padding: 0 18px 16px; color: #b0b0a8; }',
+    '.related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }',
+    '.related-link { background: #141414; border: 1px solid #1e1e1e; border-radius: 8px; padding: 12px 14px; text-decoration: none; color: var(--text); font-size: 0.83rem; font-weight: 500; }',
+    '.related-link:hover { border-color: var(--gold); color: var(--gold); }',
+    'footer { background: #0a0a0a; border-top: 1px solid #1a1a1a; padding: 32px 24px; text-align: center; margin-top: 60px; }',
+    'footer .logo { font-family: \'Playfair Display\', serif; font-size: 1.2rem; font-weight: 900; margin-bottom: 8px; }',
+    'footer .logo span { color: var(--gold); }',
+    'footer p { color: var(--muted); font-size: 0.82rem; margin-bottom: 12px; }',
+    'footer .footer-links a { color: var(--muted); text-decoration: none; margin: 0 8px; font-size: 0.8rem; }',
+    'footer .footer-links a:hover { color: var(--gold); }',
+    '.disclaimer { color: #555; font-size: 0.75rem; margin-top: 16px; max-width: 600px; margin-left: auto; margin-right: auto; }',
+    '@media (max-width: 600px) { .related-grid { grid-template-columns: 1fr; } .nav-links { display: none; } }',
+    '<' + '/style>',
+    '<' + '/head>',
+    '<body>',
+    '<nav>',
+    '  <a href="https://mysmartcents.github.io/" class="nav-logo">Smart<span>Cents</span></a>',
+    '  <ul class="nav-links">',
+    '    <li><a href="https://mysmartcents.github.io/#tools">Tools</a></li>',
+    '    <li><a href="https://mysmartcents.github.io/#blog">Articles</a></li>',
+    '    <li><a href="https://mysmartcents.github.io/#blog">&#8592; Back</a></li>',
+    '  </ul>',
+    '  <a href="https://mysmartcents.github.io/#tools" class="nav-cta">Free Tools</a>',
+    '<' + '/nav>',
+    '<div class="article-wrap">',
+    '  <span class="article-tag">' + articleTag + '</span>',
+    '  <h1 class="article-title">' + articleTitle + '</h1>',
+    '  <div class="article-meta">',
+    '    <span>&#9997;&#65039; SmartCents Editorial Team</span>',
+    '    <span>&#9201; 8 min read</span>',
+    '    <span>&#128197; Updated ' + monthYear + '</span>',
+    '  </div>',
+    '  <div class="article-body">',
+    bodyContent,
+    '  </div>',
+    '  <div style="margin-top:50px;padding-top:28px;border-top:1px solid #1e1e1e;">',
+    '    <div style="font-family:\'Playfair Display\',serif;font-size:1.2rem;color:var(--text);margin-bottom:14px;">More Finance Guides</div>',
+    '    <div class="related-grid">',
+    '      <a href="https://mysmartcents.github.io/articles/passive-income-guide.html" class="related-link">&#128176; Build Passive Income Online</a>',
+    '      <a href="https://mysmartcents.github.io/articles/best-budgeting-methods.html" class="related-link">&#128202; Best Budgeting Methods 2026</a>',
+    '      <a href="https://mysmartcents.github.io/articles/emergency-fund-guide.html" class="related-link">&#128680; Build an Emergency Fund</a>',
+    '      <a href="https://mysmartcents.github.io/articles/prop-trading-guide.html" class="related-link">&#128200; Prop Trading Guide 2026</a>',
+    '      <a href="https://mysmartcents.github.io/articles/legal-documents-online.html" class="related-link">&#9878;&#65039; Legal Documents Online</a>',
+    '      <a href="https://mysmartcents.github.io/articles/passive-income-ideas-2026.html" class="related-link">&#128161; 7 Passive Income Ideas</a>',
+    '    </div>',
+    '  </div>',
+    '</div>',
+    '<footer>',
+    '  <div class="logo">Smart<span>Cents</span></div>',
+    '  <p>Free financial tools &#8212; no signup required.</p>',
+    '  <div class="footer-links">',
+    '    <a href="https://web.facebook.com/profile.php?id=61577493070318" target="_blank" rel="noopener">Facebook</a>',
+    '    <a href="https://www.instagram.com/mysmartcents/" target="_blank" rel="noopener">Instagram</a>',
+    '    <a href="https://www.pinterest.com/mysmartcents/" target="_blank" rel="noopener">Pinterest</a>',
+    '    <a href="https://medium.com/@smartcents" target="_blank" rel="noopener">Medium</a>',
+    '  </div>',
+    '  <div class="footer-links" style="margin-top:8px;">',
+    '    <a href="https://mysmartcents.github.io/privacy.html">Privacy Policy</a>',
+    '    <a href="https://mysmartcents.github.io/terms.html">Terms of Use</a>',
+    '  </div>',
+    '  <p class="disclaimer">Disclaimer: This article is for informational purposes only. Some links are affiliate links.</p>',
+    '<' + '/footer>',
+    '<' + '/body>',
+    '<' + '/html>'
+  ];
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="${articleTitle} | SmartCents">
-  <meta property="og:description" content="${origDesc.substring(0,155)}">
-  <meta property="og:url" content="${canonUrl}">
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="SmartCents">
+  fixedHTMLContent = parts.join('\n');
+  fixedArticleMeta = { title: articleTitle, desc: desc155, slug: slug, tag: articleTag, url: canonUrl };
 
-  <!-- Twitter Cards -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@mysmartcents">
-  <meta name="twitter:title" content="${articleTitle} | SmartCents">
-  <meta name="twitter:description" content="${origDesc.substring(0,155)}">
-
-  <!-- Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Article",
-        "headline": "${articleTitle}",
-        "description": "${origDesc.substring(0,155)}",
-        "url": "${canonUrl}",
-        "datePublished": "${today}",
-        "dateModified": "${today}",
-        "author": {"@type": "Organization", "name": "SmartCents"},
-        "publisher": {"@type": "Organization", "name": "SmartCents", "url": "https://mysmartcents.github.io"}
-      },
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mysmartcents.github.io/"},
-          {"@type": "ListItem", "position": 2, "name": "Finance Guides", "item": "https://mysmartcents.github.io/#blog"},
-          {"@type": "ListItem", "position": 3, "name": "${articleTitle}", "item": "${canonUrl}"}
-        ]
-      }
-    ]
-  }
-  <\/script>
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --gold: #C9A84C; --dark: #0D0D0D; --dark2: #141414; --text: #E8E8E0; --muted: #888; --green: #4caf7d; }
-    body { background: var(--dark); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.7; font-size: 16px; }
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; border-bottom: 1px solid #1e1e1e; position: sticky; top: 0; background: var(--dark); z-index: 100; }
-    .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--text); text-decoration: none; }
-    .nav-logo span { color: var(--gold); }
-    .nav-links { display: flex; gap: 20px; list-style: none; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
-    .nav-links a:hover { color: var(--gold); }
-    .nav-cta { background: var(--gold); color: var(--dark); padding: 8px 18px; border-radius: 6px; text-decoration: none; font-size: 0.82rem; font-weight: 700; }
-    .article-wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
-    .article-tag { display: inline-block; background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 16px; }
-    .article-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; line-height: 1.2; color: var(--text); margin-bottom: 16px; }
-    .article-meta { display: flex; gap: 16px; color: var(--muted); font-size: 0.82rem; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #1e1e1e; flex-wrap: wrap; }
-    .article-body h2 { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 700; color: var(--text); margin: 40px 0 14px; padding-left: 14px; border-left: 3px solid var(--gold); }
-    .article-body h3 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 24px 0 10px; }
-    .article-body p { color: #c8c8c0; margin-bottom: 16px; line-height: 1.8; }
-    .article-body ul, .article-body ol { padding-left: 22px; margin-bottom: 16px; color: #c8c8c0; }
-    .article-body li { margin-bottom: 8px; line-height: 1.7; }
-    .article-body strong { color: var(--text); }
-    .article-body a { color: var(--gold); text-decoration: none; }
-    .article-body a:hover { text-decoration: underline; }
-    .article-body table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-    .article-body th { background: var(--dark2); color: var(--gold); padding: 10px 14px; text-align: left; font-size: 0.82rem; border-bottom: 2px solid var(--gold); }
-    .article-body td { padding: 10px 14px; border-bottom: 1px solid #1e1e1e; color: #c8c8c0; font-size: 0.88rem; }
-    .article-body tr:hover td { background: var(--dark2); }
-    .highlight-box { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
-    .affiliate-box { background: rgba(201,168,76,0.05); border-left: 3px solid var(--gold); padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; }
-    .affiliate-box a { color: var(--gold); font-weight: 700; }
-    .cta-box { background: #141414; border: 1px solid #222; border-radius: 12px; padding: 28px 24px; margin: 36px 0; text-align: center; }
-    .cta-box h3 { font-family: 'Playfair Display', serif; color: var(--gold); margin-bottom: 8px; font-size: 1.2rem; }
-    .cta-box p { color: var(--muted); font-size: 0.88rem; margin-bottom: 16px; }
-    .cta-btn { display: inline-block; background: var(--gold); color: var(--dark); padding: 12px 28px; border-radius: 7px; font-weight: 700; text-decoration: none; font-size: 0.95rem; }
-    details { margin: 10px 0; border: 1px solid #1e1e1e; border-radius: 8px; overflow: hidden; }
-    details summary { padding: 14px 18px; cursor: pointer; font-weight: 600; color: var(--text); list-style: none; display: flex; justify-content: space-between; align-items: center; }
-    details summary::after { content: '+'; color: var(--gold); font-size: 1.2rem; }
-    details[open] summary::after { content: '\\2212'; }
-    details p { padding: 0 18px 16px; color: #b0b0a8; }
-    .related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
-    .related-link { background: #141414; border: 1px solid #1e1e1e; border-radius: 8px; padding: 12px 14px; text-decoration: none; color: var(--text); font-size: 0.83rem; font-weight: 500; }
-    .related-link:hover { border-color: var(--gold); color: var(--gold); }
-    footer { background: #0a0a0a; border-top: 1px solid #1a1a1a; padding: 32px 24px; text-align: center; margin-top: 60px; }
-    footer .logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900; margin-bottom: 8px; }
-    footer .logo span { color: var(--gold); }
-    footer p { color: var(--muted); font-size: 0.82rem; margin-bottom: 12px; }
-    footer .footer-links a { color: var(--muted); text-decoration: none; margin: 0 8px; font-size: 0.8rem; }
-    footer .footer-links a:hover { color: var(--gold); }
-    .disclaimer { color: #555; font-size: 0.75rem; margin-top: 16px; max-width: 600px; margin-left: auto; margin-right: auto; }
-    @media (max-width: 600px) { .related-grid { grid-template-columns: 1fr; } .nav-links { display: none; } }
-  </style>
-</head>
-<body>
-
-<nav>
-  <a href="https://mysmartcents.github.io/" class="nav-logo">Smart<span>Cents</span></a>
-  <ul class="nav-links">
-    <li><a href="https://mysmartcents.github.io/#tools">Tools</a></li>
-    <li><a href="https://mysmartcents.github.io/#blog">Articles</a></li>
-    <li><a href="https://mysmartcents.github.io/#blog">← Back</a></li>
-  </ul>
-  <a href="https://mysmartcents.github.io/#tools" class="nav-cta">Free Tools</a>
-</nav>
-
-<div class="article-wrap">
-  <span class="article-tag">${articleTag}</span>
-  <h1 class="article-title">${articleTitle}</h1>
-  <div class="article-meta">
-    <span>✍️ SmartCents Editorial Team</span>
-    <span>⏱ 8 min read</span>
-    <span>📅 Updated ${new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})}</span>
-  </div>
-
-  <div class="article-body">
-${bodyContent}
-  </div>
-
-  <!-- RELATED ARTICLES -->
-  <div style="margin-top:50px;padding-top:28px;border-top:1px solid #1e1e1e;">
-    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:14px;">More Finance Guides</div>
-    <div class="related-grid">
-      <a href="https://mysmartcents.github.io/articles/passive-income-guide.html" class="related-link">💰 Build Passive Income Online</a>
-      <a href="https://mysmartcents.github.io/articles/best-budgeting-methods.html" class="related-link">📊 Best Budgeting Methods 2026</a>
-      <a href="https://mysmartcents.github.io/articles/emergency-fund-guide.html" class="related-link">🚨 Build an Emergency Fund</a>
-      <a href="https://mysmartcents.github.io/articles/prop-trading-guide.html" class="related-link">📈 Prop Trading Guide 2026</a>
-      <a href="https://mysmartcents.github.io/articles/legal-documents-online.html" class="related-link">⚖️ Legal Documents Online</a>
-      <a href="https://mysmartcents.github.io/articles/passive-income-ideas-2026.html" class="related-link">💡 7 Passive Income Ideas</a>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="logo">Smart<span>Cents</span></div>
-  <p>Free financial tools — no signup required.</p>
-  <div class="footer-links">
-    <a href="https://web.facebook.com/profile.php?id=61577493070318" target="_blank" rel="noopener">Facebook</a>
-    <a href="https://www.instagram.com/mysmartcents/" target="_blank" rel="noopener">Instagram</a>
-    <a href="https://www.pinterest.com/mysmartcents/" target="_blank" rel="noopener">Pinterest</a>
-    <a href="https://medium.com/@smartcents" target="_blank" rel="noopener">Medium</a>
-  </div>
-  <div class="footer-links" style="margin-top:8px;">
-    <a href="https://mysmartcents.github.io/privacy.html">Privacy Policy</a>
-    <a href="https://mysmartcents.github.io/terms.html">Terms of Use</a>
-  </div>
-  <p class="disclaimer">Disclaimer: This article is for informational purposes only. Some links are affiliate links — we may earn a commission at no extra cost to you.</p>
-</footer>
-
-</body>
-</html>`;
-
-  fixedHTMLContent = smartCentsHTML;
-  fixedArticleMeta = {
-    title: articleTitle,
-    desc: origDesc.substring(0, 155),
-    slug: slug,
-    tag: articleTag,
-    url: canonUrl
-  };
-
-  // Show output
   document.getElementById('fix-output').style.display = 'block';
-  document.getElementById('fix-status').textContent = '✅ Article fixed for SmartCents!';
+  document.getElementById('fix-status').textContent = '\u2705 Article fixed for SmartCents!';
   document.getElementById('fix-summary').textContent =
-    `Title: ${articleTitle}\nSlug: ${slug}\nCanonical: ${canonUrl}\nFixed: Nav ✅ | Footer ✅ | Schema ✅ | Twitter Cards ✅ | Breadcrumbs ✅ | Dark Theme ✅`;
+    'Title: ' + articleTitle + '\nSlug: ' + slug + '\nURL: ' + canonUrl +
+    '\nFixed: Nav \u2705 | Footer \u2705 | Schema \u2705 | Twitter Cards \u2705 | Dark Theme \u2705';
 
-  showToast('Article fixed! Copy or download below 🎉');
+  showToast('Article fixed! Download below \uD83C\uDF89');
 }
 
 function copyFixedHTML() {
   if (!fixedHTMLContent) { showToast('Fix an article first!'); return; }
-  navigator.clipboard.writeText(fixedHTMLContent).then(() => showToast('Fixed HTML copied! 📋'));
+  navigator.clipboard.writeText(fixedHTMLContent).then(() => showToast('Fixed HTML copied! \uD83D\uDCCB'));
 }
 
 function downloadFixedHTML() {
@@ -4614,11 +4573,9 @@ function downloadFixedHTML() {
   const blob = new Blob([fixedHTMLContent], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = `${slug}.html`;
-  a.click();
+  a.href = url; a.download = slug + '.html'; a.click();
   URL.revokeObjectURL(url);
-  showToast(`Downloaded: ${slug}.html ⬇️`);
+  showToast('Downloaded: ' + slug + '.html');
 }
 
 function autoFillFromFixed() {
@@ -4626,7 +4583,6 @@ function autoFillFromFixed() {
   document.getElementById('pub-title').value = fixedArticleMeta.title;
   document.getElementById('pub-desc').value = fixedArticleMeta.desc;
   document.getElementById('pub-slug').value = fixedArticleMeta.slug;
-  // Try to match tag
   const tagSel = document.getElementById('pub-tag');
   const tag = fixedArticleMeta.tag;
   for (let i = 0; i < tagSel.options.length; i++) {
@@ -4635,9 +4591,10 @@ function autoFillFromFixed() {
       tagSel.selectedIndex = i; break;
     }
   }
-  showToast('Publish plan auto-filled! ⚡');
+  showToast('Publish plan auto-filled! \u26A1');
   document.getElementById('pub-title').scrollIntoView({behavior:'smooth'});
 }
+
 
 function autoSlug() {
   const title = document.getElementById('pub-title').value;

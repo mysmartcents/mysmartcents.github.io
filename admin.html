@@ -3,6 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script>
+// Kill ALL service workers and caches immediately — runs before anything else
+(function() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(regs) {
+      regs.forEach(function(reg) { reg.unregister(); });
+    });
+  }
+  if ('caches' in window) {
+    caches.keys().then(function(keys) {
+      keys.forEach(function(k) { caches.delete(k); });
+    });
+  }
+})();
+</script>
 <title>SmartCents Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="manifest" href="admin-manifest.json">
@@ -11,7 +29,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SmartCents">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://accounts.google.com/gsi/client" defer></script>
 <style>
 :root {
   --gold: #C9A84C;
@@ -228,7 +246,7 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <div class="status-bar">
   <div class="app-title">Smart<span>Cents</span> <span style="font-size:0.7rem;color:var(--muted);font-weight:400">ADMIN</span></div>
   <div style="display:flex;align-items:center;gap:8px;">
-    <span class="version-badge" id="version-label">v1.0.0</span>
+    <span class="version-badge" id="version-label">v1.33</span>
     <div class="notif-dot"></div>
   </div>
 </div>
@@ -2085,7 +2103,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.31';
+const APP_VERSION = '1.33';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -4592,7 +4610,7 @@ window.addEventListener('load', () => {
   const proxyEl = document.getElementById('blogger-proxy-status');
   if (proxyEl) {
     fetch('https://smartcents-auth.shaheryardesigns.workers.dev/blogger-token', {
-      signal: (()=>{ const c=new AbortController(); setTimeout(()=>c.abort(),8000); return c.signal; })()
+      // signal removed - AbortController handled separately
     })
     .then(r => r.json())
     .then(data => {
@@ -5189,21 +5207,8 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('admin-sw.js', { scope: '/' }).then(reg => {
-    reg.addEventListener('updatefound', () => {
-      const newWorker = reg.installing;
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          document.getElementById('update-bar').classList.add('show');
-        }
-      });
-    });
-  }).catch(() => {}); // silently fail if SW not found
-  navigator.serviceWorker.addEventListener('controllerchange', () => {
-    window.location.reload();
-  });
-}
+// Service worker disabled — was causing version caching issues
+// if ('serviceWorker' in navigator) { ... }
 
 function checkForUpdates() {
   const btn = document.getElementById('update-check-btn');

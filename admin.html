@@ -2085,7 +2085,7 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.30';
+const APP_VERSION = '1.31';
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');
@@ -3565,9 +3565,12 @@ async function postToBloggerFromStudio() {
 async function refreshBloggerToken() {
   // Try Cloudflare proxy first
   try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
     const res = await fetch('https://smartcents-auth.shaheryardesigns.workers.dev/blogger-token', {
-      signal: (()=>{ const c=new AbortController(); setTimeout(()=>c.abort(),8000); return c.signal; })()
+      signal: controller.signal
     });
+    clearTimeout(timer);
     const data = await res.json();
     if (data.access_token) {
       localStorage.setItem('sc_blogger_token', data.access_token);
@@ -5175,14 +5178,14 @@ document.getElementById('sc-article-count').textContent = SC_ARTICLES;
 document.getElementById('medium-article-count').textContent = MEDIUM_PUBLISHED;
 document.getElementById('version-label').textContent = 'v' + APP_VERSION;
 
-// Force clear old service worker cache on version change
+// FORCE UNREGISTER ALL SERVICE WORKERS AND CLEAR ALL CACHES
+// This fixes the v1.0.0 stuck version issue permanently
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(reg => {
-      reg.active && caches.keys().then(keys => {
-        keys.forEach(k => { if (!k.includes(APP_VERSION)) caches.delete(k); });
-      });
-    });
+    regs.forEach(reg => reg.unregister());
+  });
+  caches.keys().then(keys => {
+    keys.forEach(k => caches.delete(k));
   });
 }
 
@@ -5196,7 +5199,7 @@ if ('serviceWorker' in navigator) {
         }
       });
     });
-  });
+  }).catch(() => {}); // silently fail if SW not found
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     window.location.reload();
   });

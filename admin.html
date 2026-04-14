@@ -867,8 +867,24 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       </div>
     </div>
 
-    <!-- STEP 2: RESEARCH LINKS -->
-    <div class="sec-header"><div class="sec-title">Step 2 — Research Competitors</div></div>
+    <!-- STEP 2: AI SEO RESEARCH BUTTON -->
+    <div class="sec-header"><div class="sec-title">Step 2 — Run AI SEO Research</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Tap to auto-generate keyword difficulty, search volume, long-tail keywords, competitor gaps &amp; questions — results auto-fill Step 4 below.</div>
+      <button onclick="runResearchTabSEO()" id="researchRunBtn" style="width:100%;background:var(--gold);color:#080808;border:none;padding:14px;border-radius:10px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;letter-spacing:0.3px;">🔬 Run SEO Research</button>
+      <div id="res-ai-results" style="display:none;margin-top:12px;">
+        <div id="res-ai-status" style="font-size:0.75rem;font-family:'DM Mono',monospace;color:var(--gold);margin-bottom:10px;line-height:1.7;"></div>
+        <div id="res-ai-metrics" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;"></div>
+        <div id="res-ai-longtail" style="display:none;margin-bottom:8px;">
+          <div style="font-size:0.68rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:5px;">LONG-TAIL KEYWORDS FOUND</div>
+          <div id="res-ai-longtail-list" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+        </div>
+        <button onclick="applyResearchAIData()" style="width:100%;background:rgba(76,175,125,0.15);border:1px solid rgba(76,175,125,0.3);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;">📥 Apply to Research Data (Step 4)</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: RESEARCH LINKS -->
+    <div class="sec-header"><div class="sec-title">Step 3 — Browse Competitors Manually</div></div>
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
       <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Open these → note what competitors cover → paste your findings in Step 3 below</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
@@ -883,8 +899,8 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       </div>
     </div>
 
-    <!-- STEP 3: PASTE SEO DATA -->
-    <div class="sec-header"><div class="sec-title">Step 3 — Paste Your Research Data</div></div>
+    <!-- STEP 4: PASTE SEO DATA -->
+    <div class="sec-header"><div class="sec-title">Step 4 — Paste Your Research Data</div></div>
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;">
       <div style="font-size:0.72rem;color:var(--muted);font-family:'DM Mono',monospace;">This data gets injected into your Claude prompt — the more you fill in, the better the output</div>
 
@@ -929,8 +945,8 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
       <div id="res-data-summary" style="display:none;background:rgba(76,175,125,0.08);border:1px solid rgba(76,175,125,0.2);border-radius:8px;padding:10px;font-size:0.7rem;color:var(--green);font-family:'DM Mono',monospace;line-height:1.7;"></div>
     </div>
 
-    <!-- STEP 4: GENERATE CLAUDE PROMPT -->
-    <div class="sec-header"><div class="sec-title">Step 4 — Generate Claude Prompt</div></div>
+    <!-- STEP 5: GENERATE CLAUDE PROMPT -->
+    <div class="sec-header"><div class="sec-title">Step 5 — Generate Claude Prompt</div></div>
     <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
       <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">All your research data gets injected → Claude gets a full SEO brief → outputs ready-to-publish content</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
@@ -1064,11 +1080,74 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <div class="tab-content" id="tab-seo">
   <div style="padding:20px 16px 8px;">
     <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">SEO Tools</div>
-    <div style="font-size:0.8rem; color:var(--muted);">One-tap full submission — no browser tabs needed</div>
+    <div style="font-size:0.8rem; color:var(--muted);">Keyword research + one-tap submission</div>
+  </div>
+
+  <!-- SEO RESEARCH SECTION -->
+  <div class="section">
+    <div class="sec-header"><div class="sec-title">🔬 SEO Keyword Research</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:4px;">
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Enter a keyword to auto-research difficulty, search volume, long-tail variants, competitor gaps &amp; questions — results load into the Research tab ready to generate content.</div>
+      <input id="seo-research-keyword" type="text" placeholder="e.g. best credit cards india 2026" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:8px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <select id="seo-research-country" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
+          <option value="us">🇺🇸 United States</option>
+          <option value="in">🇮🇳 India</option>
+          <option value="uk">🇬🇧 United Kingdom</option>
+          <option value="global">🌍 Global</option>
+          <option value="ca">🇨🇦 Canada</option>
+          <option value="au">🇦🇺 Australia</option>
+        </select>
+        <select id="seo-research-intent" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
+          <option value="commercial">💰 Commercial</option>
+          <option value="informational">📚 Informational</option>
+          <option value="transactional">🛒 Transactional</option>
+          <option value="navigational">🧭 Navigational</option>
+        </select>
+      </div>
+      <button onclick="runSeoResearch()" id="seoResearchBtn" style="width:100%;background:var(--gold);color:#080808;border:none;padding:13px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;letter-spacing:0.3px;">
+        🔬 Run SEO Research
+      </button>
+    </div>
+
+    <!-- RESEARCH RESULTS PANEL -->
+    <div id="seo-research-results" style="display:none;background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:4px;">
+
+      <!-- STATUS BAR -->
+      <div id="seo-research-status" style="font-size:0.78rem;font-family:'DM Mono',monospace;color:var(--gold);margin-bottom:12px;line-height:1.7;"></div>
+
+      <!-- KEYWORD METRICS ROW -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;" id="seo-metrics-grid"></div>
+
+      <!-- LONG-TAIL KEYWORDS -->
+      <div id="seo-longtail-block" style="display:none;margin-bottom:12px;">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Long-Tail Keywords</div>
+        <div id="seo-longtail-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      </div>
+
+      <!-- COMPETITOR GAPS -->
+      <div id="seo-gaps-block" style="display:none;margin-bottom:12px;">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Competitor Gaps to Cover</div>
+        <div id="seo-gaps-list" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.8;"></div>
+      </div>
+
+      <!-- QUESTIONS -->
+      <div id="seo-questions-block" style="display:none;margin-bottom:14px;">
+        <div style="font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Questions People Ask</div>
+        <div id="seo-questions-list" style="font-size:0.78rem;color:var(--text);font-family:'DM Mono',monospace;line-height:1.8;"></div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="injectResearchData()" style="background:rgba(76,175,125,0.15);border:1px solid rgba(76,175,125,0.3);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">📥 Load into Research Tab</button>
+        <button onclick="goToResearchAndGenerate()" style="background:var(--gold);color:#080808;border:none;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:800;cursor:pointer;">🚀 Generate Content →</button>
+      </div>
+    </div>
   </div>
 
   <!-- ONE-TAP FULL SEO BUTTON -->
   <div class="section">
+    <div class="sec-header"><div class="sec-title">📡 Site Submission</div></div>
     <button onclick="runFullSEO()" id="seoRunBtn" style="width:100%; background:var(--gold); color:var(--dark); border:none; padding:16px; border-radius:16px; font-weight:800; font-size:1rem; cursor:pointer; letter-spacing:0.5px;">
       🚀 Run Full SEO Submission
     </button>
@@ -1436,6 +1515,172 @@ async function pingUrlSEO(task) {
   }
 }
 
+// ── SEO KEYWORD RESEARCH ──────────────────────────────────────────────────
+let seoResearchData = {};
+
+async function runSeoResearch() {
+  const kw      = document.getElementById('seo-research-keyword').value.trim();
+  const country = document.getElementById('seo-research-country').value;
+  const intent  = document.getElementById('seo-research-intent').value;
+  if (!kw) { showToast('Enter a keyword first!'); return; }
+
+  const btn = document.getElementById('seoResearchBtn');
+  btn.textContent = '⏳ Researching...';
+  btn.disabled = true;
+
+  const resultsPanel = document.getElementById('seo-research-results');
+  const statusEl     = document.getElementById('seo-research-status');
+  resultsPanel.style.display = 'block';
+  statusEl.textContent = '🔍 Analysing keyword with AI…';
+
+  document.getElementById('seo-metrics-grid').innerHTML     = '';
+  document.getElementById('seo-longtail-block').style.display  = 'none';
+  document.getElementById('seo-gaps-block').style.display      = 'none';
+  document.getElementById('seo-questions-block').style.display = 'none';
+
+  const gl = country === 'global' ? 'US/UK/Global' : country.toUpperCase();
+  const intentMap = {
+    commercial:'Commercial investigation — user comparing options (best/top/review)',
+    informational:'Informational — user wants to learn (how/what/why)',
+    transactional:'Transactional — user ready to act (apply/buy/get)',
+    navigational:'Navigational — user looking for specific tool/brand'
+  };
+
+  const prompt =
+    'You are an expert SEO analyst. Analyse this keyword and return ONLY valid JSON, no markdown, no explanation.\n\n' +
+    'KEYWORD: ' + kw + '\nCOUNTRY: ' + gl + '\nSEARCH INTENT: ' + intentMap[intent] + '\n\n' +
+    'Return this exact JSON structure:\n' +
+    '{\n' +
+    '  "difficulty": "Easy|Medium|Hard",\n' +
+    '  "monthly_searches": "X,XXX - X,XXX",\n' +
+    '  "ranking_timeline": "X-X months",\n' +
+    '  "long_tail_keywords": ["kw1","kw2","kw3","kw4","kw5","kw6","kw7","kw8","kw9","kw10"],\n' +
+    '  "competitor_gaps": ["gap1","gap2","gap3","gap4","gap5"],\n' +
+    '  "questions": ["q1","q2","q3","q4","q5","q6","q7","q8"],\n' +
+    '  "hashtags": ["#tag1","#tag2","#tag3","#tag4","#tag5","#tag6","#tag7","#tag8","#tag9","#tag10","#tag11","#tag12","#tag13","#tag14","#tag15"]\n' +
+    '}';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content?.map(b => b.text || '').join('') || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const json = JSON.parse(clean);
+
+    seoResearchData = { kw, country, intent, ...json };
+
+    // Render metrics
+    const diff   = json.difficulty || '—';
+    const vol    = json.monthly_searches || '—';
+    const time   = json.ranking_timeline || '—';
+    const diffColor = diff === 'Easy' ? 'var(--green)' : diff === 'Hard' ? 'var(--red)' : 'var(--gold)';
+    document.getElementById('seo-metrics-grid').innerHTML =
+      metricCard('Difficulty', diff, diffColor) +
+      metricCard('Monthly Searches', vol, 'var(--text)') +
+      metricCard('Ranking Time', time, 'var(--muted)');
+
+    // Long-tail
+    if (json.long_tail_keywords?.length) {
+      document.getElementById('seo-longtail-block').style.display = 'block';
+      document.getElementById('seo-longtail-list').innerHTML =
+        json.long_tail_keywords.map(k =>
+          '<span style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:4px 9px;border-radius:6px;font-size:0.72rem;font-family:\'DM Mono\',monospace;cursor:pointer;" onclick="copyText(\''+k.replace(/'/g,"\\'")+'\')" title="Click to copy">'+k+'</span>'
+        ).join('');
+    }
+
+    // Gaps
+    if (json.competitor_gaps?.length) {
+      document.getElementById('seo-gaps-block').style.display = 'block';
+      document.getElementById('seo-gaps-list').innerHTML =
+        json.competitor_gaps.map(g => '• ' + g).join('<br>');
+    }
+
+    // Questions
+    if (json.questions?.length) {
+      document.getElementById('seo-questions-block').style.display = 'block';
+      document.getElementById('seo-questions-list').innerHTML =
+        json.questions.map(q => '❓ ' + q).join('<br>');
+    }
+
+    statusEl.innerHTML = '✅ Research complete for <strong style="color:var(--gold);">' + kw + '</strong> — tap "Load into Research Tab" then generate content.';
+
+  } catch(e) {
+    statusEl.textContent = '❌ Research failed: ' + (e.message || 'Unknown error') + '. Try again.';
+  }
+
+  btn.textContent = '🔬 Run SEO Research';
+  btn.disabled = false;
+}
+
+function metricCard(label, value, color) {
+  return '<div style="background:var(--dark3);border:1px solid var(--dark5);border-radius:10px;padding:10px;text-align:center;">' +
+    '<div style="font-size:0.68rem;color:var(--muted);font-family:\'DM Mono\',monospace;margin-bottom:4px;">' + label + '</div>' +
+    '<div style="font-size:0.82rem;font-weight:700;color:' + color + ';">' + value + '</div>' +
+    '</div>';
+}
+
+function copyText(t) {
+  navigator.clipboard.writeText(t).then(() => showToast('Copied: ' + t));
+}
+
+function injectResearchData() {
+  const d = seoResearchData;
+  if (!d.kw) { showToast('Run research first!'); return; }
+
+  // Set keyword/country/intent in Research tab
+  const kwEl      = document.getElementById('research-keyword');
+  const countryEl = document.getElementById('research-country');
+  const intentEl  = document.getElementById('research-intent');
+  if (kwEl)      kwEl.value      = d.kw;
+  if (countryEl) countryEl.value = d.country;
+  if (intentEl)  intentEl.value  = d.intent;
+
+  // Fill long-tail keywords
+  const kwField = document.getElementById('res-keywords');
+  if (kwField && d.long_tail_keywords?.length) {
+    kwField.value = d.long_tail_keywords.join('\n');
+  }
+
+  // Fill competitor gaps
+  const compField = document.getElementById('res-competitors');
+  if (compField && d.competitor_gaps?.length) {
+    compField.value = d.competitor_gaps.join('\n');
+  }
+
+  // Fill questions
+  const questField = document.getElementById('res-questions');
+  if (questField && d.questions?.length) {
+    questField.value = d.questions.join('\n');
+  }
+
+  // Fill hashtags
+  const hashField = document.getElementById('res-hashtags');
+  if (hashField && d.hashtags?.length) {
+    hashField.value = d.hashtags.join(' ');
+  }
+
+  showToast('✅ Research data loaded into Research tab!');
+}
+
+function goToResearchAndGenerate() {
+  injectResearchData();
+  // Switch to research tab
+  const resNav = document.querySelector('[onclick*="switchTab(\'research\'"]') ||
+    Array.from(document.querySelectorAll('.nav-item')).find(el => el.textContent.includes('Research'));
+  if (resNav) resNav.click();
+  setTimeout(() => openClaudeResearch('all'), 300);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 async function runFullSEO() {
   const btn = document.getElementById('seoRunBtn');
   const section = document.getElementById('seoResultsSection');
@@ -1610,7 +1855,126 @@ async function installApp() {
 }
 
 // PWA & VERSION
-const APP_VERSION = '1.39';
+const APP_VERSION = '1.44';
+
+// ── RESEARCH TAB — AI SEO RESEARCH ───────────────────────────────────────────
+let resAIData = {};
+
+async function runResearchTabSEO() {
+  const kw      = document.getElementById('research-keyword').value.trim();
+  const country = document.getElementById('research-country').value;
+  const intent  = document.getElementById('research-intent').value;
+  if (!kw) { showToast('Enter a keyword in Step 1 first!'); return; }
+
+  const btn = document.getElementById('researchRunBtn');
+  btn.textContent = '⏳ Researching…';
+  btn.disabled = true;
+
+  const panel = document.getElementById('res-ai-results');
+  const statusEl = document.getElementById('res-ai-status');
+  panel.style.display = 'block';
+  statusEl.textContent = '🔍 AI is analysing your keyword…';
+  document.getElementById('res-ai-metrics').innerHTML = '';
+  document.getElementById('res-ai-longtail').style.display = 'none';
+
+  const gl = country === 'global' ? 'US/UK/Global' : country.toUpperCase();
+  const intentMap = {
+    informational: 'Informational — user wants to learn',
+    commercial:    'Commercial — user comparing options',
+    transactional: 'Transactional — user ready to act',
+    navigational:  'Navigational — user looking for brand/tool'
+  };
+
+  const prompt =
+    'You are an expert SEO analyst. Analyse this keyword and return ONLY valid JSON — no markdown, no explanation, no backticks.\n\n' +
+    'KEYWORD: ' + kw + '\nCOUNTRY: ' + gl + '\nINTENT: ' + (intentMap[intent] || intent) + '\n\n' +
+    'Return exactly this JSON:\n' +
+    '{"difficulty":"Easy|Medium|Hard","monthly_searches":"X,XXX - X,XXX","ranking_timeline":"X-X months",' +
+    '"long_tail_keywords":["kw1","kw2","kw3","kw4","kw5","kw6","kw7","kw8","kw9","kw10"],' +
+    '"competitor_gaps":["gap1","gap2","gap3","gap4","gap5"],' +
+    '"questions":["q1","q2","q3","q4","q5","q6","q7","q8"],' +
+    '"hashtags":["#tag1","#tag2","#tag3","#tag4","#tag5","#tag6","#tag7","#tag8","#tag9","#tag10","#tag11","#tag12","#tag13","#tag14","#tag15"]}';
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const raw   = (data.content || []).map(b => b.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const json  = JSON.parse(clean);
+    resAIData   = { kw, country, intent, ...json };
+
+    // Metrics row
+    const diff      = json.difficulty || '—';
+    const diffColor = diff === 'Easy' ? 'var(--green)' : diff === 'Hard' ? 'var(--red)' : 'var(--gold)';
+    document.getElementById('res-ai-metrics').innerHTML =
+      resMetricCard('Difficulty',      diff,                    diffColor) +
+      resMetricCard('Monthly Searches', json.monthly_searches || '—', 'var(--text)') +
+      resMetricCard('Ranking Time',    json.ranking_timeline || '—', 'var(--muted)');
+
+    // Long-tail chips
+    if (json.long_tail_keywords?.length) {
+      document.getElementById('res-ai-longtail').style.display = 'block';
+      document.getElementById('res-ai-longtail-list').innerHTML =
+        json.long_tail_keywords.map(k =>
+          '<span style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);' +
+          'padding:4px 8px;border-radius:6px;font-size:0.7rem;font-family:\'DM Mono\',monospace;cursor:pointer;" ' +
+          'onclick="navigator.clipboard.writeText(\'' + k.replace(/'/g,"\\'") + '\');showToast(\'Copied!\')" title="Click to copy">' + k + '</span>'
+        ).join('');
+    }
+
+    statusEl.innerHTML =
+      '✅ Research done for <strong style="color:var(--gold);">' + kw + '</strong> — tap Apply below to fill Step 4 automatically.';
+
+  } catch(e) {
+    statusEl.textContent = '❌ Research failed: ' + (e.message || 'Unknown error') + '. Check keyword and try again.';
+  }
+
+  btn.textContent = '🔬 Run SEO Research';
+  btn.disabled = false;
+}
+
+function resMetricCard(label, value, color) {
+  return '<div style="background:var(--dark3);border:1px solid var(--dark5);border-radius:10px;padding:10px;text-align:center;">' +
+    '<div style="font-size:0.65rem;color:var(--muted);font-family:\'DM Mono\',monospace;margin-bottom:4px;">' + label + '</div>' +
+    '<div style="font-size:0.8rem;font-weight:700;color:' + color + ';">' + value + '</div>' +
+    '</div>';
+}
+
+function applyResearchAIData() {
+  const d = resAIData;
+  if (!d.kw) { showToast('Run SEO Research first!'); return; }
+
+  if (d.long_tail_keywords?.length) {
+    const f = document.getElementById('res-keywords');
+    if (f) f.value = d.long_tail_keywords.join('\n');
+    showResData('keywords');
+  }
+  if (d.competitor_gaps?.length) {
+    const f = document.getElementById('res-competitors');
+    if (f) f.value = d.competitor_gaps.join('\n');
+  }
+  if (d.questions?.length) {
+    const f = document.getElementById('res-questions');
+    if (f) f.value = d.questions.join('\n');
+  }
+  if (d.hashtags?.length) {
+    const f = document.getElementById('res-hashtags');
+    if (f) f.value = d.hashtags.join(' ');
+  }
+  showToast('✅ Research data applied to Step 4!');
+  // Flash the data-ready button
+  const readyBtn = document.querySelector('[onclick="showResDataSummary()"]');
+  if (readyBtn) { readyBtn.style.background = 'rgba(76,175,125,0.3)'; setTimeout(() => readyBtn.style.background = '', 1500); }
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 // GOOGLE DRIVE SYNC
 const GDRIVE_CLIENT_ID = ['182976820422-mk4mt230b4r2g542cuiosno45lntr12t','.apps.googleusercontent.com'].join('');

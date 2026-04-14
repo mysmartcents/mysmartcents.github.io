@@ -818,100 +818,94 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 <!-- RESEARCH TAB -->
 <div class="tab-content" id="tab-research">
   <div style="padding:16px 16px 0">
-    <div style="font-size:1.4rem; font-weight:800; margin-bottom:4px;">🔬 SEO Research</div>
-    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:16px;">Research keywords, competitors & trends — US/UK perspective</div>
+    <div style="font-size:1.4rem;font-weight:800;margin-bottom:4px;">🔬 SEO Research</div>
+    <div style="font-size:0.8rem;color:var(--muted);margin-bottom:16px;">Research → Build prompt → Open Claude → Get all platform content</div>
   </div>
 
   <div class="section">
 
-    <!-- KEYWORD SEARCH -->
-    <div class="sec-header"><div class="sec-title">Keyword Research</div></div>
-    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
-      <input id="research-keyword" type="text" placeholder="Enter keyword (e.g. loan calculator)" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
+    <!-- STEP 1: KEYWORD + SETTINGS -->
+    <div class="sec-header"><div class="sec-title">Step 1 — Enter Keyword</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;display:flex;flex-direction:column;gap:10px;">
+      <input id="research-keyword" type="text" placeholder="e.g. best credit cards in India 2026" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace;">TARGET COUNTRY</div>
+          <select id="research-country" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
+            <option value="us">🇺🇸 United States</option>
+            <option value="gb">🇬🇧 United Kingdom</option>
+            <option value="au">🇦🇺 Australia</option>
+            <option value="ca">🇨🇦 Canada</option>
+            <option value="in">🇮🇳 India</option>
+            <option value="pk">🇵🇰 Pakistan</option>
+            <option value="ae">🇦🇪 UAE</option>
+            <option value="global">🌍 Global</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace;">SEARCH INTENT</div>
+          <select id="research-intent" style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:9px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
+            <option value="informational">Informational (How/What/Why)</option>
+            <option value="commercial">Commercial (Best/Top/Compare)</option>
+            <option value="transactional">Transactional (Buy/Apply/Get)</option>
+            <option value="navigational">Navigational (Brand/Tool)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick keyword chips -->
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        <button onclick="setResearchKw('best credit cards india 2026','in','commercial')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">💳 credit cards india</button>
+        <button onclick="setResearchKw('best stock trading platform for beginners 2026','us','commercial')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">📈 stock trading</button>
+        <button onclick="setResearchKw('how to build passive income online 2026','us','informational')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">💰 passive income</button>
+        <button onclick="setResearchKw('best travel insurance for international trips 2026','global','commercial')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">✈️ travel insurance</button>
+        <button onclick="setResearchKw('business partnership agreement online','us','transactional')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">⚖️ legal documents</button>
+        <button onclick="setResearchKw('best life insurance india 2026','in','commercial')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">🛡️ life insurance india</button>
+        <button onclick="setResearchKw('how to send money internationally cheapest','global','informational')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">💸 money transfer</button>
+        <button onclick="setResearchKw('prop trading funded account guide 2026','us','informational')" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--muted);padding:5px 10px;border-radius:6px;font-size:0.72rem;cursor:pointer;font-family:'Syne',sans-serif;">📊 prop trading</button>
+      </div>
+    </div>
+
+    <!-- STEP 2: RESEARCH LINKS -->
+    <div class="sec-header"><div class="sec-title">Step 2 — Research Competitors</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">Open these to manually check what ranks and what competitors miss</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button onclick="openResearch('google')" style="background:rgba(66,133,244,0.1);border:1px solid rgba(66,133,244,0.2);color:#4285F4;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔍 Google Page 1</button>
+        <button onclick="openResearch('trends')" style="background:rgba(234,67,53,0.1);border:1px solid rgba(234,67,53,0.2);color:#EA4335;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📊 Google Trends</button>
+        <button onclick="openResearch('reddit')" style="background:rgba(255,69,0,0.1);border:1px solid rgba(255,69,0,0.2);color:#FF4500;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔴 Reddit</button>
+        <button onclick="openResearch('quora')" style="background:rgba(185,43,39,0.1);border:1px solid rgba(185,43,39,0.2);color:#B92B27;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🟠 Quora</button>
+        <button onclick="openResearch('pinterest')" style="background:rgba(230,0,35,0.1);border:1px solid rgba(230,0,35,0.2);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📌 Pinterest</button>
+        <button onclick="openResearch('youtube')" style="background:rgba(255,0,0,0.1);border:1px solid rgba(255,0,0,0.2);color:#FF0000;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">▶️ YouTube</button>
+        <button onclick="openResearch('rank')" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📈 Check My Rank</button>
+        <button onclick="openResearch('bing')" style="background:rgba(0,120,212,0.1);border:1px solid rgba(0,120,212,0.2);color:#0078D4;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔵 Bing Page 1</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: GENERATE CLAUDE PROMPT -->
+    <div class="sec-header"><div class="sec-title">Step 3 — Generate Claude Prompt</div></div>
+    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:12px;">
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:10px;font-family:'DM Mono',monospace;">No API key needed — generates full SEO research prompt → copies → opens Claude</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
-        <select id="research-country" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
-          <option value="us">🇺🇸 United States</option>
-          <option value="gb">🇬🇧 United Kingdom</option>
-          <option value="au">🇦🇺 Australia</option>
-          <option value="ca">🇨🇦 Canada</option>
-          <option value="pk">🇵🇰 Pakistan</option>
-        </select>
-        <select id="research-type" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;outline:none;">
-          <option value="search">Google Search</option>
-          <option value="trends">Google Trends</option>
-          <option value="questions">People Also Ask</option>
-          <option value="reddit">Reddit</option>
-          <option value="quora">Quora</option>
-          <option value="youtube">YouTube</option>
-        </select>
+        <button onclick="openClaudeResearch('github')" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔵 SmartCents Article</button>
+        <button onclick="openClaudeResearch('blogger')" style="background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.3);color:#FF6B00;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🟠 Blogger Post</button>
+        <button onclick="openClaudeResearch('facebook')" style="background:rgba(24,119,242,0.15);border:1px solid rgba(24,119,242,0.3);color:#4A9EF5;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📘 Facebook Post</button>
+        <button onclick="openClaudeResearch('instagram')" style="background:rgba(225,48,108,0.15);border:1px solid rgba(225,48,108,0.3);color:#E1306C;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📸 Instagram</button>
+        <button onclick="openClaudeResearch('pinterest')" style="background:rgba(230,0,35,0.15);border:1px solid rgba(230,0,35,0.3);color:#E60023;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📌 Pinterest</button>
+        <button onclick="openClaudeResearch('medium')" style="background:rgba(0,171,108,0.15);border:1px solid rgba(0,171,108,0.3);color:#00ab6c;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📝 Medium</button>
       </div>
-      <button onclick="doResearch()" style="width:100%;background:var(--gold);color:#080808;border:none;padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;">🔍 Research This Keyword</button>
+      <button onclick="openClaudeResearch('all')" style="width:100%;background:var(--gold);color:#080808;border:none;padding:13px;border-radius:10px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;">🚀 Open Claude — ALL Platforms at Once</button>
+      <div id="research-copy-status" style="font-size:0.72rem;color:var(--green);font-family:'DM Mono',monospace;text-align:center;margin-top:8px;display:none;">✅ Prompt copied! Paste in Claude with Ctrl+V</div>
     </div>
 
-    <!-- QUICK NICHE KEYWORDS -->
-    <div class="sec-header"><div class="sec-title">Quick Niche Keywords</div></div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
-      <button onclick="quickSearch('loan calculator free')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🏠 loan calculator</button>
-      <button onclick="quickSearch('budget planner free')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">📊 budget planner</button>
-      <button onclick="quickSearch('savings tracker app')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🎯 savings tracker</button>
-      <button onclick="quickSearch('best travel insurance 2026')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">✈️ travel insurance</button>
-      <button onclick="quickSearch('how to send money internationally')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">💸 money transfer</button>
-      <button onclick="quickSearch('how to build passive income')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">💰 passive income</button>
-      <button onclick="quickSearch('budgeting methods save money')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">📈 budgeting tips</button>
-      <button onclick="quickSearch('how to freelance on fiverr')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🎨 fiverr guide</button>
-      <button onclick="quickSearch('personal finance tips 2026')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">💡 finance tips</button>
-      <button onclick="quickSearch('mortgage calculator monthly payment')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🏡 mortgage</button>
-      <button onclick="quickSearch('how to save money fast')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">💵 save money</button>
-      <button onclick="quickSearch('debt free journey tips')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:7px 12px;border-radius:8px;font-size:0.75rem;cursor:pointer;font-family:'Syne',sans-serif;">🆓 debt free</button>
-    </div>
-
-    <!-- COMPETITOR CHECK -->
-    <div class="sec-header"><div class="sec-title">Competitor & Rank Checker</div></div>
-    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Check if SmartCents ranks for a keyword on Google US</div>
-      <input id="rank-keyword" type="text" placeholder="Keyword to check ranking..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button onclick="checkRank()" style="background:rgba(74,158,245,0.15);border:1px solid rgba(74,158,245,0.3);color:var(--blue);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">📊 Check Google Rank</button>
-        <button onclick="checkCompetitors()" style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer;">🏆 See Competitors</button>
-      </div>
-    </div>
-
-    <!-- TRENDING FINANCE TOPICS -->
-    <div class="sec-header"><div class="sec-title">Trending Finance Topics</div></div>
+    <!-- QUICK TOOLS -->
+    <div class="sec-header"><div class="sec-title">Quick Research Tools</div></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-      <button onclick="openTrends('personal finance')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">📈 Personal Finance Trends</button>
-      <button onclick="openTrends('loan calculator')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">🏠 Loan Calculator Trends</button>
-      <button onclick="openTrends('budget planner')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">📊 Budget Planner Trends</button>
-      <button onclick="openTrends('travel insurance')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">✈️ Travel Insurance Trends</button>
-      <button onclick="openTrends('passive income')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">💰 Passive Income Trends</button>
-      <button onclick="openTrends('save money')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;text-align:left;">💵 Save Money Trends</button>
-    </div>
-
-    <!-- AUDIENCE QUESTIONS -->
-    <div class="sec-header"><div class="sec-title">What Your Audience Asks</div></div>
-    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">See real questions people ask on Reddit & Quora</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button onclick="openRedditFinance()" style="background:rgba(255,69,0,0.1);border:1px solid rgba(255,69,0,0.2);color:#FF4500;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔴 Reddit Finance</button>
-        <button onclick="openQuoraFinance()" style="background:rgba(185,43,39,0.1);border:1px solid rgba(185,43,39,0.2);color:#B92B27;padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🟠 Quora Finance</button>
-        <button onclick="openAnswerThePublic()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">💬 Answer The Public</button>
-        <button onclick="openKeywordSurfer()" style="background:rgba(74,158,245,0.1);border:1px solid rgba(74,158,245,0.2);color:var(--blue);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🔍 Keyword Research</button>
-      </div>
-    </div>
-
-    <!-- GENERATE ARTICLE FROM RESEARCH -->
-    <div class="sec-header"><div class="sec-title">Generate Article from Research</div></div>
-    <div style="background:var(--dark2);border:1px solid var(--dark4);border-radius:14px;padding:14px;margin-bottom:14px;">
-      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">After researching, generate an SEO-optimized article brief</div>
-      <input id="article-keyword" type="text" placeholder="Target keyword for article..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
-      <input id="article-competitors" type="text" placeholder="Top competitor URLs (optional)..." style="width:100%;background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px 12px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.85rem;outline:none;margin-bottom:10px;">
-      <button onclick="generateArticleBrief()" style="width:100%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;cursor:pointer;margin-bottom:10px;">📝 Generate Article Brief</button>
-      <div id="article-brief-output" style="display:none;background:var(--dark3);border:1px solid var(--dark5);border-radius:8px;padding:12px;font-size:0.78rem;font-family:'DM Mono',monospace;line-height:1.6;color:var(--text);white-space:pre-wrap;margin-bottom:8px;"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;" id="article-brief-actions" style="display:none;">
-        <button onclick="copyArticleBrief()" style="background:var(--dark3);border:1px solid var(--dark5);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📋 Copy</button>
-        <button onclick="openClaudeWithBrief()" style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">🤖 Claude</button>
-        <button onclick="saveBriefToNotes()" style="background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:var(--green);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;">📓 Save</button>
-      </div>
+      <button onclick="window.open('https://trends.google.com/trending?geo=US','_blank')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">🔥 Trending Now</button>
+      <button onclick="window.open('https://answerthepublic.com','_blank')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">💬 AnswerThePublic</button>
+      <button onclick="window.open('https://www.reddit.com/r/personalfinance/top/?t=week','_blank')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">🔴 r/personalfinance</button>
+      <button onclick="window.open('https://www.quora.com/topic/Personal-Finance','_blank')" style="background:var(--dark2);border:1px solid var(--dark4);color:var(--text);padding:10px;border-radius:8px;font-family:'Syne',sans-serif;font-size:0.75rem;cursor:pointer;text-align:left;">🟠 Quora Finance</button>
     </div>
 
   </div>
@@ -1318,8 +1312,20 @@ html, body { background:var(--dark); color:var(--text); font-family:'Syne',sans-
 function switchTab(name, el) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  el.classList.add('active');
+  const tab = document.getElementById('tab-' + name);
+  if (tab) tab.classList.add('active');
+  // Find nav item safely - works even if el reference lost on mobile
+  if (el) {
+    el.classList.add('active');
+  } else {
+    document.querySelectorAll('.nav-item').forEach(n => {
+      if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + name + "'")) {
+        n.classList.add('active');
+      }
+    });
+  }
+  // Scroll page to top on tab change (fixes mobile scroll position issue)
+  window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
 function copyLink(url) {
@@ -1730,129 +1736,124 @@ async function gdriveLoad() {
 // RESEARCH FUNCTIONS
 const countryParams = { us:'gl=us&hl=en', gb:'gl=gb&hl=en', au:'gl=au&hl=en', ca:'gl=ca&hl=en', pk:'gl=pk&hl=en' };
 
-function doResearch() {
+// ── RESEARCH TAB FUNCTIONS ───────────────────────────────────
+let researchKeyword = '';
+let researchCountry = 'us';
+let researchIntent  = 'informational';
+
+function setResearchKw(kw, country, intent) {
+  document.getElementById('research-keyword').value = kw;
+  document.getElementById('research-country').value = country;
+  document.getElementById('research-intent').value = intent;
+  showToast('Keyword set!');
+}
+
+function openResearch(type) {
   const kw = document.getElementById('research-keyword').value.trim();
   if (!kw) { showToast('Enter a keyword first!'); return; }
   const country = document.getElementById('research-country').value;
-  const type = document.getElementById('research-type').value;
-  const params = countryParams[country] || 'gl=us&hl=en';
-  const encoded = encodeURIComponent(kw);
-
+  const gl = country === 'global' ? 'us' : country;
+  const enc = encodeURIComponent(kw);
   const urls = {
-    search: `https://www.google.com/search?q=${encoded}&${params}&num=10`,
-    trends: `https://trends.google.com/trends/explore?q=${encoded}&geo=${country.toUpperCase()}&cat=7`,
-    questions: `https://www.google.com/search?q=${encoded}+site:quora.com+OR+site:reddit.com&${params}`,
-    reddit: `https://www.reddit.com/search/?q=${encoded}&sort=top&t=month`,
-    quora: `https://www.quora.com/search?q=${encoded}`,
-    youtube: `https://www.youtube.com/results?search_query=${encoded}`
+    google:   'https://www.google.com/search?q=' + enc + '&gl=' + gl + '&hl=en&num=10',
+    trends:   'https://trends.google.com/trends/explore?q=' + enc + '&geo=' + gl.toUpperCase() + '&cat=7',
+    reddit:   'https://www.reddit.com/search/?q=' + enc + '&sort=top&t=month',
+    quora:    'https://www.quora.com/search?q=' + enc,
+    pinterest:'https://www.pinterest.com/search/pins/?q=' + enc,
+    youtube:  'https://www.youtube.com/results?search_query=' + enc,
+    rank:     'https://www.google.com/search?q=' + encodeURIComponent(kw + ' site:mysmartcents.github.io') + '&gl=us&hl=en',
+    bing:     'https://www.bing.com/search?q=' + enc + '&cc=' + gl
+  };
+  window.open(urls[type] || urls.google, '_blank');
+}
+
+// Keep old function names working
+function doResearch() { openResearch('google'); }
+function quickSearch(kw) { document.getElementById('research-keyword').value = kw; }
+function checkRank() { openResearch('rank'); }
+function checkCompetitors() { openResearch('google'); }
+function openTrends(kw) { document.getElementById('research-keyword').value = kw; openResearch('trends'); }
+function openRedditFinance() { window.open('https://www.reddit.com/r/personalfinance/top/?t=week','_blank'); }
+function openQuoraFinance() { window.open('https://www.quora.com/topic/Personal-Finance','_blank'); }
+function openAnswerThePublic() { window.open('https://answerthepublic.com/','_blank'); }
+function openKeywordSurfer() { window.open('https://keywordsurfer.com/','_blank'); }
+function generateArticleBrief() { openClaudeResearch('all'); }
+function copyArticleBrief() { openClaudeResearch('all'); }
+function openClaudeWithBrief() { openClaudeResearch('all'); }
+function showPipelineTab() {}
+function pipelineLog() {}
+function setPipelineProgress() {}
+async function callGeminiAPI() {}
+async function runResearchPipeline() { openClaudeResearch('all'); }
+function openClaudeWithResearch(p) { openClaudeResearch(p); }
+
+function openClaudeResearch(platform) {
+  const kw = document.getElementById('research-keyword').value.trim();
+  if (!kw) { showToast('Enter a keyword first!'); return; }
+  const country = document.getElementById('research-country').value;
+  const intent  = document.getElementById('research-intent').value;
+  const site    = 'https://mysmartcents.github.io';
+  const slug    = kw.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+$/,'');
+  const gl      = country === 'global' ? 'US/UK/Global' : country.toUpperCase();
+
+  const intentDesc = {
+    informational: 'informational (how/what/why — user wants to learn)',
+    commercial:    'commercial investigation (best/top/compare — user researching to buy)',
+    transactional: 'transactional (user ready to apply/buy/sign up)',
+    navigational:  'navigational (user looking for a specific tool or brand)'
+  }[intent];
+
+  const affLinks = [
+    'Zacks Trade ($259 EPC avg): https://www.jdoqocy.com/click-101713917-17112428',
+    'Instant Funding ($126 EPC avg): https://www.jdoqocy.com/click-101713917-17144677',
+    'LawDepot Corporate Guarantee ($343 EPC avg): https://www.dpbolvw.net/click-101713917-16944777',
+    'LawDepot General: https://www.dpbolvw.net/click-101713917-16944777',
+    'Western Union: https://kdbov.com/g/kryb7glvg72ae376f35fa82f40b179/',
+    'EKTA Travel Insurance: https://ogsib.com/g/92qb79zvwn2ae376f35f239505df72/',
+    'AURAS Travel Insurance: https://ogsib.com/g/g86qhgosre2ae376f35f102b8feede/',
+    'Acko Car Insurance IN: https://tjzuh.com/g/yapee0pvwc2ae376f35fd745de94b6/',
+    'SBI Credit Card IN: https://tjzuh.com/g/hxn4dcyutj2ae376f35f8bc555c0f8/',
+    'MaxLife Insurance IN: https://tjzuh.com/g/sbim6rqhhn2ae376f35f33bd52e9ca/',
+    'Rich Dad Poor Dad: https://amzn.to/47AkNmw',
+    'Free Tools: ' + site
+  ].join('\n- ');
+
+  const base = 'KEYWORD: ' + kw + '\nCOUNTRY: ' + gl + '\nSEARCH INTENT: ' + intentDesc + '\nSITE: ' + site + '\n\nAFFILIATE LINKS (use the most relevant ones naturally):\n- ' + affLinks;
+
+  const prompts = {
+    github: 'Write a COMPLETE 1500-word SEO article in HTML for SmartCents about "' + kw + '".\n\n' + base + '\n\nREQUIREMENTS:\n- Full HTML file with dark theme (bg #0D0D0D, gold #C9A84C, text #E8E8E0)\n- <title>, meta description, canonical: ' + site + '/articles/' + slug + '.html\n- H1 + 6 H2 sections with border-left gold style\n- FAQ section (5 questions as <details><summary>)\n- Affiliate link boxes (border-left gold)\n- CTA box linking to ' + site + '\n- Related articles grid at bottom\n- Breadcrumb + Article schema JSON-LD\n\nFORMAT: Output TITLE: / META: / SLUG: / then full HTML',
+
+    blogger: 'Write a COMPLETE 900-word Blogger post about "' + kw + '" for smartcents-finance.blogspot.com.\n\n' + base + '\n\nFORMAT:\nTITLE: [SEO title 60 chars]\nMETA: [155 char description]\nBLOGGER LABELS: [5 labels]\nGOOGLE SEO TAGS: [10 keywords]\n\n[Full post HTML with headings, tips, affiliate links, CTA to ' + site + ']',
+
+    facebook: 'Write a COMPLETE Facebook post about "' + kw + '" for SmartCents page.\n\n' + base + '\n\nFORMAT:\nPOST TITLE: [40 chars max]\n\nPOST CONTENT:\n[150 words, hook opening, 3-4 points with emojis, affiliate link, ' + site + ' link]\n\nFACEBOOK HASHTAGS:\n[10 hashtags with #]',
+
+    instagram: 'Write a COMPLETE Instagram post about "' + kw + '" for @mysmartcents.\n\n' + base + '\n\nFORMAT:\nHOOK LINE: [scroll-stopping first line, max 10 words]\n\nCAPTION:\n[100 words, emojis, line breaks, "🔗 Link in bio → ' + site + '"]\n\nINSTAGRAM HASHTAGS:\n[25 hashtags]\n\nPINTEREST HASHTAGS:\n[10 hashtags]\n\nIMAGE BRIEF:\n[describe ideal image for this post]',
+
+    pinterest: 'Write a COMPLETE Pinterest pin about "' + kw + '" for SmartCents.\n\n' + base + '\n\nFORMAT:\nPIN TITLE: [100 chars max, keyword-rich]\n\nPIN DESCRIPTION:\n[250 words, keyword-rich, ' + site + ' link, clear CTA]\n\nPINTEREST HASHTAGS:\n[10 hashtags with #]\n\nPINTEREST KEYWORDS:\n[10 keywords without #]\n\nBOARD SUGGESTION:\n[best board name]\n\nIMAGE BRIEF:\n[describe 1000x1500px pin image]',
+
+    medium: 'Write a COMPLETE 1000-word Medium article about "' + kw + '" for @smartcents.\n\n' + base + '\n\nFORMAT:\nTITLE: [compelling title with keyword]\nSUBTITLE: [one punchy sentence]\nMEDIUM TAGS: [exactly 5 tags]\nGOOGLE SEO TAGS: [10 keyword tags]\n\n[Full article in HTML: clean white bg, font Georgia, max-width 680px, h1/h2/p tags, affiliate links, FAQ section, CTA to ' + site + ']',
+
+    all: 'You are an SEO content creator for SmartCents (' + site + '). Generate ALL 6 platform files using EXACTLY these delimiters — do not skip any.\n\n' + base + '\n\n>>>>>>>>>>SC_FILE_1_START<<<<<<<<<<\nFILENAME: 01-smartcents-' + slug + '.html\n[1500-word full HTML article, dark theme #0D0D0D/#C9A84C, title+meta+canonical+schema+FAQs+affiliate boxes+related articles]\n>>>>>>>>>>SC_FILE_1_END<<<<<<<<<<\n\n>>>>>>>>>>SC_FILE_2_START<<<<<<<<<<\nFILENAME: 02-blogger-' + slug + '.html\nTITLE: / META: / BLOGGER LABELS: [5] / GOOGLE SEO TAGS: [10]\n[900-word blogger post HTML with affiliate links]\n>>>>>>>>>>SC_FILE_2_END<<<<<<<<<<\n\n>>>>>>>>>>SC_FILE_3_START<<<<<<<<<<\nFILENAME: 03-facebook-' + slug + '.txt\nPOST TITLE: / POST CONTENT: [150 words] / FACEBOOK HASHTAGS: [10]\n>>>>>>>>>>SC_FILE_3_END<<<<<<<<<<\n\n>>>>>>>>>>SC_FILE_4_START<<<<<<<<<<\nFILENAME: 04-instagram-' + slug + '.txt\nHOOK LINE: / CAPTION: [100 words] / INSTAGRAM HASHTAGS: [25] / PINTEREST HASHTAGS: [10] / IMAGE BRIEF:\n>>>>>>>>>>SC_FILE_4_END<<<<<<<<<<\n\n>>>>>>>>>>SC_FILE_5_START<<<<<<<<<<\nFILENAME: 05-pinterest-' + slug + '.txt\nPIN TITLE: / PIN DESCRIPTION: [250 words] / PINTEREST HASHTAGS: [10] / PINTEREST KEYWORDS: [10] / BOARD: / IMAGE BRIEF:\n>>>>>>>>>>SC_FILE_5_END<<<<<<<<<<\n\n>>>>>>>>>>SC_FILE_6_START<<<<<<<<<<\nFILENAME: 06-medium-' + slug + '.html\nTITLE: / SUBTITLE: / MEDIUM TAGS: [5] / GOOGLE SEO TAGS: [10]\n[1000-word Medium HTML article, white bg, 680px, h1/h2/p, affiliate links, FAQ, CTA]\n>>>>>>>>>>SC_FILE_6_END<<<<<<<<<<'
   };
 
-  window.open(urls[type] || urls.search, '_blank');
-  showToast('Opening research... 🔬');
+  const prompt = prompts[platform] || prompts.all;
+  navigator.clipboard.writeText(prompt).then(() => {
+    const status = document.getElementById('research-copy-status');
+    if (status) { status.style.display = 'block'; setTimeout(() => status.style.display = 'none', 4000); }
+    showToast('✅ Prompt copied! Opening Claude...');
+    setTimeout(() => window.open('https://claude.ai', '_blank'), 700);
+  }).catch(() => {
+    showToast('Copy failed — try again');
+  });
 }
 
-function quickSearch(kw) {
-  document.getElementById('research-keyword').value = kw;
-  document.getElementById('research-type').value = 'search';
-  document.getElementById('research-country').value = 'us';
-  doResearch();
-}
-
-function checkRank() {
-  const kw = document.getElementById('rank-keyword').value.trim();
-  if (!kw) { showToast('Enter a keyword to check!'); return; }
-  const encoded = encodeURIComponent(kw + ' site:mysmartcents.github.io');
-  window.open(`https://www.google.com/search?q=${encoded}&gl=us&hl=en`, '_blank');
-  showToast('Checking SmartCents rank...');
-}
-
-function checkCompetitors() {
-  const kw = document.getElementById('rank-keyword').value.trim();
+function saveBriefToNotes() {
+  const kw = document.getElementById('research-keyword').value.trim();
   if (!kw) { showToast('Enter a keyword first!'); return; }
-  const encoded = encodeURIComponent(kw);
-  window.open(`https://www.google.com/search?q=${encoded}&gl=us&hl=en&num=10`, '_blank');
-  showToast('Opening US page 1 results...');
+  showToast('Use the Claude buttons above!');
 }
 
-function openTrends(kw) {
-  const encoded = encodeURIComponent(kw);
-  window.open(`https://trends.google.com/trends/explore?q=${encoded}&geo=US&cat=7`, '_blank');
-}
-
-function openRedditFinance() {
-  window.open('https://www.reddit.com/r/personalfinance/top/?t=week', '_blank');
-}
-
-function openQuoraFinance() {
-  window.open('https://www.quora.com/topic/Personal-Finance', '_blank');
-}
-
-function openAnswerThePublic() {
-  window.open('https://answerthepublic.com/', '_blank');
-}
-
-function openKeywordSurfer() {
-  window.open('https://keywordsurfer.com/', '_blank');
-}
-
-function generateArticleBrief() {
-  const kw = document.getElementById('article-keyword').value.trim();
-  if (!kw) { showToast('Enter a target keyword!'); return; }
-  const competitors = document.getElementById('article-competitors').value.trim();
-
-  const brief = `SEO ARTICLE BRIEF — SmartCents
-========================
-TARGET KEYWORD: ${kw}
-TARGET AUDIENCE: US/UK English speakers (global)
-TARGET WORD COUNT: 1200-1500 words
-WEBSITE: mysmartcents.github.io
-========================
-
-Write a comprehensive, SEO-optimized article targeting the keyword "${kw}".
-
-REQUIREMENTS:
-1. Title must include "${kw}" naturally
-2. Write a compelling meta description (150-160 chars)
-3. Use these heading structure:
-   - H1: Main title with keyword
-   - H2: 4-6 main sections
-   - H3: Subsections where needed
-4. Include these elements:
-   - Introduction with hook (first 100 words must grab attention)
-   - Practical tips with numbered lists
-   - Real examples and data
-   - FAQ section at the end (3-5 questions)
-   - Strong call to action
-5. Naturally include related keywords throughout
-6. Link to SmartCents tools: mysmartcents.github.io
-7. Include relevant affiliate links where natural:
-   - Travel insurance: EKTA (ogsib.com/g/92qb79zvwn2ae376f35f239505df72/)
-   - Money transfer: Western Union (kdbov.com/g/kryb7glvg72ae376f35fa82f40b179/)
-   - Books: Amazon affiliate links
-8. End with: "Use SmartCents free finance tools at mysmartcents.github.io"
-${competitors ? `\nCOMPETITOR URLS TO OUTRANK:\n${competitors}` : ''}
-
-TONE: Professional but friendly, helpful, actionable
-AVOID: Fluff, padding, generic advice
-FORMAT: Use markdown headings, bullet points, bold for key terms`;
-
-  document.getElementById('article-brief-output').textContent = brief;
-  document.getElementById('article-brief-output').style.display = 'block';
-  document.getElementById('article-brief-actions').style.display = 'grid';
-  showToast('Article brief generated! 📝');
-}
-
-function copyArticleBrief() {
-  const brief = document.getElementById('article-brief-output').textContent;
-  navigator.clipboard.writeText(brief).then(() => showToast('Brief copied! 📋'));
-}
-
-function openClaudeWithBrief() {
-  const brief = document.getElementById('article-brief-output').textContent;
-  window.open('https://claude.ai/new?q=' + encodeURIComponent(brief), '_blank');
-}
-
-// AFFILIATE LINKS BY TOPIC
+// ── AFFILIATE LINKS BY TOPIC ───────────────────────────────────
 const topicAffiliates = {
   loan: { name: 'SmartCents Loan Calculator', url: 'https://mysmartcents.github.io/#tools' },
   budget: { name: 'SmartCents Budget Planner', url: 'https://mysmartcents.github.io/#tools' },
@@ -2010,115 +2011,6 @@ PIN IMAGE PROMPT:
   };
 }
 
-  return {
-    medium: `Generate a complete Medium article package about "${name}" for a global English-speaking audience (US/UK/global). Format your response EXACTLY like this:
-
-TITLE:
-[Write an SEO-optimized, compelling title including the main keyword — 60 chars max]
-
-META DESCRIPTION:
-[Write a 150-160 character description with main keyword for Google search snippet]
-
-TAGS:
-[List exactly 5 Medium tags separated by commas]
-
-ARTICLE:
-[Write 900-1200 words. Use ## for headings, bullet points for lists. Include:
-- Hook opening paragraph (grab attention immediately)
-- 4-5 sections with ## headings
-- Practical tips with examples
-- Mention ${aff.name} naturally with link: ${aff.url}
-- CTA: "Try SmartCents free finance tools at ${site} — no signup needed"
-- FAQ section with 3 questions at the end]
-
-COVER IMAGE PROMPT:
-[Write a detailed prompt to generate a cover image using AI (Gemini/Claude). Specify: style, colors, elements, mood. Make it relevant to ${name}. Format: 1500x750px, professional finance blog style]`,
-
-    blogger: `Generate a complete Blogger post package about "${name}" for SmartCents blog. Global English audience. Format EXACTLY like this:
-
-TITLE:
-[SEO-optimized title with main keyword — 60 chars max]
-
-META DESCRIPTION:
-[150-160 character meta description with keyword]
-
-LABELS/TAGS:
-[5 relevant Blogger labels separated by commas]
-
-POST CONTENT:
-[Write 600-900 words in HTML-friendly format. Include:
-- Strong intro paragraph
-- 3-4 sections with clear headings
-- Bullet points for tips
-- ${aff.name} link: ${aff.url}
-- SmartCents tools: ${site}
-- Social follow CTA: Facebook | Instagram | Pinterest
-- Final CTA paragraph]
-
-COVER IMAGE PROMPT:
-[AI image generation prompt for Blogger cover. 1200x628px, professional blog style, relevant to ${name}]`,
-
-    facebook: `Generate a complete Facebook post package about "${name}" for SmartCents page. Global English audience. Format EXACTLY like this:
-
-POST TITLE:
-[Short punchy title for the post — 40 chars max]
-
-POST CONTENT:
-[Write 100-150 words. Include:
-- Strong opening question or statement
-- 3-4 key points with emojis
-- ${aff.name}: ${aff.url}
-- "Free tools at ${site}"
-- "Follow SmartCents for daily finance tips! 👉 ${fb}"
-- 5 relevant hashtags at the end]
-
-COVER IMAGE PROMPT:
-[AI image prompt for Facebook post image. 1200x630px, eye-catching, finance theme, bold text overlay suggestion relevant to ${name}]`,
-
-    instagram: `Generate a complete Instagram post package about "${name}" for @mysmartcents. Global English audience. Format EXACTLY like this:
-
-POST TITLE:
-[Caption hook — first line that stops the scroll, max 10 words]
-
-CAPTION:
-[Write 80-120 words. Include:
-- Strong hook first line (same as title)
-- Line breaks between each point
-- Emojis throughout
-- ${aff.name} mention
-- "🔗 Link in bio → ${site}"
-- Call to action (save this post / share with someone)]
-
-FIRST COMMENT HASHTAGS:
-[List 20-25 relevant hashtags — mix of popular and niche ones]
-
-COVER IMAGE PROMPT:
-[AI image prompt for Instagram square post. 1080x1080px, bold visuals, finance theme, minimal text, vibrant. Relevant to ${name}]
-
-STORY IMAGE PROMPT:
-[Separate AI prompt for Instagram Story. 1080x1920px, vertical format, same topic]`,
-
-    pinterest: `Generate a complete Pinterest pin package about "${name}" for SmartCents. Global English audience. Format EXACTLY like this:
-
-PIN TITLE:
-[SEO-optimized pin title with keywords — 100 chars max]
-
-PIN DESCRIPTION:
-[Write 150-300 words. Include:
-- Keyword-rich opening sentence
-- What the reader will learn/gain
-- Step-by-step value points
-- ${aff.url}
-- ${site}
-- Clear call to action at end
-- 5-8 relevant keywords woven naturally]
-
-BOARD SUGGESTION:
-[Which of these boards to pin to: Personal Finance Tips / Budgeting & Saving / Home Loan Tips / Travel Insurance / Make Money Online / Savings Goals]
-
-PIN IMAGE PROMPT:
-[AI image prompt for Pinterest vertical pin. 1000x1500px, tall format, finance infographic style, bold title text at top, SmartCents branding, relevant to ${name}. Clean, professional, shareable]`
-  };
 
 let currentTopic = '';
 let platformPrompts = {};
